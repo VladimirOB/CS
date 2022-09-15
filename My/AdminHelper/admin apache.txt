@@ -1,0 +1,112 @@
+ip r << проверка адресов. 
+вверху справа будет адрес домашней сети(10.1.214.1)
+внизу слева адрес виртуальный (172.16.0.0./16
+
+установлен vsftpd потому что инфу передавать удобней.
+/etc/apache2/sites-available# << расположение
+
+apt update -y << обновление репозиториев.
+
+apt install apache2 -y << установка Apache
+
+systemctl status apache2 << проверка активности.
+systemctl start apache2 << если не запущена.
+
+systemctl enable apache2 << для автозапуска.
+
+systemctl restart apache2 << рестарт.
+
+Если брандмауэр UFW уже настроен, нам нужно разрешить службу Apache через брандмауэр, чтобы внешние пользователи могли иметь доступ к веб-серверу.
+
+Для этого нам нужно разрешить трафик через порт 80 на брандмауэре:
+
+allow 80/tcp << разрешаем трафик через 80 порт
+
+ufw status << убеждаемся что порт разрешен.
+
+netstat -pnltu << проверка порта
+
+http://server-IP-address 
+или                       << открыть браузер
+http://server-domain-name
+
+Файл веб-страницы Apache по умолчанию index.html 
+находится по адресу /var/www/html/, 
+который является каталогом webroot.
+
+mv /var/www/html/index.html /var/www/html/index.html.bak << делаем резервную копию
+
+nano /var/www/html/index.html << создаем новый файл.
+
+<html>
+<head>
+<title>Welcome to apache 2</title>
+</head>
+<body>
+<h1>Apache web server started</h1>
+</body>
+</html>   <<< добавляем пример содержимого
+
+systemctl restart apache2 << перезапускаем серв
+
+Шаг 7: Создание виртуальных хостов на Apache
+
+Для начала нам нужно создать каталог webroot 
+для домена sedicomm.com:
+
+mkdir -p /var/www/html/sedicomm.com/
+
+Далее мы назначим необходимые разрешения 
+для каталога, используя переменную $USER:
+
+chown -R $USER:$USER /var/www/html/sedicomm.com/
+
+Затем назначьте необходимые разрешения 
+для каталога webroot для домена:
+
+chmod -R 755 /var/www/html/sedicomm.com
+
+Теперь, используя текстовый редактор, 
+создайте пример файла index.html:
+
+nano /var/www/html/sedicomm.com/index.html
+
+<html>
+<head>
+<title>Welcome to Sedicomm.com</title>
+</head>
+<body>
+<h1>Sedicomm.com</h1>
+</body>
+</html>
+
+Теперь создайте файл виртуального хоста 
+для домена с помощью команды, показанной ниже:
+
+nano /etc/apache2/sites-available/sedicomm.com.conf
+
+Теперь скопируйте и вставьте содержимое ниже, 
+замените домен sedicomm.com своим доменом:
+
+<VirtualHost *:80>
+ServerAdmin admin@sedicomm.com
+ServerName sedicomm.com
+ServerAlias www.sedicomm.com
+DocumentRoot /var/www/html/sedicomm.com/
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+На этом этапе включите файл виртуального хоста, 
+как показано ниже:
+
+a2ensite sedicomm.com.conf
+
+Теперь нужно отключить сайт по умолчанию:
+
+a2dissite 000-default.conf
+
+Чтобы внести изменения, 
+перезагрузите веб-сервер Apache.
+
+systemctl restart apache2

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vector_Verb+Adjective+nouns", "Vector_Verb+Adjective+nouns\Vector_Verb+Adjective+nouns.csproj", "{6BE3A0E2-DB30-4E2D-A8D9-49057B1F4A37}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BE3A0E2-DB30-4E2D-A8D9-49057B1F4A37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BE3A0E2-DB30-4E2D-A8D9-49057B1F4A37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BE3A0E2-DB30-4E2D-A8D9-49057B1F4A37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BE3A0E2-DB30-4E2D-A8D9-49057B1F4A37}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E92E626-ED47-4AF3-B2E5-C877D315CB1A}
+	EndGlobalSection
+EndGlobal

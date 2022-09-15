@@ -1,0 +1,105 @@
+// метод на проверку последовательности Фибоначчи
+        private static bool Fibonachi(int[] array, int i, int max, int min)
+        {
+            int[] F_pos = new int[100];
+            int[] F_negativ = new int[100];
+            int[] F = new int[200];
+            int buff = 0;
+            int flag = 0;
+            F_pos[0] = 1;
+            F_pos[1] = 0;
+            F_pos[2] = 1;
+            F_negativ[0] = 0;
+            F_negativ[1] = 1;
+            if (i < 3)
+                return false;
+
+            if (min < 0)
+            {
+                int m = 0;
+
+                for (m = 2; buff <= Math.Abs(min); m++)
+                {
+                    if (m % 2 == 0)
+                        F_negativ[m] = (Math.Abs(F_negativ[m - 1]) + Math.Abs(F_negativ[m - 2])) * -1;
+
+                    else
+                        F_negativ[m] = Math.Abs(F_negativ[m - 1]) + Math.Abs(F_negativ[m - 2]);
+
+                    buff = Math.Abs(F_negativ[m]);
+                }
+                buff = 0;
+                //for (int v = 0; v <= m - 1; v++)
+                //{
+                //    Console.Write($"{F_negativ[v]} ");
+
+                //}
+                //Console.WriteLine();
+                int h = 0;
+                for (h = 0; m != 0; h++)
+                {
+                    F[h] = F_negativ[--m];
+
+                   // Console.Write($"{F[h]} ");
+
+                }
+
+
+                Console.WriteLine();
+
+                for (; buff <= max; h++)
+                {
+                    F[h] = F[h - 1] + F[h - 2];
+
+                    buff = F[h];
+                }
+                //for (int g = 0; g <h; g++)
+                //{
+                //   Console.Write($"{F[g]} ");
+                //}
+                //Console.WriteLine();
+                for (int j = 0, n = 0; n < h ; n++)
+                {
+                    if (flag > 0 && F[n] != array[j])
+                        break;
+                    if (F[n] == array[j])
+
+                    {
+                        flag++;
+                        j++;
+
+                    }
+                }
+            }
+
+
+
+
+
+            else
+            {
+                int k = 0;
+                for (k = 3; buff <= max; k++)
+                {
+                    F_pos[k] = F_pos[k - 1] + F_pos[k - 2];
+                    buff = F_pos[k];
+                }
+
+
+                for (int j = 0, n = 0; n < k - 1; n++)
+                {
+                    if (flag > 0 && F_pos[n] != array[j])
+                        break;
+                    if (F_pos[n] == array[j])
+
+                    {
+                        flag++;
+                        j++;
+
+                    }
+                }
+            }
+            if (flag == i)
+                return true;
+            else return false;
+        }

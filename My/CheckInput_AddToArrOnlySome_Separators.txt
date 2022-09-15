@@ -1,0 +1,20 @@
+Добавление в массив при условиях:
+foreach(string word in words_set)
+{
+   if(word.ToLower().All(ch=>(ch=> 'a' && ch <= 'я') && (ch >= '0' && ch <= '9'))
+	writer.WriteLine(word);
+}
+
+Добавление сепараторов:
+char[] separators = " ()[]{};:<>,./\\!@#$%^&*_+=\n-\"".ToArray();
+List<string> splitted = sentence.Split(separators).ToList();
+
+Проверка нажатий клавиш:
+
+while(1)
+{
+  if(Console.KeyAvailable)
+  {
+    var key = Console.ReadKey(true).Key;   
+  }
+}
