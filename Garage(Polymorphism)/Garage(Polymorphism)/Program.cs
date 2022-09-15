@@ -26,7 +26,7 @@
         static void Main(string[] args)
         {
             Garage garage = new Garage();
-            garage.Add(new MazdaRX8(2000, 250, 10000));
+            garage.Add(new RX8(2000, 250, 10000));
             garage.Add(new Icarus(4000, 120, 50000));
             garage.Add(new KAMAZ(5500, 160, 40000));
             garage.Print();
