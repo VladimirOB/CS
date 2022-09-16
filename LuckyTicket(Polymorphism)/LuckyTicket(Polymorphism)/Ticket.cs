@@ -34,15 +34,5 @@ namespace LuckyTicket_Polymorphism_
             else
                 this.number = num;
         }
-
-        public bool isLucky(List<LuckyCriteria> criterias)
-        {
-            foreach (var criteria in criterias)
-            {
-                if (criteria.isLucky(this))
-                    return true;
-            }
-            return false;
-        }
     }
 }

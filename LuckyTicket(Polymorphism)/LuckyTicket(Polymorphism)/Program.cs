@@ -24,14 +24,12 @@ namespace LuckyTicket_Polymorphism_
 
         static void Main(string[] args)
         {
-            HashSet<Ticket> lucky = new HashSet<Ticket>();
-            List<LuckyCriteria> criterias = new List<LuckyCriteria>();
-            criterias.Add(new LuckySums());
-            criterias.Add(new Alternation());
-            criterias.Add(new Ascending());
-            criterias.Add(new Descending());
-            criterias.Add(new Equal());
-
+           
+            LuckyDeterminationSystem lds = new LuckyDeterminationSystem();
+            lds.Add(new LuckySums());
+            lds.Add(new Ascending());
+            lds.Add(new Descending());
+            lds.Add(new Alternation());
             Console.WriteLine("Enter number of ticket or press enter to continue to check all ticket.");
             string? str = Console.ReadLine();
             if(str != "")
@@ -45,8 +43,8 @@ namespace LuckyTicket_Polymorphism_
                         num = 111111;
                     }
                     Ticket ticket = new Ticket(num);
-                    if (ticket.isLucky(criterias))
-                        lucky.Add(ticket);
+                    if (lds.isLucky(ticket))
+                        lds.AddLucky(ticket);
                 }
             }
             else
@@ -54,22 +52,14 @@ namespace LuckyTicket_Polymorphism_
                 for (int i = 111111; i < 1000000; i++)
                 {
                     Ticket ticket = new Ticket(i);
-                    if (ticket.isLucky(criterias))
-                        lucky.Add(ticket);
+                    if (lds.isLucky(ticket))
+                        lds.AddLucky(ticket);
                     else
                         ticket = null;
                 }
                 
             }
-
-            StreamWriter sw = new StreamWriter("../../../../result.txt");
-            sw.WriteLine($"Count of lucky ticket = {lucky.Count}");
-            foreach (var ticket in lucky)
-            {
-                sw.WriteLine(ticket.Number.ToString());
-            }
-            sw.Close();
-            Console.WriteLine(lucky.Count);
+            lds.SaveLuckyTicket("../../../../result.txt");
         }
     }
 }
