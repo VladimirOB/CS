@@ -14,6 +14,7 @@ namespace Vector_v2_operators__Timer_del_.jpg_
         //static string path = "V:/folder";
         static System.Timers.Timer timer;
         static int stop = 0;
+
         static void Task1()
         {
             Vector v = new Vector(10);
@@ -84,101 +85,3 @@ namespace Vector_v2_operators__Timer_del_.jpg_
         }
     }
 }
-
-
-//static void Task2(object sender, ElapsedEventArgs e)
-//{
-//    /*2.Пользователь вводит имя папки, программа следит за папкой по таймеру и удаляет из неё и из подпапок все картинки(.jpg, .png, .bmp)*/
-
-//    Console.WriteLine("Timer tick: {0}", e.SignalTime.ToString());
-//    DirectoryInfo dinfo = new DirectoryInfo(path);
-//    FileInfo[] files = dinfo.GetFiles();
-//    foreach (var current in files)
-//    {
-//        if (current.Extension == ".jpg" || current.Extension == ".bmp" || current.Extension == ".png")
-//        {
-//            //File.Delete(current.FullName);
-//            Console.WriteLine(current.FullName);
-//        }
-//    }
-
-//    DirectoryInfo[] folders = dinfo.GetDirectories();
-//    foreach (var current in folders)
-//    {
-//        path = path + "/" + current.Name;
-//        //Task2(sender, e);
-//    }
-//    Console.WriteLine("Stop");
-//    ((System.Timers.Timer)sender).Stop();
-//}
-
-//static void Task2_prog()
-//{
-//    timer = new System.Timers.Timer(1000);
-//    timer.Elapsed += Task2;
-//    timer.Start();
-//    for (int i = 1; i < 6; i++)
-//    {
-//        Console.Write($"{i} ");
-//        if (i == 1)
-//            Console.WriteLine("секунда");
-//        if (i > 2 && i < 5)
-//            Console.WriteLine("секунды");
-//        if (i == 5)
-//        {
-//            Console.WriteLine("секунд");
-//        }
-//        Thread.Sleep(1000);
-//    }
-//}
-
-//static void T2(object sender, ElapsedEventArgs e)
-//{
-//    Console.WriteLine("Timer tick: {0}", e.SignalTime.ToString());
-//    DirectoryInfo dinfo = new DirectoryInfo(path);
-//    FileInfo[] files = dinfo.GetFiles();
-//    foreach (var current in files)
-//    {
-//        if (current.Extension == ".jpg" || current.Extension == ".bmp" || current.Extension == ".png")
-//        {
-//            //File.Delete(current.FullName);
-//            Console.WriteLine(current.FullName);
-//        }
-//    }
-
-//    DirectoryInfo[] folders = dinfo.GetDirectories();
-//    foreach (var current in folders)
-//    {
-//        path = path + "/" + current.Name;
-//        Console.WriteLine("Stop");
-//        ((System.Timers.Timer)sender).Stop();
-//        //Task2(sender, e);
-//    }
-//}
-
-//static void test(string p)
-//{
-//    DirectoryInfo dinfo = new DirectoryInfo(p);
-//    FileInfo[] files = dinfo.GetFiles();
-//    foreach (var current in files)
-//    {
-//        if (current.Extension == ".jpg" || current.Extension == ".bmp" || current.Extension == ".png")
-//        {
-//            //File.Delete(current.FullName);
-//            Console.WriteLine(current.FullName);
-//        }
-//    }
-
-//    DirectoryInfo[] folders = dinfo.GetDirectories();
-//    if (folders.Length > 0)
-//    {
-//        foreach (var current in folders)
-//        {
-//            test(p + "/" + current.Name);
-//        }
-//    }
-//    else
-//    {
-//        Console.WriteLine("0");
-//    }
-//}

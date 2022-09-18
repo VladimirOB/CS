@@ -24,13 +24,13 @@ namespace SnakeGame
 
         static void DrawBorder()
         {
-            for (int i = 0; i < MapWidth; i++)
+            for (int i = 1; i < MapWidth-2; i++)
             {
                 new Pixel(i, 0, BorderColor).Draw();
                 new Pixel(i, MapHeight-1, BorderColor).Draw();
             }
 
-            for (int i = 0; i < MapHeight; i++)
+            for (int i = 1; i < MapHeight-2; i++)
             {
                 new Pixel(0, i, BorderColor).Draw();
                 new Pixel(MapWidth-1, i, BorderColor).Draw();
@@ -87,62 +87,62 @@ namespace SnakeGame
 
             DrawBorder();
 
-            Direction currenMovement = Direction.Right;
+            //Direction currenMovement = Direction.Right;
 
-            var snake = new Snake(10, 5, Head, BodyColor);
+            //var snake = new Snake(10, 5, Head, BodyColor);
 
-            Pixel food = GenFood(snake);
-            food.Draw();
+            //Pixel food = GenFood(snake);
+            //food.Draw();
 
-            int score = 0;
+            //int score = 0;
 
-            int lagMs = 0;
+            //int lagMs = 0;
 
-            Stopwatch sw = new Stopwatch();
-            while (true)
-            {
-                sw.Restart();
+            //Stopwatch sw = new Stopwatch();
+            //while (true)
+            //{
+            //    sw.Restart();
 
-                Direction oldMovement = currenMovement;
+            //    Direction oldMovement = currenMovement;
 
-                while (sw.ElapsedMilliseconds <= FrameMs - lagMs)
-                {
-                    if (currenMovement == oldMovement)
-                        currenMovement = ReadMovement(currenMovement);
-                }
+            //    while (sw.ElapsedMilliseconds <= FrameMs - lagMs)
+            //    {
+            //        if (currenMovement == oldMovement)
+            //            currenMovement = ReadMovement(currenMovement);
+            //    }
 
-                sw.Restart();
+            //    sw.Restart();
 
-                if(snake.Head.X == food.X && snake.Head.Y == food.Y)
-                {
-                    snake.Move(currenMovement, true);
+            //    if(snake.Head.X == food.X && snake.Head.Y == food.Y)
+            //    {
+            //        snake.Move(currenMovement, true);
 
-                    food = GenFood(snake); // генерация новой еды
-                    food.Draw();
-                    score++;
-                    Task.Run(() => Beep(1200, 200)); // в отдельном потоке звук
-                }
-                else
-                {
-                    snake.Move(currenMovement);
-                }
+            //        food = GenFood(snake); // генерация новой еды
+            //        food.Draw();
+            //        score++;
+            //        Task.Run(() => Beep(1200, 200)); // в отдельном потоке звук
+            //    }
+            //    else
+            //    {
+            //        snake.Move(currenMovement);
+            //    }
 
                 
 
-                if (snake.Head.X == MapWidth - 1
-                    || snake.Head.X == 0
-                    || snake.Head.Y == MapHeight - 1
-                    || snake.Head.Y == 0
-                    || snake.Body.Any(b => b.X == snake.Head.X && b.Y == snake.Head.Y))
-                    break;
-                lagMs = (int)sw.ElapsedMilliseconds;
-            }
-            snake.Clear();
-            SetCursorPosition(MapWidth / 3, MapHeight / 2);
-            WriteLine("Game over!");
-            SetCursorPosition(MapWidth / 3, (MapHeight / 2)+1);
-            WriteLine($"Score:{score}");
-            Task.Run(() => Beep(200, 600));
+            //    if (snake.Head.X == MapWidth - 1
+            //        || snake.Head.X == 0
+            //        || snake.Head.Y == MapHeight - 1
+            //        || snake.Head.Y == 0
+            //        || snake.Body.Any(b => b.X == snake.Head.X && b.Y == snake.Head.Y))
+            //        break;
+            //    lagMs = (int)sw.ElapsedMilliseconds;
+            //}
+            //snake.Clear();
+            //SetCursorPosition(MapWidth / 3, MapHeight / 2);
+            //WriteLine("Game over!");
+            //SetCursorPosition(MapWidth / 3, (MapHeight / 2)+1);
+            //WriteLine($"Score:{score}");
+            //Task.Run(() => Beep(200, 600));
         }
     }
 

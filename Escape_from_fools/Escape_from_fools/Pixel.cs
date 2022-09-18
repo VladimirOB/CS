@@ -4,22 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SnakeGame
+namespace Escape_from_fools
 {
-    public readonly struct Pixel
+    public struct Pixel
     {
-        private const char PixelChar = '█';
+        private char PixelChar = '█';
 
         public int X { get; }
         public int Y { get; }
         public ConsoleColor Color { get; }
 
 
-        public Pixel(int x, int y, ConsoleColor color)
+        public Pixel(int x, int y, ConsoleColor color, char pixelChar)
         {
             X = x;
             Y = y;
             Color = color;
+            PixelChar = pixelChar;
         }
 
         public void Draw()
@@ -28,8 +29,7 @@ namespace SnakeGame
 
             Console.SetCursorPosition(X, Y);
             Console.Write(PixelChar);
-            Console.SetCursorPosition(X+1, Y);
-            Console.Write(PixelChar);
+
         }
 
         public void Clear()
