@@ -15,18 +15,47 @@ namespace Vector_Strategy_Comp_
     //    }
     //}
 
+    abstract class Comparator
+    {
+        public abstract bool Comp(int a, int b);
+    }
+    
+    class DescendingSort : Comparator
+    {
+        public override bool Comp(int a, int b)
+        {
+            if( a == b)
+            {
+                return a >= b;
+            }
+            return a > b;
+        }
+    }
 
+    class AscendingSort : Comparator
+    {
+        public override bool Comp(int a, int b)
+        {
+            if (a == b)
+            {
+                return a <= b;
+            }
+            return a < b;
+        }
+    }
 
     abstract class SortStrategy
     {
-        public abstract void Sort(ref int[] num);
+        public abstract void Sort(ref int[] num, Comparator comp);
     }
 
     class QuickSort : SortStrategy
     {
-        public override void Sort(ref int[] num)
+        public Comparator? comp;
+        public override void Sort(ref int[] num, Comparator comp)
         {
-            QSort(num, 0, num.Length-1);
+            this.comp = comp;
+            QSort(num, 0, num.Length - 1);
         }
         void QSort(int[] num, int start, int end)
         {
@@ -43,10 +72,10 @@ namespace Vector_Strategy_Comp_
                 int value = num[baseElementIndex];
 
                 //перемещаем индекс левой части вперёд, пока не встретится большой элемент
-                while (i < baseElementIndex && (num[i] <= value)) i++;
+                while (i < baseElementIndex && (comp.Comp(num[i], value))) i++;
 
                 //перемещаем индекс правой части массива назад пока не встретится маленький элем
-                while (j > baseElementIndex && (num[j] >= value)) j--;
+                while (j > baseElementIndex && (!comp.Comp(num[j],value))) j--;
 
                 //i, j - индексы эл., которые нужно swap
                 //если индексы правильные(есть смысл замены)
@@ -68,7 +97,7 @@ namespace Vector_Strategy_Comp_
 
     class BubbleSort : SortStrategy
     {
-        public override void Sort(ref int[] num)
+        public override void Sort(ref int[] num, Comparator comp)
         {
             int temp;
             for (int i = 1; i < num.Length; i++)
@@ -76,7 +105,7 @@ namespace Vector_Strategy_Comp_
                 // проход массива от конца в начало со "всплыванием" одного элемента
                 for (int j = num.Length - 1; j >= i; j--)
                 {
-                    if (num[j - 1] > num[j])
+                    if (comp.Comp(num[j - 1], num[j]))
                     {
                         temp = num[j - 1];
                         num[j - 1] = num[j];
@@ -89,8 +118,9 @@ namespace Vector_Strategy_Comp_
 
     class InsertionSort : SortStrategy
     {
-        public override void Sort(ref int[] num)
+        public override void Sort(ref int[] num, Comparator comp)
         {
+            
             int i, j, k, temp;
 
             for (i = 1; i < num.Length; i++)
@@ -101,7 +131,7 @@ namespace Vector_Strategy_Comp_
                 //ищем правильную позицию
                 for (j = 0; j < i; j++)
                 {
-                    if (num[j] > temp) break;
+                    if (comp.Comp(num[j], temp)) break;
                 }
                 // если элемент уже на своём месте, продолжить
                 if (j == i) continue;
@@ -120,6 +150,7 @@ namespace Vector_Strategy_Comp_
     class Vector
     {
         SortStrategy _strategy;
+        Comparator comp;
         public int[] vector = new int[10];
 
         public SortStrategy Strategy
@@ -134,7 +165,7 @@ namespace Vector_Strategy_Comp_
             set { if (pos >= 0) vector[pos] = value; else throw new Exception("Incorrect index!"); }
         }
 
-        public Vector(SortStrategy strategy)
+        public Vector(SortStrategy strategy, Comparator comp)
         {
             Random rand = new Random();
             _strategy = strategy;
@@ -142,12 +173,13 @@ namespace Vector_Strategy_Comp_
             {
                 vector[i] = rand.Next(0,100);
             }
+            this.comp = comp;
         }
 
 
         public void Sort()
         {
-            _strategy.Sort(ref vector);
+            _strategy.Sort(ref vector, comp);
         }
 
         public override string ToString()

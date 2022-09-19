@@ -28,8 +28,6 @@ namespace SnakeGame
 
             Console.SetCursorPosition(X, Y);
             Console.Write(PixelChar);
-            Console.SetCursorPosition(X+1, Y);
-            Console.Write(PixelChar);
         }
 
         public void Clear()

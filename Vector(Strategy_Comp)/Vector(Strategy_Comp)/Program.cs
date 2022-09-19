@@ -1,4 +1,8 @@
-﻿namespace Vector_Strategy_Comp_
+﻿using System;
+using System.Diagnostics;
+using System.Xml.Linq;
+
+namespace Vector_Strategy_Comp_
 {
     class MainApp
     {
@@ -10,7 +14,7 @@
 
         static void Main()
         {
-            Vector v = new Vector(new QuickSort());
+            Vector v = new Vector(new QuickSort(), new DescendingSort());
             Console.WriteLine(v);
             v.Sort();
             Console.WriteLine(v);

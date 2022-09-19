@@ -29,7 +29,6 @@ namespace Escape_from_fools
         private const ConsoleColor HeroColor = ConsoleColor.Green;
         private const ConsoleColor EnemyColor = ConsoleColor.Red;
         private const int FrameMs = 200; // перерыв между кадрами
-
         private static readonly Random rand = new Random();
         static void DrawBorder()
         {
@@ -125,9 +124,8 @@ namespace Escape_from_fools
                 wall[i] = GenWall(Hero);
                 wall[i].Draw();
             }
-
-            Enemy[] Enemies = new Enemy[3];
-            for (int i = 0; i < 3; i++)
+            Enemy[] Enemies = new Enemy[10];
+            for (int i = 0; i < 10; i++)
             {
                 Enemies[i] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new RandomBehavior());
             }
@@ -142,6 +140,10 @@ namespace Escape_from_fools
                 {
                     while (sw.ElapsedMilliseconds <= FrameMs)
                     {
+                        foreach (var Enemy in Enemies)
+                        {
+                            Enemy.Move();
+                        }
                         Direction currentMovement = ReadMovement(Hero, wall);
                         if (Enemies.Any(a => a.Head.X == Hero.Head.X && a.Head.Y == Hero.Head.Y))
                             break;

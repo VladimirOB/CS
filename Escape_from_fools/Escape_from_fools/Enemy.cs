@@ -8,14 +8,52 @@ namespace Escape_from_fools
 {
     abstract class Strategy
     {
-        public abstract void Behavior();
+        public abstract void Move(ref Pixel Head);
     }
 
     class RandomBehavior : Strategy
     {
-        public override void Behavior()
+
+        Direction direction;
+        Random random = new Random();
+        public override void Move(ref Pixel Head)
         {
-            
+            Head.Clear();
+            direction = (Direction)random.Next(0, 4);
+            Head = direction switch
+            {
+                Direction.Right when Head.X != 57 => new Pixel(Head.X + 1, Head.Y, ConsoleColor.Red, '♣'),
+                Direction.Left when Head.X != 2 => new Pixel(Head.X - 1, Head.Y, ConsoleColor.Red, '♣'),
+                Direction.Up when Head.Y != 1 => new Pixel(Head.X, Head.Y - 1, ConsoleColor.Red, '♣'),
+                Direction.Down when Head.Y != 28 => new Pixel(Head.X, Head.Y + 1, ConsoleColor.Red, '♣'),
+                Direction.Stay => new Pixel(Head.X, Head.Y, ConsoleColor.Red, '♣'),
+                _ => Head
+
+            };
+            Head.Draw();
+        }
+    }
+
+    class ChaseBehavior : Strategy
+    {
+
+        Direction direction;
+        Random random = new Random();
+        public override void Move(ref Pixel Head)
+        {
+            Head.Clear();
+            direction = (Direction)random.Next(0, 4);
+            Head = direction switch
+            {
+                Direction.Right when Head.X != 57 => new Pixel(Head.X + 1, Head.Y, ConsoleColor.Red, '♣'),
+                Direction.Left when Head.X != 2 => new Pixel(Head.X - 1, Head.Y, ConsoleColor.Red, '♣'),
+                Direction.Up when Head.Y != 1 => new Pixel(Head.X, Head.Y - 1, ConsoleColor.Red, '♣'),
+                Direction.Down when Head.Y != 28 => new Pixel(Head.X, Head.Y + 1, ConsoleColor.Red, '♣'),
+                Direction.Stay => new Pixel(Head.X, Head.Y, ConsoleColor.Red, '♣'),
+                _ => Head
+
+            };
+            Head.Draw();
         }
     }
 
@@ -26,7 +64,7 @@ namespace Escape_from_fools
 
         private readonly ConsoleColor _headColor;
 
-        public Pixel Head { get; private set; }
+        public Pixel Head;
 
         public Strategy Strategy    
         { 
@@ -42,21 +80,10 @@ namespace Escape_from_fools
             this.strategy = strategy;
         }
 
-        public void Move(Direction direction)
+
+        public void Move()
         {
-            Clear();
-            Head = direction switch
-            {
-                Direction.Right => new Pixel(Head.X + 1, Head.Y, _headColor, '♣'),
-                Direction.Left => new Pixel(Head.X - 1, Head.Y, _headColor, '♣'),
-                Direction.Up => new Pixel(Head.X, Head.Y - 1, _headColor, '♣'),
-                Direction.Down => new Pixel(Head.X, Head.Y + 1, _headColor, '♣'),
-                Direction.Stay => new Pixel(Head.X, Head.Y, _headColor, '♣'),
-                _ => Head
-
-            };
-            Draw();
-
+            strategy.Move(ref Head);
         }
 
         public void Draw()
