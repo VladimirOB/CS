@@ -13,7 +13,7 @@ namespace Vector_Strategy_Comp_
 
         static void Main()
         {
-            Vector v = new Vector(new QuickSort(), new DescendingSort());
+            Vector v = new Vector(new QuickSort(new DescendingSort()));
             Console.WriteLine(v);
             v.Sort();
             Console.WriteLine(v);

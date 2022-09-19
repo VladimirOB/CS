@@ -36,13 +36,18 @@ namespace Vector_Strategy_Comp_
 
     abstract class SortStrategy
     {
-        public abstract void Sort(ref int[] num, Comparator comp);
+        public abstract void Sort(ref int[] num);
     }
 
     class QuickSort : SortStrategy
     {
         public Comparator? comp;
-        public override void Sort(ref int[] num, Comparator comp)
+        
+        public QuickSort(Comparator comp)
+        {
+            this.comp = comp;
+        }
+        public override void Sort(ref int[] num)
         {
             this.comp = comp;
             QSort(num, 0, num.Length - 1);
@@ -87,7 +92,13 @@ namespace Vector_Strategy_Comp_
 
     class BubbleSort : SortStrategy
     {
-        public override void Sort(ref int[] num, Comparator comp)
+        public Comparator? comp;
+
+        public BubbleSort(Comparator comp)
+        {
+            this.comp = comp;
+        }
+        public override void Sort(ref int[] num)
         {
             int temp;
             for (int i = 1; i < num.Length; i++)
@@ -108,7 +119,13 @@ namespace Vector_Strategy_Comp_
 
     class InsertionSort : SortStrategy
     {
-        public override void Sort(ref int[] num, Comparator comp)
+        public Comparator? comp;
+
+        public InsertionSort(Comparator comp)
+        {
+            this.comp = comp;
+        }
+        public override void Sort(ref int[] num)
         {
             
             int i, j, k, temp;
@@ -140,7 +157,6 @@ namespace Vector_Strategy_Comp_
     class Vector
     {
         SortStrategy _strategy;
-        Comparator comp;
         public int[] vector = new int[10];
 
         public SortStrategy Strategy
@@ -155,7 +171,7 @@ namespace Vector_Strategy_Comp_
             set { if (pos >= 0) vector[pos] = value; else throw new Exception("Incorrect index!"); }
         }
 
-        public Vector(SortStrategy strategy, Comparator comp) // комп в стратегию
+        public Vector(SortStrategy strategy)
         {
             Random rand = new Random();
             _strategy = strategy;
@@ -163,13 +179,12 @@ namespace Vector_Strategy_Comp_
             {
                 vector[i] = rand.Next(0,100);
             }
-            this.comp = comp;
         }
 
 
         public void Sort()
         {
-            _strategy.Sort(ref vector, comp);
+            _strategy.Sort(ref vector);
         }
 
         public override string ToString()

@@ -170,6 +170,13 @@ namespace Escape_from_fools
                         {
                             Hero.Move(currentMovement);
                         }
+                       if (Enemies[10].Head.X - Hero.Head.X <= 2 || Enemies[10].Head.Y - Hero.Head.Y <= 2)  //типо погоня
+                        {
+                            Enemies[10].Strategy.patrol = false;
+                            Enemies[10].Strategy.Chase(ref Enemies[10].Head, currentMovement, 'W');
+                        }
+                       else
+                            Enemies[10].Strategy.patrol = true;
                     }
                 }
                 sw.Restart();
@@ -190,14 +197,14 @@ namespace Escape_from_fools
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += Timer_Elapsed;
 
-            Enemies = new Enemy[10];
+            Enemies = new Enemy[11];
             char[] EnemyBody = { '♣', '♠', '♥', '♦' };
             for (int i = 0; i < 10; i++)
             {
                 Enemies[i] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new RandomBehavior(), EnemyBody[rand.Next(0,3)]);
             }
 
-            //Enemies[9] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new ChaseBehavior(), 'X');
+            Enemies[10] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new ChaseBehavior(), 'x');
 
             while (true)
             {
