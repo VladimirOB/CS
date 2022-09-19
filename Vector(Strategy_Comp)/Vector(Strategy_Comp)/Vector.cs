@@ -7,14 +7,6 @@ using System.Threading.Tasks;
 
 namespace Vector_Strategy_Comp_
 {
-    //class Comp : IComparer<int>
-    //{
-    //    public bool Compare(int x, int y)
-    //    {
-    //        return x < y;
-    //    }
-    //}
-
     abstract class Comparator
     {
         public abstract bool Comp(int a, int b);
@@ -24,11 +16,10 @@ namespace Vector_Strategy_Comp_
     {
         public override bool Comp(int a, int b)
         {
-            if( a == b)
-            {
-                return a >= b;
-            }
-            return a > b;
+            if (a > b)
+                return true;
+            else
+                return false;
         }
     }
 
@@ -36,11 +27,10 @@ namespace Vector_Strategy_Comp_
     {
         public override bool Comp(int a, int b)
         {
-            if (a == b)
-            {
-                return a <= b;
-            }
-            return a < b;
+            if (a < b)
+                return true;
+            else
+            return false;
         }
     }
 
@@ -165,7 +155,7 @@ namespace Vector_Strategy_Comp_
             set { if (pos >= 0) vector[pos] = value; else throw new Exception("Incorrect index!"); }
         }
 
-        public Vector(SortStrategy strategy, Comparator comp)
+        public Vector(SortStrategy strategy, Comparator comp) // комп в стратегию
         {
             Random rand = new Random();
             _strategy = strategy;

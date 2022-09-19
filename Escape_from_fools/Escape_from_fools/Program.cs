@@ -25,6 +25,7 @@ namespace Escape_from_fools
         private const int MapHeight = 30;
         static System.Timers.Timer timer;
         public static int time = 0;
+        public static int score = 0;
         private const ConsoleColor BorderColor = ConsoleColor.Gray;
         private const ConsoleColor HeroColor = ConsoleColor.Green;
         private const ConsoleColor EnemyColor = ConsoleColor.Red;
@@ -121,6 +122,16 @@ namespace Escape_from_fools
             }
         }
 
+        static Pixel GenFood(Hero hero)
+        {
+            Pixel food;
+            do
+            {
+                food = new Pixel(rand.Next(2, MapWidth - 3), rand.Next(2, MapHeight - 3), ConsoleColor.Cyan, '☼');
+            } while (hero.Head.X == food.X && hero.Head.Y == food.Y); // продолжать в том случае если еда вдруг попала на положение героя
+            return food;
+        }
+
         static void StartGame(Enemy[] Enemies)
         {
             Clear();
@@ -133,9 +144,9 @@ namespace Escape_from_fools
                 wall[i] = GenWall(Hero);
                 wall[i].Draw();
             }
-           
-                
 
+            Pixel food = GenFood(Hero);
+            food.Draw();
             Stopwatch sw = new Stopwatch();
             while (true)
             {
@@ -144,11 +155,21 @@ namespace Escape_from_fools
                 {
                     while (sw.ElapsedMilliseconds <= FrameMs)
                     {
-                       
                         Direction currentMovement = ReadMovement(Hero, wall);
                         if (Enemies.Any(a => a.Head.X == Hero.Head.X && a.Head.Y == Hero.Head.Y))
                             break;
-                        Hero.Move(currentMovement);
+                        if (Hero.Head.X == food.X && Hero.Head.Y == food.Y)
+                        {
+                            Hero.Move(currentMovement);
+                            food = GenFood(Hero); // генерация новой еды
+                            food.Draw();
+                            score++;
+                            Task.Run(() => Beep(1200, 200)); // в отдельном потоке звук
+                        }
+                        else
+                        {
+                            Hero.Move(currentMovement);
+                        }
                     }
                 }
                 sw.Restart();
@@ -168,12 +189,15 @@ namespace Escape_from_fools
             CursorVisible = false;
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += Timer_Elapsed;
+
             Enemies = new Enemy[10];
             char[] EnemyBody = { '♣', '♠', '♥', '♦' };
             for (int i = 0; i < 10; i++)
             {
                 Enemies[i] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new RandomBehavior(), EnemyBody[rand.Next(0,3)]);
             }
+
+            //Enemies[9] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new ChaseBehavior(), 'X');
 
             while (true)
             {
@@ -182,7 +206,10 @@ namespace Escape_from_fools
                 timer.Stop();
                 SetCursorPosition(MapWidth /2-4, MapHeight / 2+1);
                 WriteLine($"Time: {time}");
+                SetCursorPosition(MapWidth / 2 - 4, MapHeight / 2 + 2);
+                WriteLine($"Score: {score}");
                 time = 0;
+                score = 0;
                 Thread.Sleep(1000);
                 ReadKey();
             }

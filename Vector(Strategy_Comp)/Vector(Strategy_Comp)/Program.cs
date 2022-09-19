@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Xml.Linq;
-
 namespace Vector_Strategy_Comp_
 {
     class MainApp
