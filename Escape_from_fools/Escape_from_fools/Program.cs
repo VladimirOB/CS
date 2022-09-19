@@ -30,6 +30,7 @@ namespace Escape_from_fools
         private const ConsoleColor EnemyColor = ConsoleColor.Red;
         private const int FrameMs = 200; // перерыв между кадрами
         private static readonly Random rand = new Random();
+        public static Enemy[] Enemies;
         static void DrawBorder()
         {
             for (int i = 0; i < MapWidth; i++)
@@ -112,7 +113,15 @@ namespace Escape_from_fools
             return wall;
         }
 
-        static void StartGame()
+        static void EnemyMove()
+        {
+            foreach (var Enemy in Enemies)
+            {
+                Enemy.Move();
+            }
+        }
+
+        static void StartGame(Enemy[] Enemies)
         {
             Clear();
             DrawBorder();
@@ -124,26 +133,18 @@ namespace Escape_from_fools
                 wall[i] = GenWall(Hero);
                 wall[i].Draw();
             }
-            Enemy[] Enemies = new Enemy[10];
-            for (int i = 0; i < 10; i++)
-            {
-                Enemies[i] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new RandomBehavior());
-            }
+           
                 
 
             Stopwatch sw = new Stopwatch();
             while (true)
             {
                 sw.Restart();
-
                 if (KeyAvailable)
                 {
                     while (sw.ElapsedMilliseconds <= FrameMs)
                     {
-                        foreach (var Enemy in Enemies)
-                        {
-                            Enemy.Move();
-                        }
+                       
                         Direction currentMovement = ReadMovement(Hero, wall);
                         if (Enemies.Any(a => a.Head.X == Hero.Head.X && a.Head.Y == Hero.Head.Y))
                             break;
@@ -167,11 +168,17 @@ namespace Escape_from_fools
             CursorVisible = false;
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += Timer_Elapsed;
+            Enemies = new Enemy[10];
+            char[] EnemyBody = { '♣', '♠', '♥', '♦' };
+            for (int i = 0; i < 10; i++)
+            {
+                Enemies[i] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new RandomBehavior(), EnemyBody[rand.Next(0,3)]);
+            }
 
             while (true)
             {
                 timer.Start();
-                StartGame();
+                StartGame(Enemies);
                 timer.Stop();
                 SetCursorPosition(MapWidth /2-4, MapHeight / 2+1);
                 WriteLine($"Time: {time}");
@@ -186,6 +193,7 @@ namespace Escape_from_fools
             SetCursorPosition(MapWidth/2-4, 0);
             WriteLine($"Time: {time}");
             time++;
+            EnemyMove();
         }
     }
 }
