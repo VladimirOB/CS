@@ -8,7 +8,7 @@ namespace Escape_from_fools
 {
     public struct Pixel
     {
-        private char PixelChar = '█';
+        public char PixelChar = '█';
 
         public int X { get; }
         public int Y { get; }

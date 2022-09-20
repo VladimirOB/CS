@@ -3,7 +3,7 @@
     internal class Program
     {
 
-        interface IHasInfo // интерфейс по сути тот же абстрактный класс
+        interface IHasInfo
         {
             void ShowInfo();
         }
@@ -53,7 +53,7 @@
         {
             public override int Damage => 3; // лямбда выражение
 
-            public override void Fire() // override работает и с virtual и с abstract
+            public override void Fire()
             {
                 //throw new NotImplementedException(); 
                 Console.WriteLine("пуньк");
@@ -127,10 +127,10 @@
 
             Weapon[] inventory = { new Gun(), new LaserGun(), new Bow() }; // массив со всеми видами
 
-            foreach (var item in inventory)
+            foreach (var weapon in inventory)
             {
-                player.ChechInfo(item);
-                player.Fire(item);
+                player.ChechInfo(weapon);
+                player.Fire(weapon);
                 Console.WriteLine();
             }
             player.ChechInfo(new Box()); // передали коробку

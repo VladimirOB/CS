@@ -28,10 +28,12 @@ namespace Escape_from_fools
         public static int score = 0;
         private const ConsoleColor BorderColor = ConsoleColor.Gray;
         private const ConsoleColor HeroColor = ConsoleColor.Green;
-        private const ConsoleColor EnemyColor = ConsoleColor.Red;
+        private const ConsoleColor EnemyColor = ConsoleColor.Blue;
         private const int FrameMs = 200; // перерыв между кадрами
-        private static readonly Random rand = new Random();
+        private static Random rand = new Random();
         public static Enemy[] Enemies;
+        public static Pixel[] wall;
+        public static Direction currentMovement;
         static void DrawBorder()
         {
             for (int i = 0; i < MapWidth; i++)
@@ -109,26 +111,43 @@ namespace Escape_from_fools
             {
                 wall = new Pixel(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), BorderColor, '█');
             }
-            while (hero.Head.X == wall.X && hero.Head.Y == wall.Y); // продолжать в том случае если еда вдруг попала на положение головы или тела
+            while (hero.Head.X == wall.X && hero.Head.Y == wall.Y); // создаёт стенку в том случае, если она не попала на героя
 
             return wall;
+        }
+
+        static void CheckWall() // если утварь схавала стенку - удаляем её.
+        {
+            wall = wall.Where(val => val.PixelChar != ' ').ToArray();
+            for (int i = 0; i < wall.Length; i++)
+            {
+                if (Enemies.Any(b => b.Head.X == wall[i].X && b.Head.Y == wall[i].Y))
+                {
+                    wall[i].PixelChar = ' ';
+                }
+            }
         }
 
         static void EnemyMove()
         {
             foreach (var Enemy in Enemies)
             {
+                if(Enemy.Strategy.GetType().Name == "ChaseBehavior")
+                {
+                    if (Enemy.Strategy.patrol == false)
+                        Enemy.Strategy.Chase(ref Enemy.Head, currentMovement, '♦');
+                }
                 Enemy.Move();
             }
         }
 
-        static Pixel GenFood(Hero hero)
+        static Pixel GenFood(Hero hero, Pixel[] wall)
         {
             Pixel food;
             do
             {
                 food = new Pixel(rand.Next(2, MapWidth - 3), rand.Next(2, MapHeight - 3), ConsoleColor.Cyan, '☼');
-            } while (hero.Head.X == food.X && hero.Head.Y == food.Y); // продолжать в том случае если еда вдруг попала на положение героя
+            } while (wall.Any(b => b.Y == food.Y && b.X == food.X) || hero.Head.X == food.X && hero.Head.Y == food.Y); // продолжать в том случае если еда вдруг попала на положение героя
             return food;
         }
 
@@ -136,16 +155,15 @@ namespace Escape_from_fools
         {
             Clear();
             DrawBorder();
-            Pixel[] wall = new Pixel[70];
             var Hero = new Hero(rand.Next(2, MapWidth-2), rand.Next(2, MapHeight-2), HeroColor);
-
-            for (int i = 0; i < 70; i++)
+            wall = new Pixel[100];
+            for (int i = 0; i < 100; i++)
             {
                 wall[i] = GenWall(Hero);
                 wall[i].Draw();
             }
 
-            Pixel food = GenFood(Hero);
+            Pixel food = GenFood(Hero, wall);
             food.Draw();
             Stopwatch sw = new Stopwatch();
             while (true)
@@ -155,13 +173,13 @@ namespace Escape_from_fools
                 {
                     while (sw.ElapsedMilliseconds <= FrameMs)
                     {
-                        Direction currentMovement = ReadMovement(Hero, wall);
+                        currentMovement = ReadMovement(Hero, wall);
                         if (Enemies.Any(a => a.Head.X == Hero.Head.X && a.Head.Y == Hero.Head.Y))
                             break;
                         if (Hero.Head.X == food.X && Hero.Head.Y == food.Y)
                         {
                             Hero.Move(currentMovement);
-                            food = GenFood(Hero); // генерация новой еды
+                            food = GenFood(Hero, wall); // генерация новой еды
                             food.Draw();
                             score++;
                             Task.Run(() => Beep(1200, 200)); // в отдельном потоке звук
@@ -170,12 +188,14 @@ namespace Escape_from_fools
                         {
                             Hero.Move(currentMovement);
                         }
-                       if (Enemies[10].Head.X - Hero.Head.X <= 2 || Enemies[10].Head.Y - Hero.Head.Y <= 2)  //типо погоня
+
+                        if ((Enemies[10].Head.X - Hero.Head.X < 5 && Enemies[10].Head.X - Hero.Head.X > -5) && 
+                             Enemies[10].Head.Y - Hero.Head.Y < 5 && Enemies[10].Head.Y - Hero.Head.Y > -5)  //типо погоня
                         {
                             Enemies[10].Strategy.patrol = false;
-                            Enemies[10].Strategy.Chase(ref Enemies[10].Head, currentMovement, 'W');
+                            Enemies[10]._headColor = ConsoleColor.Red;
                         }
-                       else
+                        else
                             Enemies[10].Strategy.patrol = true;
                     }
                 }
@@ -188,7 +208,6 @@ namespace Escape_from_fools
             WriteLine("Game over!");
         }
 
-        
         static void Main()
         {
             SetWindowSize(MapWidth, MapHeight);
@@ -198,13 +217,13 @@ namespace Escape_from_fools
             timer.Elapsed += Timer_Elapsed;
 
             Enemies = new Enemy[11];
-            char[] EnemyBody = { '♣', '♠', '♥', '♦' };
+            //char[] EnemyBody = { '♣', '♠', '♥', '♦' };
             for (int i = 0; i < 10; i++)
             {
-                Enemies[i] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new RandomBehavior(), EnemyBody[rand.Next(0,3)]);
+                Enemies[i] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new RandomBehavior(), '♣');
             }
 
-            Enemies[10] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new ChaseBehavior(), 'x');
+            Enemies[10] = new Enemy(rand.Next(2, MapWidth - 2), rand.Next(2, MapHeight - 2), EnemyColor, new ChaseBehavior(), '♥');
 
             while (true)
             {
@@ -228,6 +247,7 @@ namespace Escape_from_fools
             WriteLine($"Time: {time}");
             time++;
             EnemyMove();
+            CheckWall();
         }
     }
 }

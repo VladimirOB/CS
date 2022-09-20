@@ -10,6 +10,7 @@ namespace Escape_from_fools
     {
         public bool patrol;
         public abstract void Move(ref Pixel Head, char body);
+
         public abstract void Chase(ref Pixel Head, Direction direction, char body);
     }
 
@@ -18,25 +19,29 @@ namespace Escape_from_fools
 
         Direction direction;
         Random random = new Random();
+
         public override void Move(ref Pixel Head, char body)
         {
-            Head.Clear();
-            direction = (Direction)random.Next(0, 4);
-            Head = direction switch
+            if (!patrol)
             {
-                Direction.Right when Head.X != 57 => new Pixel(Head.X + 1, Head.Y, ConsoleColor.Red, body),
-                Direction.Left when Head.X != 2 => new Pixel(Head.X - 1, Head.Y, ConsoleColor.Red, body),
-                Direction.Up when Head.Y != 1 => new Pixel(Head.X, Head.Y - 1, ConsoleColor.Red, body),
-                Direction.Down when Head.Y != 28 => new Pixel(Head.X, Head.Y + 1, ConsoleColor.Red, body),
-                Direction.Stay => new Pixel(Head.X, Head.Y, ConsoleColor.Red, body),
-                _ => Head
+                Head.Clear();
+                direction = (Direction)random.Next(0, 4);
+                Head = direction switch
+                {
+                    Direction.Right when Head.X != 57 => new Pixel(Head.X + 1, Head.Y, ConsoleColor.Blue, body),
+                    Direction.Left when Head.X != 2 => new Pixel(Head.X - 1, Head.Y, ConsoleColor.Blue, body),
+                    Direction.Up when Head.Y != 1 => new Pixel(Head.X, Head.Y - 1, ConsoleColor.Blue, body),
+                    Direction.Down when Head.Y != 28 => new Pixel(Head.X, Head.Y + 1, ConsoleColor.Blue, body),
+                    Direction.Stay => new Pixel(Head.X, Head.Y, ConsoleColor.Blue, body),
+                    _ => Head
 
-            };
-            Head.Draw();
+                };
+                Head.Draw();
+            }
         }
         public override void Chase(ref Pixel Head, Direction direction, char body)
         {
-           
+
         }
     }
 
@@ -47,7 +52,7 @@ namespace Escape_from_fools
         Random random = new Random();
         public override void Move(ref Pixel Head, char body)
         {
-            if(patrol)
+            if(patrol == true)
             {
                 Head.Clear();
                 direction = (Direction)random.Next(0, 4);
@@ -70,10 +75,10 @@ namespace Escape_from_fools
             Head.Clear();
             Head = direction switch
             {
-                Direction.Right when Head.X != 57 => new Pixel(Head.X + 1, Head.Y, ConsoleColor.Red, body),
-                Direction.Left when Head.X != 2 => new Pixel(Head.X - 1, Head.Y, ConsoleColor.Red, body),
-                Direction.Up when Head.Y != 1 => new Pixel(Head.X, Head.Y - 1, ConsoleColor.Red, body),
-                Direction.Down when Head.Y != 28 => new Pixel(Head.X, Head.Y + 1, ConsoleColor.Red, body),
+                Direction.Right when Head.X != 57 => new Pixel(Head.X - 1, Head.Y, ConsoleColor.Red, body),
+                Direction.Left when Head.X != 2 => new Pixel(Head.X + 1, Head.Y, ConsoleColor.Red, body),
+                Direction.Up when Head.Y != 1 => new Pixel(Head.X, Head.Y + 1, ConsoleColor.Red, body),
+                Direction.Down when Head.Y != 28 => new Pixel(Head.X, Head.Y - 1, ConsoleColor.Red, body),
                 Direction.Stay => new Pixel(Head.X, Head.Y, ConsoleColor.Red, body),
                 _ => Head
 
@@ -82,12 +87,43 @@ namespace Escape_from_fools
         }
     }
 
+    class NewBehavior : Strategy
+    {
+        bool patrol = true;
+        Direction direction;
+        Random random = new Random();
+        public override void Move(ref Pixel Head, char body)
+        {
+            if (patrol)
+            {
+                Head.Clear();
+                direction = (Direction)random.Next(0, 4);
+                Head = direction switch
+                {
+                    Direction.Right when Head.X != 57 => new Pixel(Head.X + 1, Head.Y, ConsoleColor.Red, body),
+                    Direction.Left when Head.X != 2 => new Pixel(Head.X - 1, Head.Y, ConsoleColor.Red, body),
+                    Direction.Up when Head.Y != 1 => new Pixel(Head.X, Head.Y - 1, ConsoleColor.Red, body),
+                    Direction.Down when Head.Y != 28 => new Pixel(Head.X, Head.Y + 1, ConsoleColor.Red, body),
+                    Direction.Stay => new Pixel(Head.X, Head.Y, ConsoleColor.Red, body),
+                    _ => Head
+
+                };
+                Head.Draw();
+            }
+        }
+
+        public override void Chase(ref Pixel Head, Direction direction, char body)
+        {
+            
+        }
+    }
+
 
     class Enemy
     {
         Strategy strategy;
 
-        private readonly ConsoleColor _headColor;
+        public ConsoleColor _headColor;
 
         public Pixel Head;
         public char Body;
