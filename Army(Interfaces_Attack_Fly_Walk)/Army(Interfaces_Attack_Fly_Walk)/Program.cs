@@ -38,6 +38,9 @@
                 ((IFly)fly).Move(3,1,2);
             }
 
+            Army soldier = new Army();
+            soldier.Fire(new AK47());
+
         }
     }
 }

@@ -13,6 +13,11 @@ namespace Army_Interfaces_Attack_Fly_Walk_
 
         public double this[int pos] => 5;
 
+        public void Fire(IWeapon weapon)
+        {
+            weapon.Fire();
+        }
+
         public void Attack(int x, int y)
         {
             Console.Write($"{GetType().Name} : ");

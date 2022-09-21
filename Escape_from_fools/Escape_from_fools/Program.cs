@@ -27,7 +27,7 @@ namespace Escape_from_fools
         public static int time = 0;
         public static int score = 0;
         private const ConsoleColor BorderColor = ConsoleColor.Gray;
-        private const ConsoleColor HeroColor = ConsoleColor.Green;
+        private const ConsoleColor HeroColor = ConsoleColor.DarkGreen;
         private const ConsoleColor EnemyColor = ConsoleColor.Blue;
         private const int FrameMs = 200; // перерыв между кадрами
         private static Random rand = new Random();
@@ -132,12 +132,13 @@ namespace Escape_from_fools
         {
             foreach (var Enemy in Enemies)
             {
-                if(Enemy.Strategy.GetType().Name == "ChaseBehavior")
+                if (Enemy.Strategy.patrol == 1)
                 {
-                    if (Enemy.Strategy.patrol == false)
-                        Enemy.Strategy.Chase(ref Enemy.Head, currentMovement, '♦');
+                    Enemy.Strategy.Chase(ref Enemy.Head, currentMovement,'♦', ConsoleColor.Red);
                 }
+
                 Enemy.Move();
+                
             }
         }
 
@@ -146,7 +147,7 @@ namespace Escape_from_fools
             Pixel food;
             do
             {
-                food = new Pixel(rand.Next(2, MapWidth - 3), rand.Next(2, MapHeight - 3), ConsoleColor.Cyan, '☼');
+                food = new Pixel(rand.Next(2, MapWidth - 3), rand.Next(2, MapHeight - 3), ConsoleColor.Magenta, '☼');
             } while (wall.Any(b => b.Y == food.Y && b.X == food.X) || hero.Head.X == food.X && hero.Head.Y == food.Y); // продолжать в том случае если еда вдруг попала на положение героя
             return food;
         }
@@ -186,17 +187,23 @@ namespace Escape_from_fools
                         }
                         else
                         {
+                            Enemies[10].Strategy.patrol = 0;
                             Hero.Move(currentMovement);
                         }
-
-                        if ((Enemies[10].Head.X - Hero.Head.X < 5 && Enemies[10].Head.X - Hero.Head.X > -5) && 
-                             Enemies[10].Head.Y - Hero.Head.Y < 5 && Enemies[10].Head.Y - Hero.Head.Y > -5)  //типо погоня
+                        if (Enemies.Any(b=>b.Strategy.GetType().Name == "ChaseBehavior"))
                         {
-                            Enemies[10].Strategy.patrol = false;
-                            Enemies[10]._headColor = ConsoleColor.Red;
+                            if ((Enemies[10].Head.X - Hero.Head.X < 5 && Enemies[10].Head.X - Hero.Head.X > -5) &&
+                             Enemies[10].Head.Y - Hero.Head.Y < 5 && Enemies[10].Head.Y - Hero.Head.Y > -5)  //типо погоня
+                            {
+                                Enemies[10].Strategy.patrol += 1;
+                                Enemies[10]._headColor = ConsoleColor.Red;
+                            }
+                            else
+                            {
+                                Enemies[10]._headColor = EnemyColor;
+                                Enemies[10].Strategy.patrol = 0;
+                            }
                         }
-                        else
-                            Enemies[10].Strategy.patrol = true;
                     }
                 }
                 sw.Restart();
