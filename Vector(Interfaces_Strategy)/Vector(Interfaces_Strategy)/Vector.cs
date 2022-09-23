@@ -36,7 +36,7 @@ namespace Vector_Interfaces_Strategy_
 
     interface ISortStrategy
     {
-        public void Sort(ref int[] num);
+        public void Sort(int[] num);
     }
 
     //abstract class SortStrategy
@@ -52,7 +52,7 @@ namespace Vector_Interfaces_Strategy_
         {
             this.comp = comp;
         }
-        public void Sort(ref int[] num)
+        public void Sort(int[] num)
         {
             this.comp = comp;
             QSort(num, 0, num.Length - 1);
@@ -103,7 +103,7 @@ namespace Vector_Interfaces_Strategy_
         {
             this.comp = comp;
         }
-        public void Sort(ref int[] num)
+        public void Sort(int[] num)
         {
             int temp;
             for (int i = 1; i < num.Length; i++)
@@ -130,7 +130,7 @@ namespace Vector_Interfaces_Strategy_
         {
             this.comp = comp;
         }
-        public void Sort(ref int[] num)
+        public void Sort(int[] num)
         {
 
             int i, j, k, temp;
@@ -190,7 +190,7 @@ namespace Vector_Interfaces_Strategy_
 
         public void Sort()
         {
-            _strategy.Sort(ref vector);
+            _strategy.Sort(vector);
         }
 
         public override string ToString()

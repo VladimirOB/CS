@@ -17,15 +17,16 @@ namespace Calc_Delegates_
         double result;
         public Application()
         {
-            m1 = Plus;
-            menu.Add('1', "Plus", m1);
-            m1 = Minus;
-            menu.Add('2', "Minus", m1);
+            menu.Add('1', "Plus", new Deleg(Plus));
+            menu.Add('2', "Minus", Minus);
             m1 = Multiply;
             menu.Add('3', "Multiply", m1);
             m1 = Divide;
             menu.Add('4', "Divide", m1);
+            menu.Add('5', "Exit", ()=>Environment.Exit(0));
         }
+
+        
         void DataInput()
         {
             Console.Clear();
@@ -37,6 +38,7 @@ namespace Calc_Delegates_
                 Console.ReadKey();
                 DataInput();
             }
+
             Console.WriteLine("Please, enter a second number: ");
             temp = Console.ReadLine();
             if (!double.TryParse(temp, out b))

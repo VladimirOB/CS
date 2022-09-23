@@ -42,6 +42,7 @@ namespace Calc_Delegates_
                         Deleg m1 = current.handler;
                         // запуск метода класса Application, на который указывает указатель handler
                         m1();
+                        break;
                     }
                 }
 
