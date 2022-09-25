@@ -119,7 +119,6 @@ namespace Mozgovoi_M.B_
                         isRuning = false;
                         Environment.Exit(0);
                     }
-                        
                 }
                 if(isRuning)
                 {
