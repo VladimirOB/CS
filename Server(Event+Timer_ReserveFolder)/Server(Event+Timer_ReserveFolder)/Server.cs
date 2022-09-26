@@ -9,18 +9,20 @@ using System.Threading.Tasks;
 namespace Server_Event_Timer_ReserveFolder_
 {
 
-    delegate int Subscriber(FileInfo current, uint timerCnt);
+    delegate int Subscriber(FileInfo current);
+    delegate int SubscriberTimer(System.Timers.Timer timer);
 
     class Server
     {
         //переменная-списка адресов функций (event)
         protected event Subscriber subscribers;
+        protected event SubscriberTimer subscriberTimer;
         System.Timers.Timer timer;
         DirectoryInfo dinfo;
         DirectoryInfo dinfoResult;
         HashSet<FileInfo> filesTemp;
         HashSet<FileInfo> files;
-        uint timerCnt = 0;
+        // попробовать HashMap
         string sourceDir;
         string backupDir;
         public Server(string path)
@@ -43,15 +45,23 @@ namespace Server_Event_Timer_ReserveFolder_
 
         private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            timerCnt++;
-            Console.WriteLine($"Time: {timerCnt}");
             StartEvent();
+            TimerEvent();
         }
 
         //метод, подписывающий клиентские классы на сообщ.
         public void Add(Subscriber ev)
         {
             subscribers += ev;
+        }
+        public void AddTimer(SubscriberTimer ev)
+        {
+            subscriberTimer += ev;
+        }
+
+        public void TimerEvent()
+        {
+            subscriberTimer?.Invoke(timer);
         }
 
         public void StartEvent()
@@ -65,19 +75,17 @@ namespace Server_Event_Timer_ReserveFolder_
                 {
                     files.Add(current);
                     File.Copy(Path.Combine(sourceDir, current.Name), Path.Combine(backupDir, current.Name), true);
-                    
-                    subscribers?.Invoke(current, timerCnt);
+                    // добавить дубликаты
+                    subscribers?.Invoke(current);
                 }
             }
-            if (timerCnt == 10)
-                Environment.Exit(0);
         }
     }
 
     class Client1
     {
         // обработчик события
-        public int ShowInfo(FileInfo current, uint timerCnt)
+        public int ShowInfo(FileInfo current)
         {
             int cnt = current.FullName.Length;
             Console.Write($"Server copy {current.Name} to backUpDir");
@@ -93,31 +101,45 @@ namespace Server_Event_Timer_ReserveFolder_
 
     class Client2
     {
+        uint TimerCnt = 0;
         // обработчик события
-        public int shutDownServer(FileInfo current, uint timerCnt)
+        public int shutDownServer(System.Timers.Timer timer)
         {
-            if (timerCnt == 10)
-                Environment.Exit(0);
+            TimerCnt++;
+            Console.WriteLine(TimerCnt);
+            if (TimerCnt == 10)
+            {
+                Console.WriteLine("Press any key.");
+                timer.Stop();
+            }
+               
+            
+                
             return 0;
         }
     }
 
-    class Client3
+    class Client3 : IDisposable
     {
-        // обработчик события
-        public int Log(FileInfo current, uint timerCnt)
+        StreamWriter writer;
+
+        public Client3()
+        {
+            writer = new StreamWriter("../../../../server.log");
+        }
+        public void Dispose()
+        {
+            writer.Close();
+        }
+        public int Log(FileInfo current)
         {
             int cnt = current.FullName.Length;
-            using (StreamWriter writer = File.AppendText("../../../../server.log"))
+            writer.Write(current.Name);
+            for (int i = cnt; i < 40; i++)
             {
-                writer.Write(current.FullName);
-                for (int i = cnt; i < 40; i++)
-                {
-                    writer.Write(" ");
-                }
-                writer.WriteLine($"size: {current.Length}");
+                writer.Write(" ");
             }
-
+            writer.WriteLine($"size: {current.Length}");
             return 0;
         }
 

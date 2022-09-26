@@ -1,6 +1,16 @@
 ﻿using static System.Console;
 namespace Mozgovoi_M.B_
 {
+    /*public override int GetHashCode()
+        {
+            //return base.GetHashCode();
+
+            int hash = 17;
+            hash = (hash * 7) + x.GetHashCode();
+            hash = (hash * 7) + y.GetHashCode();
+            return hash;
+        }*/
+
     class Program
     {
         private const int MapWidth = 60;
@@ -24,8 +34,14 @@ namespace Mozgovoi_M.B_
             //Chapter1_SolarSystem ss = new Chapter1_SolarSystem();
             //ss.Start();
 
-            Chapter1_DefinitionOfPI pi = new Chapter1_DefinitionOfPI();
-            pi.Start();
+            //Chapter1_DefinitionOfPI pi = new Chapter1_DefinitionOfPI();
+            //pi.Start();
+
+            //Chapter1_Life life = new Chapter1_Life();
+            //life.Start();
+
+            //Chapter1_Life_JohnConway lifeJC = new Chapter1_Life_JohnConway();
+            //lifeJC.Start();
         }
     }
 }

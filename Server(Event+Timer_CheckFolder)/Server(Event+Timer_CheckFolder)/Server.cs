@@ -23,7 +23,6 @@ namespace Server_Event_Timer_CheckFolder_
         DirectoryInfo dinfo;
         HashSet<FileInfo> filesTemp;
         HashSet<FileInfo> files;
-        int cntTimer = 0;
         public Server(string path)
         {
             dinfo = new DirectoryInfo(path);
@@ -40,9 +39,6 @@ namespace Server_Event_Timer_CheckFolder_
 
         private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            cntTimer++;
-            if (cntTimer == 100)
-                timer.Stop();
             StartEvent();
         }
 
@@ -57,7 +53,7 @@ namespace Server_Event_Timer_CheckFolder_
             filesTemp = dinfo.GetFiles("*.*", SearchOption.AllDirectories).ToHashSet();
             foreach (FileInfo current in filesTemp)
             {
-                if (!files.Any(a => a.FullName == current.FullName && a.Length == current.Length))
+                if (!files.Any(a => a.FullName == current.FullName && a.LastWriteTime == current.LastWriteTime))
                 {
                     files.Add(current);
                     subscribers?.Invoke(current);
@@ -99,24 +95,33 @@ namespace Server_Event_Timer_CheckFolder_
         }
     }
 
-    class Client3
+    class Client3 : IDisposable
     {
         // обработчик события
+        StreamWriter writer;
+        public Client3()
+        {
+            writer = new StreamWriter("../../../../server.log");
+        }
+
+        public void Dispose()
+        {
+            Console.WriteLine("Destr dispose");
+            writer.Close();
+        }
+        
         public int Log(FileInfo current)
         {
             int cnt = current.FullName.Length;
-            using (StreamWriter writer = File.AppendText("../../../../server.log"))
+            writer.Write(current.FullName);
+            for (int i = cnt; i < 40; i++)
             {
-                writer.Write(current.FullName);
-                for (int i = cnt; i < 40; i++)
-                {
-                    writer.Write(" ");
-                }
-                writer.WriteLine($"size: {current.Length}");
+                writer.Write(" ");
             }
-               
+            writer.WriteLine($"size: {current.Length}");
             return 0;
         }
+
         
     }
 }

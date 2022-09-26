@@ -55,6 +55,12 @@ namespace Mozgovoi_M.B_
                     Console.Write($"Number of experiments: {N}");
                     Console.SetCursorPosition(1, 3);
                     current = (double)4 * N0 / N;
+                    if (current == 3.1415926535897932)
+                    {
+                        Console.WriteLine("Yeees!!!");
+                        isRuning = false;
+                    }
+                        
                     Console.Write($"Сurrent experimental value:{current}");
                     Console.SetCursorPosition(1, 5);
                     sum = sum + 4 * N0 / N;
