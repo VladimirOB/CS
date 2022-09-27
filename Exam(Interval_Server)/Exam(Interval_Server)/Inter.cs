@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Exam_Interval_Server_
 {
+    [Serializable]
     class Inter
     {
         double start;

@@ -35,6 +35,7 @@ namespace Exam_Interval_Server_
     - энумератор, который позволяет перебирать все интервалы в цикле foreach
     - Save, Load -  сохрание, загр в файл
     */
+    [Serializable]
     class Intervals
     {
         List<Inter> intervals;
@@ -62,6 +63,12 @@ namespace Exam_Interval_Server_
 
         public void Add(Inter interval)
         {
+            if(interval.Start > interval.End)
+            {
+                double temp = interval.Start;
+                interval.Start = interval.End;
+                interval.End = temp;
+            }
             intervals.Add(interval);
         }
 
@@ -108,6 +115,7 @@ namespace Exam_Interval_Server_
 
         public Inter? GetLongest()
         {
+            
             Inter temp = new Inter(0, 0);
             foreach (Inter current  in intervals)
             {
@@ -119,7 +127,13 @@ namespace Exam_Interval_Server_
 
         public Inter? GetShortest()
         {
-            return null;
+            Inter temp = intervals[0];
+            foreach (Inter current in intervals)
+            {
+                if (current.End - current.Start < temp.End - temp.Start)
+                    temp = current;
+            }
+            return temp;
         }
 
         public static Intervals operator +(Intervals intervals, Inter inter) // добавление интервала в коллекцию интервалов += авто
@@ -198,6 +212,12 @@ namespace Exam_Interval_Server_
             }
         }
 
+        public void SaveJS()
+        {
+            string res = JsonSerializer.Serialize(this);
+            File.WriteAllText("../../../../db.json", res);
+        }
+
         public void Save(string path)
         {
             try 
@@ -227,7 +247,6 @@ namespace Exam_Interval_Server_
                 for (int i = 0; i < str2.Length; i+=2)
                 {
                     if(i+1 != str2.Length)
-                    if(str2[i] != "")
                     {
                         Add(new Inter(Convert.ToDouble(str2[i]), Convert.ToDouble(str2[i+1])));
                     }
