@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
 namespace Mozgovoi_M.B_
 {
     class Chapter1_SolarSystem

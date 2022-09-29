@@ -1,4 +1,5 @@
 ﻿using static System.Console;
+using System.Drawing;
 namespace Mozgovoi_M.B_
 {
     /*public override int GetHashCode()

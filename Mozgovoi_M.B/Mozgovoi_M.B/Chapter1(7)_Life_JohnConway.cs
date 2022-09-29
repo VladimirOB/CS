@@ -101,10 +101,16 @@ namespace Mozgovoi_M.B_
                                 {
                                     //s = s + Ord(Field[x + i, y +j])
                                     //s = s - Ord(Field[x, y])
-                                    s = s + Convert.ToInt32(Field[x + i, y + j]); // тернальный оператор
 
-                                    if (Field[x, y])
-                                        s++;
+                                    //int temp = Convert.ToInt32(Field[x + i, y + j]); ????????
+                                    //s = (temp > 0) ? s + temp : s;
+                                    //temp = Convert.ToInt32(Field[x, y]);
+                                    //s = (temp > 0) ? s - temp : s;
+
+                                    //z = (x > y) ? x : y; // тернальный оператор
+
+                                    //if (Field[x, y])
+                                    //    s++;
 
                                     if (Field[x, y] == false && s == 3 || (Field[x,y] == true && (s<2) || (s > 3)))
                                     {

@@ -101,34 +101,17 @@ namespace Exam_Interval_Server_
         }
     }
 
-    class Client1 : IReceiver, IDisposable
+    class Client1 : IReceiver
     {
         StreamWriter? sw;
         string path = "../../../../ServerDB.txt";
-        HashSet<string> dictionary = new HashSet<string>();
+        Dictionary<string, int> dictionary = new Dictionary<string, int>();
         SortedSet<string> result = new SortedSet<string>();
         char[] separators = { ' ', '\r', '\n', '\t', ',', '.', '-', '_', '<', '?', '!', ':', ';', '1', '2', '3', '4', '5', '6', '7', '8','9','0', '"' };
 
         public Client1()
         {
             File.WriteAllText(path, "");
-        }
-
-        public void Dispose()
-        {
-            //открыть файл и сортирнуть
-            string str = File.ReadAllText(path);
-            string[] str2 = str.Split(' ', '\r', '\n');
-            foreach (var item in str2)
-            {
-                result.Add(item);
-            }
-            StreamWriter sw2 = new StreamWriter(path);
-            foreach (var item in result)
-            {
-                sw2.WriteLine(item);
-            }
-            sw2.Close();
         }
 
         void IReceiver.OnReceive(HashSet<FileInfo> files)
@@ -142,13 +125,15 @@ namespace Exam_Interval_Server_
                 SourceStr2 = SourceStr2.Where(a => a != "").ToArray();
                 foreach (string word in SourceStr2)
                 {
-                    if (!dictionary.Contains(word))
-                    dictionary.Add(word);
+                    if(dictionary.ContainsKey(word))
+                        dictionary[word] ++;
+                    else
+                    dictionary.Add(word, 1);
                 }
                  
                 foreach (var word in dictionary)
                 {
-                    sw.WriteLine(word);
+                    sw.WriteLine(word.Key + " : " + word.Value);
                 }
             }
             sw.Close();

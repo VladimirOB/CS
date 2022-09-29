@@ -180,18 +180,49 @@ namespace Exam_Interval_Server_
 
         //свойство для чтения bool HasHoles сообщает,
         //содержит ли коллекция интервалов "дыры" внутри, то есть, все ли интервалы перекрывают друг друга
-
+        
+       
         public bool HasHoles
         {
             get
             {
-                for (int i = 0; i < intervals.Count; i++)
+                double start = double.MaxValue;
+                double end = double.MinValue;
+
+                for (int i = 0; i < Count; i++)
                 {
-                    if(i+1 != intervals.Count)
-                    if (intervals[i].End - intervals[i + 1].Start < 0)
-                        return true;
+                    if (intervals[i].Start < start)
+                    {
+                        start = intervals[i].Start;
+                    }
+                    if (intervals[i].End > end)
+                    {
+                        end = intervals[i].End;
+                    }
                 }
-                return false;
+                Dictionary<double, bool> check = new Dictionary<double, bool>();
+                for (double i = start; i < end; i++)
+                {
+                    check.Add(i, false);
+                }
+                for (int i = 0; i < Count; i++)
+                {
+                    for (double k = intervals[i].Start; k < intervals[i].End; k++)
+                    {
+                        if(check.ContainsKey(k))
+                        {
+                            check[k] = true;
+                        }
+                    }
+                }
+                for (double i = start; i < end; i++)
+                {
+                    if (check[i] == false)
+                    {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
 
@@ -200,7 +231,13 @@ namespace Exam_Interval_Server_
         {
             get
             {
-                return intervals[0].Start;
+                double temp = intervals[0].Start;
+                foreach (var item in intervals)
+                {
+                    if (item.Start < temp)
+                        temp = item.Start;
+                }
+                return temp;
             }
         }
 
@@ -208,7 +245,13 @@ namespace Exam_Interval_Server_
         {
             get
             {
-                return intervals[intervals.Count-1].End;
+                double temp = intervals[0].Start;
+                foreach (var item in intervals)
+                {
+                    if (item.Start > temp)
+                        temp = item.Start;
+                }
+                return temp;
             }
         }
 
@@ -260,11 +303,9 @@ namespace Exam_Interval_Server_
 
         public IEnumerator GetEnumerator()
         {
-            string temp;
             foreach (var current in intervals)
             {
-                temp = current.Start.ToString() + " : " + current.End.ToString();
-                yield return temp;
+                yield return $"{current.Start} : {current.End}";
             }
         }
     }

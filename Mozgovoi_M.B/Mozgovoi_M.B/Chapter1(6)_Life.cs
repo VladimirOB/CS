@@ -73,10 +73,16 @@ namespace Mozgovoi_M.B_
                     {
                         for (j = -1; j <= 1; j++)
                         {
-                            s = s + Convert.ToInt32(Field[x + i, y + j]);
 
-                            if (Field[x, y])
-                                s++;
+                            int temp = Convert.ToInt32(Field[x + i, y + j]);
+                            s = (temp > 0) ? s +1 : s +0;
+                            temp = Convert.ToInt32(Field[x, y]);
+                            s = (temp > 0) ? s - temp : s -temp;
+
+                            //s = s + Convert.ToInt32(Field[x + i, y + j]);
+
+                            //if (Field[x, y])
+                            //    s++;
 
                             if (Field[x, y] == false && s > 2)
                             {
