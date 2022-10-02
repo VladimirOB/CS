@@ -7,11 +7,19 @@ namespace Exam_Interval_Server_
         {
             Intervals intervals = new Intervals();
             IntervalsDaughter intervals2 = new IntervalsDaughter();
+            intervals2.Add(new Inter(7.5, 8.2));
+            intervals2.Add(new Inter(1, 3));
             intervals2.Add(new Inter(1, 10));
-            intervals2.Add(new Inter(2, 3));
-            intervals2.Add(new Inter(7, 8));
-            int explic = (int)intervals2;
-            Console.WriteLine(explic);
+
+            Console.WriteLine("Has holes:" + intervals2.HasHoles);
+            foreach (var item in intervals2)
+            {
+                Console.WriteLine(item);
+            }
+
+
+            //int explic = (int)intervals2;
+            //Console.WriteLine(explic);
             
         }
 

@@ -180,51 +180,102 @@ namespace Exam_Interval_Server_
 
         //свойство для чтения bool HasHoles сообщает,
         //содержит ли коллекция интервалов "дыры" внутри, то есть, все ли интервалы перекрывают друг друга
-        
-       
+
+        void sort()
+        {
+            double tS, tE;
+            for (int i = 0; i < intervals.Count-1; i++)
+            {
+                if (intervals[i].Start > intervals[i + 1].Start)
+                {
+                    tS = intervals[i].Start;
+                    intervals[i].Start = intervals[i + 1].Start;
+                    intervals[i + 1].Start = tS;
+                    tE = intervals[i].End;
+                    intervals[i].End = intervals[i + 1].End;
+                    intervals[i + 1].End = tE;
+                    sort();
+                }
+            }
+
+            for (int i = 0; i < intervals.Count-1; i++)
+            {
+                if (intervals[i].Start == intervals[i + 1].Start)
+                {
+                    if (intervals[i].End > intervals[i + 1].End)
+                    {
+                        tE = intervals[i].End;
+                        intervals[i].End = intervals[i + 1].End;
+                        intervals[i + 1].End = tE;
+                        i--;
+                    }
+                }
+            }
+        }
+
         public bool HasHoles
         {
             get
             {
-                double start = double.MaxValue;
-                double end = double.MinValue;
-
-                for (int i = 0; i < Count; i++)
+                sort();
+                double b = intervals[0].End;
+                for (int i = 1; i < intervals.Count; i++)
                 {
-                    if (intervals[i].Start < start)
+                    if (intervals[i].Start > b)
                     {
-                        start = intervals[i].Start;
+                        return true;
                     }
-                    if (intervals[i].End > end)
-                    {
-                        end = intervals[i].End;
-                    }
+                    if (intervals[i].End > b)
+                        b = intervals[i].End;
                 }
-                Dictionary<double, bool> check = new Dictionary<double, bool>();
-                for (double i = start; i < end; i++)
-                {
-                    check.Add(i, false);
-                }
-                for (int i = 0; i < Count; i++)
-                {
-                    for (double k = intervals[i].Start; k < intervals[i].End; k++)
-                    {
-                        if(check.ContainsKey(k))
-                        {
-                            check[k] = true;
-                        }
-                    }
-                }
-                for (double i = start; i < end; i++)
-                {
-                    if (check[i] == false)
-                    {
-                        return false;
-                    }
-                }
-                return true;
+                return false;
             }
         }
+
+
+        //public bool HasHoles
+        //{
+        //    get
+        //    {
+        //        double start = double.MaxValue;
+        //        double end = double.MinValue;
+
+        //        for (int i = 0; i < Count; i++)
+        //        {
+        //            if (intervals[i].Start < start)
+        //            {
+        //                start = intervals[i].Start;
+        //            }
+        //            if (intervals[i].End > end)
+        //            {
+        //                end = intervals[i].End;
+        //            }
+        //        }
+        //        Dictionary<double, bool> check = new Dictionary<double, bool>();
+        //        for (double i = start; i < end; i++)
+        //        {
+        //            check.Add(i, false);
+        //        }
+        //        for (int i = 0; i < Count; i++)
+        //        {
+        //            for (double k = intervals[i].Start; k < intervals[i].End; k++)
+        //            {
+        //                if(check.ContainsKey(k))
+        //                {
+        //                    check[k] = true;
+        //                }
+        //            }
+        //        }
+        //        for (double i = start; i < end; i++)
+        //        {
+        //            if (check[i] == false)
+        //            {
+        //                return false;
+        //            }
+        //        }
+        //        return true;
+        //    }
+        //}
 
         //- свойства для чтения Start, End координаты начала первого и конца последнего по координатам интервала
         public double Start
