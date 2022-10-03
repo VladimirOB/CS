@@ -11,7 +11,7 @@ namespace Observer_Link_
     {
         event Subscriber subscribers;
         Node node1Temp = new Node(0,0);
-        Node node2Temp = new Node(0, 0);
+        Node node2Temp = new Node(0,0);
         Node node1;
         Node node2;
         public Subject(Node node1, Node node2)

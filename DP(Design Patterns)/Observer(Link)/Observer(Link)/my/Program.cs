@@ -21,20 +21,20 @@
 
 		// Wait for user 
 		Console.Read();*/
-    class MainApp
-    {
-        static void Main(string[] args)
-        {
-            Node node1 = new Node(23, 4);
-            Node node2 = new Node(2, 14);
-            Node node3 = new Node(20, 30);
+   // class MainApp
+   // {
+   //     static void Main(string[] args)
+   //     {
+   //         Node node1 = new Node(23, 4);
+   //         Node node2 = new Node(2, 14);
+   //         Node node3 = new Node(20, 30);
 
-            Subject link1 = new Subject(node1, node2);
-            Subject link2 = new Subject(node2, node3);
-            node2.Move(3, 5);
+   //         Subject link1 = new Subject(node1, node2);
+   //         Subject link2 = new Subject(node2, node3);
+   //         node2.Move(3, 5);
 
-			//node2.X = 34;
-            //node2.Y = 54;
-        }
-    }
+			////node2.X = 34;
+   //         //node2.Y = 54;
+   //     }
+   // }
 }

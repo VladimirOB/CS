@@ -12,7 +12,6 @@ namespace Observer_Link_
         int x;
         int y;
         List<Subject> subjects;
-        Subject subject;
         public int X 
         {
             get { return x; }
@@ -57,7 +56,6 @@ namespace Observer_Link_
         public void Update(Subject sub)
         {
             subjects.Add(sub);
-            subject = sub;
         }
 
         public Node Clone()

@@ -20,7 +20,7 @@
         - GetRoute(string from, string to) - нахождение кратчайшего пути на графе по волновому алгоритму*/
         static void GraphList()
         {
-            Graph<string> graph = new Graph<string>("test");
+            Graph<int> graph = new Graph<int>("test");
             //graph.AddVertex("A", 10);
             //graph.AddVertex("B", 20);
             //graph.AddVertex("C", 30);
@@ -33,23 +33,23 @@
             //graph.AddLink("B", "E", "link4", 21);
             //graph.GetRoute("A", "E");
 
-            graph.AddVertex("One", 34);
-            graph.AddVertex("Two", 45);
-            graph.AddVertex("Three", 23);
-            graph.AddVertex("Four", 78);
-            graph.AddVertex("Five", 11);
-            graph.AddVertex("Six", 21);
-            graph.AddLink("One", "Two", "", 7);
-            graph.AddLink("One", "Three", "", 9);
-            graph.AddLink("One", "Six", "", 14);
-            graph.AddLink("Two", "Three", "", 10);
-            graph.AddLink("Two", "Four", "", 15);
-            graph.AddLink("Three", "Four", "", 11);
-            graph.AddLink("Three", "Six", "", 2);
-            graph.AddLink("Four", "Five", "", 6);
-            graph.AddLink("Five", "Six", "", 9);
+            //graph.AddVertex("One", 34);
+            //graph.AddVertex("Two", 45);
+            //graph.AddVertex("Three", 23);
+            //graph.AddVertex("Four", 78);
+            //graph.AddVertex("Five", 11);
+            //graph.AddVertex("Six", 21);
+            //graph.AddLink("One", "Two", "", 7);
+            //graph.AddLink("One", "Three", "", 9);
+            //graph.AddLink("One", "Six", "", 14);
+            //graph.AddLink("Two", "Three", "", 10);
+            //graph.AddLink("Two", "Four", "", 15);
+            //graph.AddLink("Three", "Four", "", 11);
+            //graph.AddLink("Three", "Six", "", 2);
+            //graph.AddLink("Four", "Five", "", 6);
+            //graph.AddLink("Five", "Six", "", 9);
 
-            Graph<string> graph2 = new Graph<string>(graph);
+            //Graph<string> graph2 = new Graph<string>(graph);
             //graph2.AddVertex("One", 34);
             //graph2.AddVertex("Two", 45);
             //graph2.AddVertex("Three", 23);
@@ -67,32 +67,32 @@
             //graph2.AddLink("Four", "Five", "", 6);
             //graph2.AddLink("Five", "Six", "", 9);
 
-            if (graph == graph2)
-                Console.WriteLine("Yes");
-            else
-                Console.WriteLine("No");
+            //if (graph == graph2)
+            //    Console.WriteLine("Yes");
+            //else
+            //    Console.WriteLine("No");
             //graph.VertexConnection("One", "Six");
             //graph.DeleteLink("Two", "Three");
             //graph.PrintLinks("Two");
             //graph.GetRouteDijkstra("One", "Six");
 
-            //graph.AddVertex(1, 34);
-            //graph.AddVertex(2, 45);
-            //graph.AddVertex(3, 23);
-            //graph.AddVertex(4, 78);
-            //graph.AddVertex(5, 11);
-            //graph.AddVertex(6, 21);
-            //graph.AddLink(1, 2, "", 7);
-            //graph.AddLink(1, 3, "", 9);
-            //graph.AddLink(1, 6, "", 14);
-            //graph.AddLink(2, 3, "", 10);
-            //graph.AddLink(2, 4, "", 15);
-            //graph.AddLink(3, 4, "", 11);
-            //graph.AddLink(3, 6, "", 2);
-            //graph.AddLink(4, 5, "", 6);
-            //graph.AddLink(5, 6, "", 9);
+            graph.AddVertex(1, 34);
+            graph.AddVertex(2, 45);
+            graph.AddVertex(3, 23);
+            graph.AddVertex(4, 78);
+            graph.AddVertex(5, 11);
+            graph.AddVertex(6, 21);
+            graph.AddLink(1, 2, "", 7);
+            graph.AddLink(1, 3, "", 9);
+            graph.AddLink(1, 6, "", 14);
+            graph.AddLink(2, 3, "", 10);
+            graph.AddLink(2, 4, "", 15);
+            graph.AddLink(3, 4, "", 11);
+            graph.AddLink(3, 6, "", 2);
+            graph.AddLink(4, 5, "", 6);
+            graph.AddLink(5, 6, "", 9);
 
-            //graph.GetRouteDijkstra(1, 6);
+            graph.GetRouteDijkstra(1, 6);
 
         }
 
