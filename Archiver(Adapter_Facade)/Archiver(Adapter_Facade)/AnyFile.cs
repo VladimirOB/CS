@@ -8,6 +8,8 @@ namespace Archiver_Adapter_Facade_
 {
     abstract class AnyFile
     {
-        public string Extension { get; set; }
+        public string Name { get; set; }
+        public int Size { get; set; }
+        public string Compression { get; set; }
     }
 }
