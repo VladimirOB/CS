@@ -10,60 +10,70 @@ namespace Archiver_Adapter_Facade_
     {
         List<FileInfo> files;
         DirectoryInfo dinfo;
-        List<AnyFile> children;
+
+        public Dictionary<string, ArchiverAlgorihtm> algorithms;
 
         public Archiver()
         {
             files = new List<FileInfo>();
-            children = new List<AnyFile>();
+            algorithms = new Dictionary<string, ArchiverAlgorihtm>();
         }
         
-        void Add(AnyFile file)
+        void Add(string mask, ArchiverAlgorihtm file)
         {
-            children.Add(file);
+            algorithms.Add(mask, file);
         }
 
-        public void ScanDir(string path)
+        
+
+        public void ZipFolder(string path)
         {
             dinfo = new DirectoryInfo(path);
             files = dinfo.GetFiles("*.*", SearchOption.AllDirectories).ToList();
-            foreach (var current in files)
+            foreach (var item in files)
             {
-                if(current.Extension == ".txt")
+                foreach (var current in algorithms)
                 {
-                    children.Add(new MyTextFile((int)current.Length, current.Name));
+                    if(item.Extension.Equals(current.Key))
+                    {
+                        current.Value.Compress(item.Name);
+                    }
                 }
-                if (current.Extension == ".jpg" || current.Extension == ".bmp" || current.Extension == ".png")
+            }
+           
+        }
+
+        public void ZipFile(string path)
+        {
+            FileInfo file = new FileInfo(path);
+            foreach (var item in algorithms)
+            {
+                if(file.Extension.Equals(item.Key))
                 {
-                    children.Add(new MyImageFile((int)current.Length, current.Name));
+                    item.Value.Compress(file.Name);
                 }
-                if (current.Extension == ".mp3" || current.Extension == ".wav" || current.Extension == ".mid")
+            }
+        }
+        public void UnZipFile(string path)
+        {
+            FileInfo file = new FileInfo(path);
+            foreach (var item in algorithms)
+            {
+                if (file.Extension.Equals(item.Key))
                 {
-                    children.Add(new MySoundFile((int)current.Length, current.Name));
+                    item.Value.DeCompress(file.Name);
                 }
             }
         }
 
-        public void Test()
+        public override string ToString()
         {
-            foreach (var item in children)
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in algorithms)
             {
-                (item as MyTextFile)?.textFile.Print();
+                sb.Append(item.Value);
             }
-        }
-
-        public void Print()
-        {
-            foreach (var item in children)
-            {
-                int cnt = item.Name.Length + item.Compression.Length;
-                Console.Write(item.Name + " " + item.Compression);
-                for (int i = cnt; i < 48; i++)
-                {
-                    Console.Write(" ");
-                }
-                Console.WriteLine($"size: {item.Size}");
-            }
+            return sb.ToString();
         }
     }
 }

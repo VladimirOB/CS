@@ -22,12 +22,23 @@ namespace Analizer_Reflection_
 
         public void Print()
         {
-            Console.WriteLine(title);
+            Console.WriteLine($"Title: {title}");
             Console.WriteLine($"x = {x}, y = {y}");
             Console.WriteLine($"height = {height}, width {wigth}");
-            Console.WriteLine(text);
+            Console.WriteLine($"Text: {text}");
             Console.WriteLine($"Is button up = {isButtonUp}");
         }
+        protected static void TextExt(Button button, string newText)
+        {
+            Console.WriteLine("TextExt");
+            button.text = "123";
+        }
+
+        void SetText(string newText)
+        {
+            TextExt(this, newText);
+        }
+
 
         void set(int a, int b)
         {
@@ -53,6 +64,16 @@ namespace Analizer_Reflection_
         {
             Console.WriteLine("push button");
             isButtonUp = flag;
+        }
+
+        void test(int a, double b, string c)
+        {
+            Console.WriteLine("qwert");
+            x = a;
+            height = b;
+            Console.WriteLine($"x = {x}");
+            Console.WriteLine($"height = {height}");
+            title = c;
         }
 
     }
@@ -153,9 +174,6 @@ namespace Analizer_Reflection_
                         m.Invoke(obj, arg);
                     }
                 }
-
-
-
             }
         }
     }

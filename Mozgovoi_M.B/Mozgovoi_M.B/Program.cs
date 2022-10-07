@@ -23,8 +23,8 @@ namespace Mozgovoi_M.B_
             SetBufferSize(MapWidth, MapHeight);
             CursorVisible = false;
 
-            //Chapter1_GasMolecule gm = new Chapter1_GasMolecule();
-            //gm.Start();
+            Chapter1_GasMolecule gm = new Chapter1_GasMolecule();
+            gm.Start();
 
             //Chapter1_Equilibrium gm = new Chapter1_Equilibrium();
             //gm.Start();

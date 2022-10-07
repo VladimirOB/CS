@@ -168,9 +168,9 @@ namespace Mozgovoi_M.B_
                         else
                             mol[i].wasCollision = false;
                     }
-                    Console.SetCursorPosition((int)Math.Round(Xb - Rb), (int)Math.Round(Yb - Rb));
-                    Console.Write(" ");
-                    //CleanBrownian();// стираем частицу
+                    //Console.SetCursorPosition((int)Math.Round(Xb - Rb), (int)Math.Round(Yb - Rb));
+                    //Console.Write(" ");
+                    CleanBrownian();// стираем частицу
                     Xb = Xb + Vxb; // сдвигаем на новую позицию
                     Yb = Yb + Vyb;
 
@@ -195,9 +195,9 @@ namespace Mozgovoi_M.B_
                         Yb = Rb;
                         Vyb = -Vyb;
                     }
-                    Console.SetCursorPosition((int)Math.Round(Xb - Rb), (int)Math.Round(Yb - Rb));
-                    Console.Write("☻");
-                    //DrawBrownian();
+                    //Console.SetCursorPosition((int)Math.Round(Xb - Rb), (int)Math.Round(Yb - Rb));
+                    //Console.Write("☻");
+                    DrawBrownian();
                 }
                 Thread.Sleep(50);
             }
