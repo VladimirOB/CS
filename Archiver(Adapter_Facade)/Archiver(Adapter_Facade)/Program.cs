@@ -29,8 +29,6 @@
             ar.algorithms.Add(".wav", encryption);
             ar.algorithms.Add(".txt", ri);
             ar.algorithms.Add(".jpg", com);
-            //ar.ZipFile("V:/temp/test.txt");
-            Console.WriteLine();
             ar.ZipFolder("V:/temp");
 
         }

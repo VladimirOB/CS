@@ -15,15 +15,15 @@ namespace Archiver_Adapter_Facade_
             Length = x;
         }
 
-        public void Pack(string name)
+        public void Pack(FileInfo file)
         {
-            Console.Write(name);
+            Console.Write(file.Name);
             Console.WriteLine(" : LZW Pack");
         }
 
-        public void UnPack(string name)
+        public void UnPack(FileInfo file)
         {
-            Console.Write(name);
+            Console.Write(file.Name);
             Console.WriteLine(" : LZW UnPack");
         }
 

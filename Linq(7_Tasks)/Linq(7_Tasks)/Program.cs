@@ -35,36 +35,26 @@ namespace Linq_7_Tasks_
         public static int NumberOfOccurrences(int[] arr, int n) => arr.Count(number => n.ToString().Contains(number.ToString())); // 1
 
         public static double GetUnique(double[] arr) => arr.GroupBy(x => x).Where(g => g.Count() < 2).Select(y => y.Key).First(); // 2 Single?
-       
+
         public static string RemoveDuplicateWords(string str) => string.Join(' ', str.Split(' ').Distinct()); // 3
 
-        public static char[] Solve(string str) => str.Select(x => char.IsDigit(x) ? x : ' ').ToArray(); // 4
+        public static string Solve(string str) => string.Join("", str.Select(x => char.IsDigit(x) ? x : ' ').ToArray()).Split(' ').Max(a=> a); // 4
+      
+        public static string ReverseWords(string str) => string.Join(" ",string.Join("", str.Reverse()).Split(' ').Reverse()); // 5
 
-        public static IEnumerable ReverseWords(string str) => string.Join("", str.Reverse()).Split(' ').Reverse(); // 5
+        public static string MakeString(string str) => string.Join("",str.Split(' ').Select(a => a.First())); //6
 
-        public static IEnumerable<int> Capitals(string str) => from ch in str.ToArray() where (Char.IsUpper(ch)) orderby str select str.IndexOf(ch);
-        public static IEnumerable MakeString(string str) => str.Split(' ').Select(a => a.First());
+        public static string Capitals(string str) => string.Join(" ", from ch in str where (char.IsUpper(ch)) orderby str select str.IndexOf(ch)); // 7
 
-        static void Main(string[] args)
+        static void Main()
         {
-            //Console.WriteLine($"Task 1 = " + NumberOfOccurrences(new int[] { 1, 0, 2, 2, 3 }, 0));
-            //Console.WriteLine($"Task 2 = " + GetUnique(new double[] { 1, 1, 0.1, 1, 1 }));
-            //Console.WriteLine($"Task 3 = " + RemoveDuplicateWords("Hello big world big Hello"));
-
-            //Console.Write("Task 4 = ");
-            //string str4 = new string(Solve("12hello987big89world"));
-            //string[] str44 = str4.Split(' ');
-            //Console.WriteLine(str44.Max(a=>a));
-
-            //Console.Write("Task 5 = ");
-            //var str5 = ReverseWords("Hello big world");
-            //foreach (var item in str5)
-            //{
-            //    Console.Write(item + " ");
-            //}
-
-            //var makeString = MakeString("Miru Mir"); Console.Write("\nTask 6 = "); foreach (var item in makeString) { Console.Write(item); } Console.WriteLine();
-            //var arr = Capitals("Hello World"); Console.Write("Task 7 = "); foreach (var item in arr) { Console.Write(item + " "); }
+            Console.WriteLine($"Task 1 = {NumberOfOccurrences(new int[] { 1, 0, 2, 2, 3 }, 0)}");
+            Console.WriteLine($"Task 2 = {GetUnique(new double[] { 1, 1, 0.1, 1, 1 })}");
+            Console.WriteLine($"Task 3 = {RemoveDuplicateWords("Hello big world big Hello")}");
+            Console.WriteLine($"Task 4 = {Solve("12hello987big89world")}");
+            Console.WriteLine($"Task 5 = {ReverseWords("Hello big world")}");
+            Console.WriteLine($"Task 6 = {MakeString("Miru Mojno Mir")}");
+            Console.WriteLine($"Task 7 = {Capitals("Hello World")}");
         }
     }
 }

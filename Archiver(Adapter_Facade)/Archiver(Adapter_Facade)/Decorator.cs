@@ -27,22 +27,22 @@ namespace Archiver_Adapter_Facade_
     {
         public Encryption(ArchiverAlgorihtm component) : base(component){ }
 
-        public override void Compress(string filename)
+        public override void Compress(FileInfo file)
         {
-            component.Compress(filename);
+            component.Compress(file);
             Operation();
         }
 
-        public override void DeCompress(string filename)
+        public override void DeCompress(FileInfo file)
         {
-            component.DeCompress(filename);
+            component.DeCompress(file);
             Operation();
         }
 
         public override void Operation()
         {
             //base.Operation();
-            Console.WriteLine("(Encryption)");
+            Console.WriteLine("Encryption \n");
         }
     }
 
@@ -50,42 +50,51 @@ namespace Archiver_Adapter_Facade_
     {
         public Comment(ArchiverAlgorihtm component) : base(component) { }
 
-        public override void Compress(string filename)
+        public override void Compress(FileInfo file)
         {
-            component.Compress(filename);
+            component.Compress(file);
             Operation();
         }
 
-        public override void DeCompress(string filename)
+        public override void DeCompress(FileInfo file)
         {
-            component.DeCompress(filename);
+            component.DeCompress(file);
             Operation();
         }
 
         public override void Operation()
         {
-            Console.WriteLine("Comment");
+            Console.WriteLine("Comment\n");
         }
     }
     public class RecoveryInfo : Decorator
     {
         public RecoveryInfo(ArchiverAlgorihtm component) : base(component) { }
 
-        public override void Compress(string filename)
+        public override void Compress(FileInfo file)
         {
-            component.Compress(filename);
-            Operation();
+            if(file.Length < (component as GZipPack).compressor.MaxSize)
+            {
+                component.Compress(file);
+                Operation();
+            }
+            else
+            {
+                Console.WriteLine("Error RecoveryInfo. MaxLength of file 30000");
+                Console.WriteLine($"Length of file is too much!({file.Length})");
+                component.Compress(file);
+            }
         }
 
-        public override void DeCompress(string filename)
+        public override void DeCompress(FileInfo file)
         {
-            component.DeCompress(filename);
+            component.DeCompress(file);
             Operation();
         }
 
         public override void Operation()
         {
-            Console.WriteLine("Recovery Info + 20% memory");
+            Console.WriteLine("Recovery Info + 20% memory\n");
         }
     }
 
@@ -93,15 +102,15 @@ namespace Archiver_Adapter_Facade_
     {
         public ShutDown(ArchiverAlgorihtm component) : base(component) { }
 
-        public override void Compress(string filename)
+        public override void Compress(FileInfo file)
         {
-            component.Compress(filename);
+            component.Compress(file);
             Operation();
         }
 
-        public override void DeCompress(string filename)
+        public override void DeCompress(FileInfo file)
         {
-            component.DeCompress(filename);
+            component.DeCompress(file);
             Operation();
         }
 

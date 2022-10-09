@@ -33,7 +33,7 @@ namespace Archiver_Adapter_Facade_
                 {
                     if(item.Extension.Equals(current.Key))
                     {
-                        current.Value.Compress(item.Name);
+                        current.Value.Compress(item);
                     }
                 }
             }
@@ -46,7 +46,7 @@ namespace Archiver_Adapter_Facade_
             {
                 if(file.Extension.Equals(item.Key))
                 {
-                    item.Value.Compress(file.Name);
+                    item.Value.Compress(file);
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace Archiver_Adapter_Facade_
             {
                 if (file.Extension.Equals(item.Key))
                 {
-                    item.Value.DeCompress(file.Name);
+                    item.Value.DeCompress(file);
                 }
             }
         }

@@ -20,17 +20,17 @@ namespace Archiver_Adapter_Facade_
             Title = name;
 
             // установка свойств адаптируемого объекта
-            compressor = new GZipCompressor(7777);
+            compressor = new GZipCompressor(30000);
         }
 
-        public override void Compress(string filename)
+        public override void Compress(FileInfo file)
         {
-            compressor.Pack(filename);
+            compressor.Pack(file);
         }
 
-        public override void DeCompress(string filename)
+        public override void DeCompress(FileInfo file)
         {
-            compressor.UnPack(filename);
+            compressor.UnPack(file);
         }
 
         public override void Operation() 

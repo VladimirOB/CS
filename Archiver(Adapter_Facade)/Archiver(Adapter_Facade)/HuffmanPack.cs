@@ -17,14 +17,14 @@ namespace Archiver_Adapter_Facade_
             compressor = new HuffmanCompressor(55555);
         }
 
-        public override void Compress(string filename)
+        public override void Compress(FileInfo file)
         {
-            compressor.Pack(filename);
+            compressor.Pack(file);
         }
 
-        public override void DeCompress(string filename)
+        public override void DeCompress(FileInfo file)
         {
-            compressor.UnPack(filename);
+            compressor.UnPack(file);
         }
 
         public override void Operation()

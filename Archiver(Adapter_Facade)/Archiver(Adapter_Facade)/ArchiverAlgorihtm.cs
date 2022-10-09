@@ -13,9 +13,9 @@ namespace Archiver_Adapter_Facade_
 
         public int PackSize { get; set; }
 
-        public abstract void Compress(string filename);
+        public abstract void Compress(FileInfo file);
 
-        public abstract void DeCompress(string filename);
+        public abstract void DeCompress(FileInfo file);
 
         public abstract void Operation();
     }

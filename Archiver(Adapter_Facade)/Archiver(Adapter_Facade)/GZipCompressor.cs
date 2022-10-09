@@ -9,22 +9,22 @@ namespace Archiver_Adapter_Facade_
 {
     class GZipCompressor
     {
-        public int Length { get; set; }
+        public double MaxSize { get; set; }
 
         public GZipCompressor(int x)
         {
-            Length = x;
+            MaxSize = x;
         }
 
-        public void Pack(string name)
+        public void Pack(FileInfo file)
         {
-            Console.Write(name);
+            Console.Write(file.Name);
             Console.WriteLine(" : GZip Pack");
         }
 
-        public void UnPack(string name)
+        public void UnPack(FileInfo file)
         {
-            Console.Write(name);
+            Console.Write(file.Name);
             Console.WriteLine(" : GZip UnPack");
         }
 
