@@ -8,6 +8,9 @@ namespace Graph.Matrix
 {
     class Program
     {
-
+        static void Main()
+        {
+            Console.WriteLine("qwer");
+        }
     }
 }

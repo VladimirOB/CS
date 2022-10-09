@@ -10,7 +10,6 @@ namespace Archiver_Adapter_Facade_
     {
         List<FileInfo> files;
         DirectoryInfo dinfo;
-
         public Dictionary<string, ArchiverAlgorihtm> algorithms;
 
         public Archiver()
@@ -23,8 +22,6 @@ namespace Archiver_Adapter_Facade_
         {
             algorithms.Add(mask, file);
         }
-
-        
 
         public void ZipFolder(string path)
         {
@@ -40,7 +37,6 @@ namespace Archiver_Adapter_Facade_
                     }
                 }
             }
-           
         }
 
         public void ZipFile(string path)

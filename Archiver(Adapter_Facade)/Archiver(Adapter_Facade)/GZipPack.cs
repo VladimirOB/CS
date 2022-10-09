@@ -12,7 +12,7 @@ namespace Archiver_Adapter_Facade_
     class GZipPack : ArchiverAlgorihtm
     {
         // ссылка на адаптируемый об
-        GZipCompressor compressor;
+        public GZipCompressor compressor;
 
         public GZipPack(string name)
         {
@@ -21,7 +21,6 @@ namespace Archiver_Adapter_Facade_
 
             // установка свойств адаптируемого объекта
             compressor = new GZipCompressor(7777);
-
         }
 
         public override void Compress(string filename)
@@ -32,6 +31,11 @@ namespace Archiver_Adapter_Facade_
         public override void DeCompress(string filename)
         {
             compressor.UnPack(filename);
+        }
+
+        public override void Operation() 
+        {
+            Console.WriteLine("operation");
         }
     }
 }

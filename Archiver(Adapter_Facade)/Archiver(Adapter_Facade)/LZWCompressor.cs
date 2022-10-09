@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Archiver_Adapter_Facade_
 {
-    class HuffmanCompressor
+    class LZWCompressor
     {
         public int Length { get; set; }
 
-        public HuffmanCompressor(int x)
+        public LZWCompressor(int x)
         {
             Length = x;
         }
@@ -18,13 +18,13 @@ namespace Archiver_Adapter_Facade_
         public void Pack(string name)
         {
             Console.Write(name);
-            Console.WriteLine(" : Huffman Pack");
+            Console.WriteLine(" : LZW Pack");
         }
 
         public void UnPack(string name)
         {
             Console.Write(name);
-            Console.WriteLine(" : Huffman UnPack");
+            Console.WriteLine(" : LZW UnPack");
         }
 
         public void ArchiveChecker()

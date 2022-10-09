@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Archiver_Adapter_Facade_
 {
-    // Адаптер
-    class HuffmanPack : ArchiverAlgorihtm
+    class LZWPack : ArchiverAlgorihtm
     {
         // ссылка на адаптируемый об
-        HuffmanCompressor compressor;
-        public HuffmanPack(string name)
+        public LZWCompressor compressor;
+
+        public LZWPack(string title)
         {
-            Title = name;
-            compressor = new HuffmanCompressor(55555);
+            this.Title = title;
+            compressor = new LZWCompressor(99999);
         }
 
         public override void Compress(string filename)
@@ -29,7 +30,7 @@ namespace Archiver_Adapter_Facade_
 
         public override void Operation()
         {
-            
+           
         }
     }
 }

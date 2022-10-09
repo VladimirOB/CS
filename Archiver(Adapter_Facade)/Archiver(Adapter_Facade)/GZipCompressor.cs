@@ -18,16 +18,14 @@ namespace Archiver_Adapter_Facade_
 
         public void Pack(string name)
         {
-            Console.WriteLine(name);
-            Console.WriteLine("GZipCompressor Pack");
-            Console.WriteLine();
+            Console.Write(name);
+            Console.WriteLine(" : GZip Pack");
         }
 
         public void UnPack(string name)
         {
-            Console.WriteLine(name);
-            Console.WriteLine("GZipCompressor UnPack");
-            Console.WriteLine();
+            Console.Write(name);
+            Console.WriteLine(" : GZip UnPack");
         }
 
         public void ArchiveChecker()
