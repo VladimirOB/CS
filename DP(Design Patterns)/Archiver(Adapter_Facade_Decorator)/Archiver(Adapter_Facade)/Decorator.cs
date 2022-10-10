@@ -81,7 +81,7 @@ namespace Archiver_Adapter_Facade_
             else
             {
                 Console.WriteLine("Error RecoveryInfo. MaxLength of file 30000");
-                Console.WriteLine($"Length of file is too much!({file.Length})");
+                Console.WriteLine($"Length of file is too big!({file.Length})");
                 component.Compress(file);
             }
         }

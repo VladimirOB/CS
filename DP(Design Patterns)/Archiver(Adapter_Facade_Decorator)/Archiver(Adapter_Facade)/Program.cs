@@ -21,14 +21,14 @@
             GZipPack gp = new GZipPack("GZip");
             LZWPack lzw = new LZWPack("LZW");
 
-            Encryption encryption = new Encryption(hp);
-            RecoveryInfo ri = new RecoveryInfo(gp);
-            Comment com = new Comment(lzw);
+            Encryption encryptionHP = new Encryption(hp);
+            RecoveryInfo recoveryGP = new RecoveryInfo(gp);
+            Comment commentLZW = new Comment(lzw);
+            ShutDown shutDownEncryptionHP = new ShutDown(encryptionHP);
 
-
-            ar.algorithms.Add(".wav", encryption);
-            ar.algorithms.Add(".txt", ri);
-            ar.algorithms.Add(".jpg", com);
+            ar.algorithms.Add(".wav", shutDownEncryptionHP);
+            ar.algorithms.Add(".txt", recoveryGP);
+            ar.algorithms.Add(".jpg", commentLZW);
             ar.ZipFolder("V:/temp");
 
         }
