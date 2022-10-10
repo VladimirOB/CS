@@ -6,44 +6,47 @@ using System.Threading.Tasks;
 
 namespace MementoUpdate
 {
-    class SalesProspect<T,T2,T3>
+    class SalesProspect
     {
-        private T _name;
-        private T2 _phone;
-        private T3 _budget;
+        private string _name;
+        private string _phone;
+        private double _budget;
 
-        public T Name
+        public string Name
         {
             get { return _name; }
-            set { _name = value; Console.WriteLine("Name: " + _name); ; }
+            set { _name = value;}
         }
 
-        public T2 Phone
+        public string Phone
         {
             get { return _phone; }
-            set { _phone = value; Console.WriteLine("Phone: " + _phone); ; }
+            set { _phone = value;}
         }
 
-        public T3 Budget
+        public double Budget
         {
             get { return _budget; }
-            set { _budget = value; Console.WriteLine($"Budget: {_budget}"); }
+            set { _budget = value;}
         }
 
         //Выполнение back - up
         public Memento SaveMemento()
         {
-            Console.WriteLine("\nSaving state\n");
             return new Memento(_name, _phone, _budget);
         }
 
         //Восстановление данных из back - up
         public void RestoreMemento(Memento memento)
         {
-            Console.WriteLine("\nRestoring state\n");
-            Name = (T)memento.Name;
-            Phone = (T2)memento.Phone;
-            Budget = (T3)memento.Budget;
+            if(memento != null)
+            {
+                Console.WriteLine("\nRestoring state\n");
+                Name = (string)memento.dict["name"];
+                Phone = (string)memento.dict["phone"];
+                Budget = Convert.ToDouble(memento.dict["budget"]);
+            }
+
         }
 
     }

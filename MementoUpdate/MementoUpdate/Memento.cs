@@ -6,36 +6,15 @@ using System.Threading.Tasks;
 
 namespace MementoUpdate
 {
-    [Serializable]
     class Memento
     {
-        private object _name;
-        private object _phone;
-        private object _budget;
-        public Memento(object name, object phone, object bugdet)
+        public Dictionary<string, object> dict; // 1 - имя поля. 2 - значение.
+        public Memento(object name, object phone, object budget)
         {
-            _name = name;
-            _phone = phone;
-            _budget = bugdet;
+            dict = new Dictionary<string, object>();
+            dict.Add("name", name);
+            dict.Add("phone", phone);
+            dict.Add("budget", budget);
         }
-
-        public object Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        public object Phone
-        {
-            get { return _phone; }
-            set { _phone = value; }
-        }
-
-        public object Budget
-        {
-            get { return _budget; }
-            set { _budget = value; }
-        }
-
     }
 }

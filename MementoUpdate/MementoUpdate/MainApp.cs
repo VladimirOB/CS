@@ -12,34 +12,33 @@
         - сжатие / шифрование хранилища данных
         - контроль доступа к резервным копиям*/
 
+        public static Random rand = new Random();
+        public static string[] name = { "Донателло", "Леонардо", "Микеланджело", "Рафаэль" };
+        public static string[] phone = { "(111) 11-11-111", "(222) 22-22-222", "(333) 33-33-333", "(444) 44-44-444" };
+        public static double[] budget = { 11111, 2222, 333, 77 };
+        public static void SalesRand(SalesProspect s)
+        {
+            s.Name = name[rand.Next(0,4)];
+            s.Phone = phone[rand.Next(0, 4)];
+            s.Budget = budget[rand.Next(0, 4)];
+        }
+
         static void Main()
         {
-            // Класс имеет начальные данные
-            SalesProspect<string, string, decimal> s = new SalesProspect<string, string, decimal>();
-            //s.Name = "Noel van Halen";
-            //s.Phone = "(412) 256-0990";
-            //s.Budget = 25000.0m;
-
-            // Инициализация хранилища резервных копий
+            SalesProspect s = new SalesProspect();
             ProspectMemory memory = new ProspectMemory();
             memory.Load("../../../../db.txt");
+
+            //SalesRand(s);
+            //memory.Add(s.SaveMemento());//Выполнение back-up. Тут происходит добавление в файл
+            //SalesRand(s);
+            //memory.Add(s.SaveMemento());
+
+            //Восстановление данных основного объекта из резервной копии
+            s.RestoreMemento(memory.Restore(0.45182));
+
+
             memory.ViewMemory();
-            // Выполнение back-up
-            //memory.Memento = s.SaveMemento();
-            //memory.Add(s.SaveMemento());
-
-            // Изменение свойств основного объекта
-            //s.Name = "Leo Welch";
-            //s.Phone = "(310) 209-7111";
-            //s.Budget = 1000000.0m;
-            //memory.Add(s.SaveMemento());
-
-            // Восстановление данных основного объекта из резервной копии
-            //s.RestoreMemento(memory.Memento);
-            //s.RestoreMemento(memory.Restore(1));
-
-
-            // Wait for user
             Console.ReadKey();
         }
     }
