@@ -11,7 +11,6 @@ namespace MementoUpdate
         private string _name;
         private string _phone;
         private double _budget;
-
         public string Name
         {
             get { return _name; }
@@ -47,6 +46,11 @@ namespace MementoUpdate
                 Budget = Convert.ToDouble(memento.dict["budget"]);
             }
 
+        }
+
+        public override string ToString()
+        {
+            return $"Name: {_name}\nPhone: {_phone}\nBudget: {_budget}";
         }
 
     }
