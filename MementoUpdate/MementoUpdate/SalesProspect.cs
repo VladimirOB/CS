@@ -8,8 +8,8 @@ namespace MementoUpdate
 {
     class SalesProspect
     {
-        private string _name;
-        private string _phone;
+        private string? _name;
+        private string? _phone;
         private double _budget;
         public string Name
         {

@@ -129,19 +129,19 @@ namespace MementoUpdate
         {
             SalesProspect s = new SalesProspect();
             ProspectMemory memory = new ProspectMemory();
-            memory.Load("../../../../MemoryDB.txt.gz");
-            //memory.Clear();
-            //SalesRand(s);
-            //memory.Add(s.SaveMemento());//Выполнение back-up. Тут происходит добавление в файл
+            memory.Load("../../../../MemoryDB.zip");
+
+            //SalesRand(s); // рандом генерация полей класса
+            //memory.Add(s.SaveMemento());
             //SalesRand(s);
             //memory.Add(s.SaveMemento());
             //memory.SaveMemory("db.txt");
 
             //Восстановление данных основного объекта из резервной копии
-            //s.RestoreMemento(memory.Restore(11.25513));
-            //Console.WriteLine(s);
+            s.RestoreMemento(memory.Restore(17.3321));
+            Console.WriteLine(s);
 
-            memory.ViewMemory();
+            //memory.ViewMemory();
             Console.ReadKey();
 
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO.Compression;
+//using System.IO.Compression;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-
+using Ionic.Zip;
 namespace MementoUpdate
 {
     class ProspectMemory
@@ -26,70 +26,77 @@ namespace MementoUpdate
         public void Add(Memento memento)
         {
             id = Convert.ToDouble(DateTime.Now.Hour.ToString() + "," + DateTime.Now.Minute.ToString() + DateTime.Now.Millisecond.ToString());
-            //Save(memento);
             _mementoPack.Add(id, memento);
         }
 
         public void SaveMemory(string path)
         {
-            StreamWriter sw = new StreamWriter(path, true);
+            string tempFile = DonNetZipDeCompress("../../../../MemoryDB.zip"); // извлекаем старый db.txt для дозаписи
+            StreamWriter sw = new StreamWriter(tempFile, true);
             foreach (var item in _mementoPack)
             {
                 sw.Write(EncodeDecrypt(item.Key) + '|');
                 foreach (var memento in item.Value.dict)
                 {
-                    sw.Write(EncodeDecrypt(memento.Value) + "|");
+                    sw.Write(EncodeDecrypt(memento.Value) + "|"); // шифруем и дозаписываем
                 }
                 sw.Write('\n');
             }
             sw.Close();
-            GZipCompress(path);
+            DonNetZipCompress(path); // закидываем новый db.txt в архив
+            File.Delete(tempFile); // удаляем временный db.txt
         }
 
-        void GZipCompress(string path)
+        void DonNetZipCompress(string path)
         {
-            // поток для чтения исходного файла
-            using (FileStream sourceStream = new FileStream(path, FileMode.OpenOrCreate))
+            if(File.Exists("../../../../MemoryDB.zip"))
             {
-                //поток для записи сжатого файла
-                using FileStream targetStream = File.Create("../../../../MemoryDB.txt.gz");
-
-                //поток архивации
-                using GZipStream compressionStream = new GZipStream(targetStream, CompressionLevel.Fastest);
-                sourceStream.CopyTo(compressionStream); // копируем байты из одного потока в другой
-
-                //Console.WriteLine($"Исходный размер: {sourceStream.Length}  сжатый размер: {targetStream.Length}");
+                using (ZipFile zip = ZipFile.Read("../../../../MemoryDB.zip"))
+                {
+                    foreach (ZipEntry e in zip)
+                    {
+                        if (e.FileName.Equals(path))
+                            zip.RemoveEntry(e.FileName);
+                    }
+                    zip.AddFile(path);
+                    zip.Save("../../../../MemoryDB.zip");
+                }
             }
-            File.Delete(path);
-        }
-
-        string GZipDecompress(string compressedFile, string targetFile)
-        {
-            // поток для чтения из сжатого файла
-            using FileStream sourceStream = new FileStream(compressedFile, FileMode.OpenOrCreate);
-            // поток для записи восстановленного файла
-            using FileStream targetStream = File.Create(targetFile);
-            // поток разархивации
-            using GZipStream decompressionStream = new GZipStream(sourceStream, CompressionMode.Decompress);
-            decompressionStream.CopyTo(targetStream);
-            return targetFile;
-        }
-
-        void Save(Memento memento)
-        {
-            StreamWriter sw = new StreamWriter("../../../../db.txt", true);
-            sw.Write(EncodeDecrypt(id)+ '|');
-            foreach (var item in memento.dict)
+            else
             {
-                sw.Write(EncodeDecrypt(item.Value) + "|");
+                using (ZipFile zip = new ZipFile("../../../../MemoryDB.zip"))
+                {
+                    zip.Password = "12321";
+                    zip.AddFile(path);
+                    zip.Save("../../../../MemoryDB.zip");
+                }
             }
-            sw.Write('\n');
-            sw.Close();
+            
+        }
+
+        string DonNetZipDeCompress(string path)
+        {
+            if (File.Exists("../../../../MemoryDB.zip"))
+            {
+                string fileName = "db.txt";
+                using (ZipFile zip = ZipFile.Read(path))
+                {
+                    ZipEntry e = zip[fileName];
+                    e.ExtractWithPassword("V:\\Study\\Home Work\\CS\\MementoUpdate\\MementoUpdate\\bin\\Debug\\net6.0", "12321");
+                }
+                return fileName;
+            }
+            else
+            {
+                using (File.Create("db.txt"))
+                return "db.txt";
+            }
+           
         }
 
         public void Load(string path)
         {
-            string tempFile = GZipDecompress(path, "db.txt");
+            string tempFile = DonNetZipDeCompress(path);
             string temp = File.ReadAllText(tempFile);
             string[] str = temp.Split(new[] { '|', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < str.Length; i+=4)
@@ -145,11 +152,37 @@ namespace MementoUpdate
             }
             
         }
-
-        public void Clear()
-        {
-            _mementoPack.Clear();
-            File.WriteAllText("../../../../ProspectMemoryDB.txt", "");
-        }
     }
 }
+
+
+//void GZipCompress(string path)
+//{
+//    // поток для чтения исходного файла
+//    using (FileStream sourceStream = new FileStream(path, FileMode.OpenOrCreate))
+//    {
+//        //поток для записи сжатого файла
+//        using FileStream targetStream = File.Create("../../../../MemoryDB.txt.gz");
+
+//        //поток архивации
+//        using GZipStream compressionStream = new GZipStream(targetStream, CompressionLevel.Fastest);
+//        sourceStream.CopyTo(compressionStream); // копируем байты из одного потока в другой
+
+//        //Console.WriteLine($"Исходный размер: {sourceStream.Length}  сжатый размер: {targetStream.Length}");
+//    }
+//    File.Delete(path);
+//    ZipFile arch = ZipFile.Open("../../../../MemoryDB.txt.gz", ZipArchiveMode.Update);
+
+//}
+
+//string GZipDecompress(string compressedFile, string targetFile)
+//{
+//    // поток для чтения из сжатого файла
+//    using FileStream sourceStream = new FileStream(compressedFile, FileMode.OpenOrCreate);
+//    // поток для записи восстановленного файла
+//    using FileStream targetStream = File.Create(targetFile);
+//    // поток разархивации
+//    using GZipStream decompressionStream = new GZipStream(sourceStream, CompressionMode.Decompress);
+//    decompressionStream.CopyTo(targetStream);
+//    return targetFile;
+//}
