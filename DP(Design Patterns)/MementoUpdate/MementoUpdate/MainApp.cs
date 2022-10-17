@@ -138,10 +138,15 @@ namespace MementoUpdate
             //memory.SaveMemory("db.txt");
 
             //Восстановление данных основного объекта из резервной копии
-            s.RestoreMemento(memory.Restore(17.3321));
-            Console.WriteLine(s);
+            //s.RestoreMemento(memory.Restore(17.3321));
+            //Console.WriteLine(s);
 
-            //memory.ViewMemory();
+            foreach (Memento item in memory)
+            {
+                Console.WriteLine($"Name: {item.dict["name"]}");
+                Console.WriteLine($"Phone: {item.dict["phone"]}");
+                Console.WriteLine($"Budget: {item.dict["budget"]}\n");
+            }
             Console.ReadKey();
 
         }

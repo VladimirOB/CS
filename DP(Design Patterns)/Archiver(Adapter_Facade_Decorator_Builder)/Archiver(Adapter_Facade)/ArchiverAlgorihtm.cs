@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Archiver_Adapter_Facade_
 {
-    public abstract class ArchiverAlgorihtm
+    abstract class ArchiverAlgorihtm
     {
         public string Title { get; set; }
         public int SourceSize { get; set; }
@@ -18,5 +18,6 @@ namespace Archiver_Adapter_Facade_
         public abstract void DeCompress(FileInfo file);
 
         public abstract void Operation();
+
     }
 }

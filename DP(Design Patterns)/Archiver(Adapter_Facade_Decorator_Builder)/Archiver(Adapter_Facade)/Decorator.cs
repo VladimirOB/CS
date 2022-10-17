@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Archiver_Adapter_Facade_
 {
-    public abstract class Decorator : ArchiverAlgorihtm
+    abstract class Decorator : ArchiverAlgorihtm
     {
         protected ArchiverAlgorihtm? component;
 
@@ -23,7 +23,7 @@ namespace Archiver_Adapter_Facade_
         }
     }
 
-    public class Encryption : Decorator
+    class Encryption : Decorator
     {
         public Encryption(ArchiverAlgorihtm component) : base(component){ }
 
@@ -46,7 +46,7 @@ namespace Archiver_Adapter_Facade_
         }
     }
 
-    public class Comment : Decorator
+    class Comment : Decorator
     {
         public Comment(ArchiverAlgorihtm component) : base(component) { }
 
@@ -67,7 +67,7 @@ namespace Archiver_Adapter_Facade_
             Console.WriteLine("Comment\n");
         }
     }
-    public class RecoveryInfo : Decorator
+    class RecoveryInfo : Decorator
     {
         public RecoveryInfo(ArchiverAlgorihtm component) : base(component) { }
 
@@ -98,7 +98,7 @@ namespace Archiver_Adapter_Facade_
         }
     }
 
-    public class ShutDown : Decorator
+    class ShutDown : Decorator
     {
         public ShutDown(ArchiverAlgorihtm component) : base(component) { }
 

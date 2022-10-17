@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 //using System.IO.Compression;
@@ -58,6 +59,7 @@ namespace MementoUpdate
                         if (e.FileName.Equals(path))
                             zip.RemoveEntry(e.FileName);
                     }
+                    zip.Password = "12321";
                     zip.AddFile(path);
                     zip.Save("../../../../MemoryDB.zip");
                 }
@@ -101,8 +103,12 @@ namespace MementoUpdate
             string[] str = temp.Split(new[] { '|', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < str.Length; i+=4)
             {
+                Memento newMemento = new Memento();
                 id = Convert.ToDouble(EncodeDecrypt(str[i]));
-                _mementoPack.Add(id, new Memento(EncodeDecrypt(str[i + 1]), EncodeDecrypt(str[i + 2]), (EncodeDecrypt(str[i + 3]))));
+                newMemento.Add("name", EncodeDecrypt(str[i + 1]));
+                newMemento.Add("phone", EncodeDecrypt(str[i + 2]));
+                newMemento.Add("budget", EncodeDecrypt(str[i + 3]));
+                _mementoPack.Add(id, newMemento);
             }
             File.Delete(tempFile);
         }
@@ -150,7 +156,15 @@ namespace MementoUpdate
                 Console.WriteLine("Invalid id");
                 return null;
             }
-            
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            foreach (var item in _mementoPack)
+            {
+                Console.WriteLine($"Id: {item.Key}");
+                yield return item.Value;
+            }
         }
     }
 }

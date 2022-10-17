@@ -1,0 +1,6 @@
+Serial_Attributes_.Student
+Name-Zohan|
+Height-1,19|
+Age-53|
+Weight-22|
+MaritalStatus-True|

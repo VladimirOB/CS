@@ -1,6 +1,6 @@
 ﻿namespace Archiver_Adapter_Facade_
 {
-    class Program
+    partial class Program
     {
         /*2. Реализовать паттерн Адаптер (и паттерн Фасад) на примере программы "Архиватор".*/
         //операции фасад: распаковать архив, посмотреть весь архив, и тд
@@ -16,6 +16,8 @@
         static void Main(string[] args)
         {
             Archiver ar = new Archiver();
+            IBuilder rar = new RaRBuilder(); 
+            IBuilder zip = new ZipBuilder(); 
 
             HuffmanPack hp = new HuffmanPack("Huffman");
             GZipPack gp = new GZipPack("GZip");
@@ -29,7 +31,14 @@
             ar.algorithms.Add(".wav", shutDownEncryptionHP);
             ar.algorithms.Add(".txt", recoveryGP);
             ar.algorithms.Add(".jpg", commentLZW);
-            ar.ZipFolder("V:/temp");
+
+            UIFactory factory = new ConcreteUIFactory2();
+            GeneralUI general = new GeneralUI(factory);
+            ProductsContainer pc = general.CreateUI();
+            pc.Run();
+
+            ar.ZipFolder("V:/temp", zip);
+            //ar.UnZipFolder("V:/temp", rar);
 
         }
     }

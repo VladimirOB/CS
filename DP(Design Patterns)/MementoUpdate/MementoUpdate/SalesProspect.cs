@@ -32,7 +32,11 @@ namespace MementoUpdate
         //Выполнение back - up
         public Memento SaveMemento()
         {
-            return new Memento(_name, _phone, _budget);
+            Memento newMemento = new Memento();
+            newMemento.Add("name", Name);
+            newMemento.Add("phone", Phone);
+            newMemento.Add("budget", Budget);
+            return newMemento;
         }
 
         //Восстановление данных из back - up

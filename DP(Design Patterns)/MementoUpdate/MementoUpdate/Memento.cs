@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MementoUpdate
 {
     class Memento
     {
         public Dictionary<string, object> dict; // 1 - имя поля. 2 - значение.
-        public Memento(object name, object phone, object budget)
+        public Memento()
         {
             dict = new Dictionary<string, object>();
-            dict.Add("name", name);
-            dict.Add("phone", phone);
-            dict.Add("budget", budget);
+        }
+        public void Add(string key, object value)
+        {
+            dict.Add(key, value);
         }
     }
 }
