@@ -2,26 +2,10 @@
 
 namespace Prime_Fibonachi
 {
-    /*class StreamWriterTwo
+    class Program
     {
-        public static async Task ExampleAsync()
+        static void PrimeNumbers()
         {
-
-            using StreamWriter file = new("WriteLines2.txt", append: true);
-            await file.WriteLineAsync("Fourth line");
-            // полная перезапись файла 
-            using (StreamWriter writer = new StreamWriter("test.txt", false))
-            {
-                await writer.WriteLineAsync("test.txt");
-            }
-        }
-    }*/
-
-    internal class Program
-    {
-        static void Main(string[] args)
-        {
-
             /*1. Пользователь вводит числа, пока не введёт слово "exit". Программа подсчитывает количество простых чисел*/
 
             //int countOfPrime = 0, number = 0;
@@ -60,11 +44,20 @@ namespace Prime_Fibonachi
 
             //string readText = File.ReadAllText("Prime.txt");
             //Console.WriteLine($"File:\n{readText}");
+        }
 
+        static bool Fibonacci(int number)
+        {
+            if (n == 0 || n == 1) return n;
+
+            return Fibonacci(n - 1) + Fibonacci(n - 2);
+        }
+
+        static bool test()
+        {
             /*2. Пользователь вводит числа, пока не введёт слово "exit". Программа выясняет, является ли эта последовательность чисел числами Фибоначчи.*/
 
-
-           // 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711,
+            // 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711,
             int[] number = new int[100];
             int i = 0, sum = 0;
             bool flag = false;
@@ -80,9 +73,9 @@ namespace Prime_Fibonachi
                     i++;
                     if (i > 2)
                     {
-                        if (number[i-3] < number[i-2] || number[i - 3] == 1 && number[i - 2] == 1) // вот
-                        sum = number[i - 3] + number[i - 2];
-                        if (sum == 0 || sum > number[i-1])
+                        if (number[i - 3] < number[i - 2] || number[i - 3] == 1 && number[i - 2] == 1) // вот
+                            sum = number[i - 3] + number[i - 2];
+                        if (sum == 0 || sum > number[i - 1])
                         {
                             flag = true;
                             break;
@@ -102,9 +95,13 @@ namespace Prime_Fibonachi
 
             //Console.WriteLine($"0 = {temp}, 1 = {number[1]}, 2 = {number[2]}");
             if (!flag)
-                Console.WriteLine("Yes");
+                return true;
             else
-                Console.WriteLine("No");
+                return false;
+        }
+
+        static void Main(string[] args)
+        {
 
         }
     }

@@ -1,4 +1,7 @@
-﻿namespace Array__2DArray
+﻿using System.Linq;
+using System.Text;
+
+namespace Array__2DArray
 {
     internal class Program
     {  
@@ -230,11 +233,35 @@
             }
 
         }
+
+        public static string Encrypt(string name)
+        {
+            StringBuilder sb = new StringBuilder(name);
+            for (int i = 0; i < name.Length - 4; i++)
+            {
+                sb[i] = '#';
+            }
+            return sb.ToString();
+        }
+
+        public static IEnumerable<string> OpenOrSenior(int[][] data)
+        {
+            for (int i = 0; i < data.Length; i++)
+            {
+                var str =  (data[i][0] > 54 && data[i][1] > 7) ? "Senior" : "Open";
+                yield return str;
+            }
+
+        }
+
         static void Main(string[] args)
         {
             //Task1();
             //Task2();
-            Task3();
+            //Task3();
+
+            //var str = OpenOrSenior(new[] { new[] { 45, 12 }, new[] { 55, 21 }, new[] { 19, 2 }, new[] { 104, 20 } });
+            //Console.WriteLine(Encrypt("5168755456421726"));
         }
     }
 }
