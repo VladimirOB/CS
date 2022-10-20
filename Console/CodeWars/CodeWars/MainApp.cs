@@ -2,6 +2,11 @@
 using System;
 using System.Text;
 using System.Xml.Linq;
+using System.Data;
+using System.Collections.Generic;
+using System.Net;
+using System.Collections;
+
 namespace CodeWars
 {
     class MainApp
@@ -42,7 +47,7 @@ namespace CodeWars
             }
             return min;
         }
-            
+
         public static void Dict(string s)
         {
             //частотный словарь букв в строке
@@ -127,15 +132,15 @@ namespace CodeWars
         {
             //количество улыбок
 
-            if(smileys.Length == 0)
-            return 0;
+            if (smileys.Length == 0)
+                return 0;
             else
             {
                 int cnt = 0;
                 for (int i = 0; i < smileys.Length; i++)
                 {
                     string temp = smileys[i];
-                    if(temp.Length == 2)
+                    if (temp.Length == 2)
                     {
                         if ((temp[0] == ';' || temp[0] == ':') && (temp[1] == ')' || temp[1] == 'D'))
                             cnt++;
@@ -177,6 +182,96 @@ namespace CodeWars
             return long.Parse(string.Concat(arr)).ToString("(000) 000-0000");
         }
 
+        public static int[] DelNRepeat(int[] arr, int num)
+        {
+            //Учитывая список и число, создайте новый список, который содержит каждое число списка не более N раз без изменения порядка.
+            //Например, если входное число равно 2, а входной список — [1,2,3,1,2,1,2,3], вы берете[1, 2, 3, 1, 2], отбрасываете следующий[1, 2], поскольку это приведет к тому, что 1 и 2 будут в результате 3 раза, а затем взять 3, что приведет к[1, 2, 3, 1, 2, 3].
+            //Со списком[20, 37, 20, 21] и числом 1 результатом будет[20, 37, 21].
+
+            List<int> result = new List<int>();
+            Dictionary<int, int> numberCount = new Dictionary<int, int>();
+            foreach (var item in arr)
+            {
+                if (numberCount.ContainsKey(item))
+                    numberCount[item]++;
+                else
+                    numberCount.Add(item, 1);
+                if (numberCount[item] <= num)
+                    result.Add(item);
+            }
+            return result.ToArray();
+
+            //var gg = arr.GroupBy(i => i).Where(x=>x.Count() < num);
+            //values = values.Where.values. values.RemoveAll(item => item);
+        }
+
+        public static char MissingLetter(string str)
+        {
+            char[] chars = str.ToCharArray();
+            char ch ='0';
+            for (int i = 0; i < chars.Length-1; i++)
+            {
+                if (chars[i] != chars[i + 1] - 1)
+                    ch = chars[i]+=(char)1;
+            }
+            return ch;
+            // public static char FindMissingLetter(char[] array) => (char)Enumerable.Range(array[0], 25).First(x => !array.Contains((char)x));
+        }
+
+        public static long IP(string start, string end)
+        {
+            //Count IP Addresses
+            //Implement a function that receives two IPv4 addresses, and returns the number of addresses between them(including the first one, excluding the last one).
+            //All inputs will be valid IPv4 addresses in the form of strings. The last address will always be greater than the first one.
+            //Examples
+            //* With input "10.0.0.0", "10.0.0.50"  => return 50
+            //* With input "10.0.0.0", "10.0.1.0"   => return 256
+            //* With input "20.0.0.10", "20.0.1.0"  => return 246
+            string[] str1 = start.Split('.');
+            string[] str2 = end.Split('.');
+            long[] arr1 = new long[4];
+            long[] arr2 = new long[4];
+            long[] res = new long[4];
+            for (int i = 0; i < str1.Length; i++)
+            {
+                arr1[i] = Convert.ToInt64(str1[i]);
+            }
+            for (int i = 0; i < str2.Length; i++)
+            {
+                arr2[i] = Convert.ToInt64(str2[i]);
+            }
+
+            long result = 0;
+            if (arr1[0] != arr2[0])
+            {
+                long t = arr2[0] - arr1[0];
+                res[0] = t * 256 * 256 * 256;
+                result = res[0];
+            }
+            if (arr1[1] != arr2[1])
+            {
+                long t = arr2[1] - arr1[1];
+                res[1] = t * 256 * 256;
+                result += res[1];
+            }
+            if (arr1[2] != arr2[2])
+            {
+                long t = arr2[2] - arr1[2];
+                res[2] = t * 256;
+                result += res[2];
+            }
+            if (arr1[3] != arr2[3])
+            {
+                long t = arr2[3] - arr1[3];
+                res[3] = t;
+                result += res[3];
+            }
+            return result;
+
+            //return (long)(uint)IPAddress.NetworkToHostOrder((int)IPAddress.Parse(end).Address) - 
+            //(long)(uint)IPAddress.NetworkToHostOrder((int)IPAddress.Parse(start).Address);
+        }
+
         static void Main()
         {
             //var str = OpenOrSenior(new[] { new[] { 45, 12 }, new[] { 55, 21 }, new[] { 19, 2 }, new[] { 104, 20 } });
@@ -188,6 +283,10 @@ namespace CodeWars
             //Console.WriteLine(CountSmileys(new[] { ":)", ";(", ";}", ":-D" }));
             //int[] res = MoveZeroes(new[] { 1, 2, 0, 1, 0, 1, 0, 3, 0, 1 });
             //Console.WriteLine(CreatePhoneNumber(new[] {1,2,3,4,5,6,7,8,9,0}));
+            //int[] res = DelNRepeat(new[] { 1, 2, 3, 1, 2, 1, 2, 3 }, 2);
+            //char ch = MissingLetter("ac");
+            //Console.WriteLine(IP("10.0.0.0", "10.0.2.0"));
+
         }
     }
 }
