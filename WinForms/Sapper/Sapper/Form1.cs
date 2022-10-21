@@ -8,8 +8,8 @@ namespace Sapper
         public Form1()
         {
             InitializeComponent();
-            MapController.mapSize = 10;
-            MapController.numberOfBombs = 10;
+            MapController.mapSize = 5;
+            MapController.numberOfBombs = 5;
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -6,6 +6,10 @@ using System.Data;
 using System.Collections.Generic;
 using System.Net;
 using System.Collections;
+using System.Text.RegularExpressions;
+using Microsoft.VisualBasic;
+using System.Linq;
+using System.Numerics;
 
 namespace CodeWars
 {
@@ -272,8 +276,254 @@ namespace CodeWars
             //(long)(uint)IPAddress.NetworkToHostOrder((int)IPAddress.Parse(start).Address);
         }
 
+        public static bool CheckString(string str)
+        {
+            if (!string.IsNullOrEmpty(str)
+            && str.All(c => char.IsLetterOrDigit(c) && (c < 128)))
+            {
+                return true;
+            }
+            return false;
+            //public static bool Alphanumeric(string str) => new Regex("^[a-zA-Z0-9]+$").Match(str).Success;
+        }
+
+        public static bool IsValidIp(string ipAddres)
+        {
+            string ip = @"^((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])[\.]){3}(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])$";
+            MatchCollection m = Regex.Matches(ipAddres, ip);
+            if (m.Count > 0)
+            {
+                return true;
+            }
+            return false;
+            //public static bool IsValidIp(string ipAddres) =>
+            //new Regex("^((2[0-5][0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[1-9]|0)\\.){3}(2[0-5][0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[1-9]|0)$")
+            //.IsMatch(ipAddres);
+        }
+
+        public static int MaxSubarraySum(int[] a)
+        {
+            if (a.All(s => s < 0)) // If all array before zero, return zero
+                return 0;
+            int max_so_far = int.MinValue;
+            int max_ending_here = 0;
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                max_ending_here = max_ending_here + a[i];
+
+                if (max_so_far < max_ending_here)
+                    max_so_far = max_ending_here;
+
+                if (max_ending_here < 0)
+                    max_ending_here = 0;
+            }
+
+            return max_so_far;
+
+            /*int max = 0, res = 0, sum = 0;
+            foreach(var item in arr)
+            {
+                sum += item;
+                max = sum > max ? max : sum;
+                res = res > sum - max ? res : sum - max;
+            }
+            return res;*/
+        }
+
+        public static int StrCount(string str, string letter) => str.Count(x => x.ToString() == letter);
+
+        public static double[] Tribonacci(double[] signature, int n)
+        {
+            double[] r = new double[n];
+            if (n < 3)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    r[i] = signature[i];
+                }
+                return r;
+            }
+            else
+            {
+                List<double> t = new List<double>();
+                for (int i = 0; i < signature.Length; i++)
+                {
+                    t.Add(signature[i]);
+                }
+
+                for (int i = 1; i < n - 2; i++)
+                {
+                    t.Add(t[i] + t[i + 1] + t[i - 1]);
+                }
+                return t.ToArray();
+            }
+            /*double[] res = new double[n];
+            Array.Copy(s, res, Math.Min(3, n));
+    
+            for(int i = 3; i < n; i++)
+              res[i] = res[i - 3] + res[i - 2] + res[i - 1];
+    
+            return n == 0 ? new double[]{0} : res;*/
+
+        }
+
+        public static string StripComments(string text, string[] commentSymbols) // 4 kyu
+        {
+            //string stripped = StripCommentsSolution.StripComments("яблоки, груши # и бананы\ngrapes\nbananas !apples", new[] { "#", "!" })
+            // результат должен == "яблоки, груши\nвиноград\nбананы"
+
+            //return string.Join("", Regex.Replace(text, commentSymbols[1] + ".+", string.Empty).Trim());
+
+            var lines = Regex.Split(text, @"\n");
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var line = lines[i];
+                foreach (var comm in commentSymbols)
+                {
+                    int ind = line.IndexOf(comm);
+                    if (ind >= 0)
+                    {
+                        line = line.Substring(0, ind);
+                    }
+                }
+                lines[i] = line.TrimEnd();
+            }
+            return string.Join("\n", lines);
+
+            //StringBuilder sb = new StringBuilder();
+            //for (int i = 0; i < text.Length; i++)
+            //{
+            //    char character = text[i];
+            //    if (sb.Length > 0)
+            //        if (sb[sb.Length - 1] == '\n' && character == ' ')
+            //        {
+            //            continue;
+            //        }
+
+            //    if (commentSymbols.Any(x => x.Contains(character)))
+            //    {
+            //        // перемещаем i непосредственно перед концом текущей строки
+            //        i = text.IndexOf('\n', i) - 1;
+            //        // Удаляем пробел, который мы уже добавили в конце
+            //        sb.Remove(sb.Length - 1, 1);
+            //        // Если в конце последней строки нет символа новой строки
+            //        if (i < 0) break;
+            //        // Пропустить оставшуюся часть этой итерации
+            //        continue;
+            //    }
+            //    sb.Append(character);
+            //}
+            //return sb.ToString();
+
+            //StringBuilder sb = new StringBuilder();
+            //for (int i = 0; i < text.Length; i++)
+            //{
+
+            //    if(commentSymbols.Any(x=> x.Contains(text[i])))
+            //    {
+            //        sb.Remove(sb.Length-1, 1);
+            //        for (int k = text[i]; text[i] != '\n' && i + 1 != text.Length; k++, i++){}
+            //        if(i+1 != text.Length)
+            //        {
+            //            sb.Remove(sb.Length - 1, 1);
+            //            sb.Append('\n');
+            //        }
+            //        continue;
+            //    }
+            //    sb.Append(text[i]);
+            //}
+            //Console.WriteLine("len = " + sb.Length);
+            //return sb.ToString();
+        }
+
+        public static string Add(string a, string b) // 4 kyu
+        {
+            return (BigInteger.Parse(a) + BigInteger.Parse(b)).ToString();
+        }
+
+        public static bool Sudoku(int[][] arr)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (arr[i][j] <= 0 || arr[i][j] > 9)
+                        return false;
+                }
+            }
+
+            for (int i = 0; i < 9; i++)
+            {
+                bool[] uniq = new bool[10];
+
+                for(int j = 0; j < 9; j++) 
+                {
+                    int t = arr[i][j]; // проверка columns
+                    if (uniq[t] == true) // если 2 раз встретилось число
+                    {
+                        return false;
+                    }
+                    uniq[t] = true;
+                }
+            }
+
+            for (int i = 0; i < 9; i++)
+            {
+                bool[] uniq = new bool[10];
+
+                for (int j = 0; j < 9; j++)
+                {
+                    int t = arr[j][i]; // проверка rows
+                    if (uniq[t] == true) // если 2 раз встретилось число
+                    {
+                        return false;
+                    }
+                    uniq[t] = true;
+                }
+            }
+
+            //проверка 3х3
+            for (int i = 0; i < 9-2; i+=3)
+            {
+                for (int j = 0; j < 9-2; j+=3)
+                {
+                    bool[] uniq = new bool[10];
+                    for (int k = 0; k < 3; k++)
+                    {
+                        for (int l = 0; l < 3; l++)
+                        {
+                            int x = i + k;
+                            int y = j + l;
+                            int t = arr[x][y];
+
+                            if (uniq[t] == true)
+                                return false;
+                            uniq[t] = true;
+                        }
+                    }
+                }
+            }
+
+            return true;
+
+            /*return Enumerable
+              .Range(0, 9)
+              .SelectMany(i => new[]
+              {
+                  board[i].Sum(),
+                  board.Sum(b => b[i]),
+                  board.Skip(3 * (i / 3)).Take(3).SelectMany(r => r.Skip(3 * (i % 3)).Take(3)).Sum()
+              })
+              .All(i => i == 45);*/
+        }
         static void Main()
         {
+
+            //double[] res = Tribonacci(new double[] { 8, 2, 18, }, 2);
+            //Assert.AreEqual(new double[] { 1, 1, 1, 3, 5, 9, 17, 31, 57, 105 }, variabonacci.Tribonacci(new double[] { 1, 1, 1 }, 10));
+            //Assert.AreEqual(new double[] { 0, 0, 1, 1, 2, 4, 7, 13, 24, 44 }, variabonacci.Tribonacci(new double[] { 0, 0, 1 }, 10));
+            //Assert.AreEqual(new double[] { 0, 1, 1, 2, 4, 7, 13, 24, 44, 81 }, variabonacci.Tribonacci(new double[] { 0, 1, 1 }, 10));
             //var str = OpenOrSenior(new[] { new[] { 45, 12 }, new[] { 55, 21 }, new[] { 19, 2 }, new[] { 104, 20 } });
             //Console.WriteLine(Encrypt("5168755456421726"));
             //Console.WriteLine(ShortWord("hello worldik"));
@@ -286,7 +536,12 @@ namespace CodeWars
             //int[] res = DelNRepeat(new[] { 1, 2, 3, 1, 2, 1, 2, 3 }, 2);
             //char ch = MissingLetter("ac");
             //Console.WriteLine(IP("10.0.0.0", "10.0.2.0"));
-
+            //Console.WriteLine(CheckString("PassW0rd"));
+            //Console.WriteLine(IsValidIp("1.1.1.1"));
+            //Console.WriteLine(MaxSubarraySum(new[] { -5, 0, -1, -4 }));
+            //Console.WriteLine(StrCount("Hello", "o"));
+            //Console.WriteLine(StripComments("яблоки, груши # и бананы\ngrapes\nbananas !apples", new[] { "#", "!" }));
+            //Console.WriteLine(Add("1111111111111111111111", "1111111111111111111111"));
         }
     }
 }

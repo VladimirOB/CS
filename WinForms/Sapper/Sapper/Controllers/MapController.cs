@@ -12,7 +12,7 @@ namespace Sapper.Controllers
         public const int cellSize = 50; // Размер клетки
         public static int numberOfBombs = 20;
         private static int currentPictureToSet = 0;
-
+        private static int countOfSteps;
         public static int[,] map = new int[mapSize, mapSize];
         public static Button[,] buttons = new Button[mapSize, mapSize];
 
@@ -27,6 +27,7 @@ namespace Sapper.Controllers
         //инициализация
         public static void Init(Form current)
         {
+            countOfSteps = 0;
             form = current;
             currentPictureToSet = 0;
             isFirstStep = true;
@@ -128,6 +129,13 @@ namespace Sapper.Controllers
             {
                 ShowAllBombs(iButton, jButton);
                 MessageBox.Show("Поражение!", "Game over!");
+                form.Controls.Clear(); // очистка формы
+                Init(form); // перезапуск
+            }
+            if (mapSize*mapSize-countOfSteps == numberOfBombs)
+            {
+                ShowAllBombs(iButton, jButton);
+                MessageBox.Show("Победа!", "Урааа!");
                 form.Controls.Clear(); // очистка формы
                 Init(form); // перезапуск
             }
@@ -233,33 +241,43 @@ namespace Sapper.Controllers
             {
                 case 1:
                     buttons[i, j].Image = FindNeededImage(1, 0);
+                    countOfSteps++;
                     break;
                 case 2:
                     buttons[i, j].Image = FindNeededImage(2, 0);
+                    countOfSteps++;
                     break;
                 case 3:
                     buttons[i, j].Image = FindNeededImage(3, 0);
+                    countOfSteps++;
                     break;
                 case 4:
                     buttons[i, j].Image = FindNeededImage(4, 0);
+                    countOfSteps++;
                     break;
                 case 5:
                     buttons[i, j].Image = FindNeededImage(0, 1);
+                    countOfSteps++;
                     break;
                 case 6:
                     buttons[i, j].Image = FindNeededImage(1, 1);
+                    countOfSteps++;
                     break;
                 case 7:
                     buttons[i, j].Image = FindNeededImage(2, 1);
+                    countOfSteps++;
                     break;
                 case 8:
                     buttons[i, j].Image = FindNeededImage(2, 2);
+                    countOfSteps++;
                     break;
                 case -1:
                     buttons[i, j].Image = FindNeededImage(1, 2);
+                    countOfSteps++;
                     break;
                 case 0:
                     buttons[i, j].Image = FindNeededImage(0, 0);
+                    countOfSteps++;
                     break;
             }
 
