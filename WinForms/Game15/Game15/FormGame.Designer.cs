@@ -30,36 +30,71 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGame));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.difficultyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.easyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mediumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.resetToolStripMenuItem});
+            this.optionsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(490, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // resetToolStripMenuItem
+            // optionsToolStripMenuItem
             // 
-            this.resetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
-            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.resetToolStripMenuItem.Text = "Options";
-            this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resetGameToolStripMenuItem,
+            this.difficultyToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.optionsToolStripMenuItem.Text = "Options";
             // 
-            // toolStripMenuItem1
+            // resetGameToolStripMenuItem
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(147, 22);
-            this.toolStripMenuItem1.Text = "Reset level";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            this.resetGameToolStripMenuItem.Name = "resetGameToolStripMenuItem";
+            this.resetGameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetGameToolStripMenuItem.Text = "Reset game";
+            this.resetGameToolStripMenuItem.Click += new System.EventHandler(this.resetGameToolStripMenuItem_Click);
+            // 
+            // difficultyToolStripMenuItem
+            // 
+            this.difficultyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.easyToolStripMenuItem,
+            this.mediumToolStripMenuItem,
+            this.hardToolStripMenuItem});
+            this.difficultyToolStripMenuItem.Name = "difficultyToolStripMenuItem";
+            this.difficultyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.difficultyToolStripMenuItem.Text = "Difficulty";
+            // 
+            // easyToolStripMenuItem
+            // 
+            this.easyToolStripMenuItem.Name = "easyToolStripMenuItem";
+            this.easyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.easyToolStripMenuItem.Text = "Easy";
+            this.easyToolStripMenuItem.Click += new System.EventHandler(this.easyToolStripMenuItem_Click);
+            // 
+            // mediumToolStripMenuItem
+            // 
+            this.mediumToolStripMenuItem.Name = "mediumToolStripMenuItem";
+            this.mediumToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mediumToolStripMenuItem.Text = "Medium";
+            this.mediumToolStripMenuItem.Click += new System.EventHandler(this.mediumToolStripMenuItem_Click);
+            // 
+            // hardToolStripMenuItem
+            // 
+            this.hardToolStripMenuItem.Name = "hardToolStripMenuItem";
+            this.hardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hardToolStripMenuItem.Text = "Hard";
+            this.hardToolStripMenuItem.Click += new System.EventHandler(this.hardToolStripMenuItem_Click);
             // 
             // FormGame
             // 
@@ -81,7 +116,11 @@
         #endregion
 
         private MenuStrip menuStrip1;
-        private ToolStripMenuItem resetToolStripMenuItem;
-        private ToolStripMenuItem toolStripMenuItem1;
+        private ToolStripMenuItem optionsToolStripMenuItem;
+        private ToolStripMenuItem resetGameToolStripMenuItem;
+        private ToolStripMenuItem difficultyToolStripMenuItem;
+        private ToolStripMenuItem easyToolStripMenuItem;
+        private ToolStripMenuItem mediumToolStripMenuItem;
+        private ToolStripMenuItem hardToolStripMenuItem;
     }
 }
