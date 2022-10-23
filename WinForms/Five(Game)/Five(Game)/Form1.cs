@@ -8,7 +8,14 @@ namespace Five_Game_
             MapController.Init(this);
         }
 
-        private void restartToolStripMenuItem_Click(object sender, EventArgs e)
+        public void Restart()
+        {
+            Controls.Clear();
+            InitializeComponent();
+            MapController.Init(this);
+        }
+
+        public void restartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Controls.Clear();
             InitializeComponent();

@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Mediator_Chat_
 {
+    delegate void Subs(string message);
+
     // "Colleague"
     abstract class Member
     {
+        protected event Subs? subscribers;
         protected Mediator mediator;
 
         public Member(Mediator mediator)
         {
             this.mediator = mediator;
-            mediator.Add(this);
+            //mediator.Add(this);
         }
 
-        public abstract void Notify(string message);
+        //public abstract void AddSubs(Subs ev);
+        public abstract void Notify(string message, Member member);
     }
 
     //"ConcreteColleague1" - Пехота
@@ -27,14 +32,13 @@ namespace Mediator_Chat_
         public Infantry(Mediator mediator) : base(mediator) { }
 
         //вызываем метод Send у Mediator(Server)
-        public void Send(string message, Member m)
+        public void Send(string message, Member m) 
         {
-            mediator.Send(message, m);
+            mediator.Send(message, m, this);
         }
-        
-        public override void Notify(string message)
+        public override void Notify(string message, Member member)
         {
-            Console.WriteLine("Colleague1 gets message: " + message);
+            Console.WriteLine($"Infantry gets message from {member.GetType().Name}: {message} ({DateTime.Now.ToLongTimeString()})");
         }
     }
     
@@ -47,12 +51,12 @@ namespace Mediator_Chat_
         //вызываем метод Send у Mediator(Server)
         public void Send(string message, Member m)
         {
-            mediator.Send(message, m);
+            mediator.Send(message, m, this);
         }
 
-        public override void Notify(string message)
+        public override void Notify(string message, Member member)
         {
-            Console.WriteLine("Colleague2 gets message: " + message);
+            Console.WriteLine($"HeavyArtillery gets message from {member.GetType().Name}: {message} ({DateTime.Now.ToLongTimeString()})");
         }
     }
     //"ConcreteColleague3"
@@ -64,12 +68,11 @@ namespace Mediator_Chat_
         //вызываем метод Send у Mediator(Server)
         public void Send(string message, Member m)
         {
-            mediator.Send(message, m);
+            mediator.Send(message, m, this);
         }
-
-        public override void Notify(string message)
+        public override void Notify(string message, Member member)
         {
-            Console.WriteLine("Colleague3 gets message: " + message);
+            Console.WriteLine($"Aviation gets message from {member.GetType().Name}: {message} ({DateTime.Now.ToLongTimeString()})");
         }
     }
 }
