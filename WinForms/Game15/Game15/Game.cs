@@ -13,7 +13,7 @@ namespace Game15
         public static int size = 4;
         const int CELLSIZE = 100;
         static Button[,] buttons;
-        static int[,] map;
+        public static int[,] map;
         static Stack<int> stack;
         
         public static void Init(FormGame current, int new_size)
@@ -26,6 +26,28 @@ namespace Game15
             InitStack();
             InitMap();
             InitButtons(current);
+        }
+
+        public static void Load(FormGame current)
+        {
+            form = current;
+            StreamReader sr = new StreamReader("db.dat");
+            size = Convert.ToInt32(sr.ReadLine());
+            ConfigMapSize(form);
+            string temp = sr.ReadToEnd();
+            sr.Close();
+            string[] arr = temp.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            int cnt = 0;
+            buttons = new Button[size, size];
+            map = new int[size, size];
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    map[i,j] = Convert.ToInt32(arr[cnt++]);
+                }
+            }
+            InitButtons(form);
         }
 
         static void ConfigMapSize(FormGame current)
