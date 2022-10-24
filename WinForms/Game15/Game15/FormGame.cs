@@ -2,7 +2,7 @@ namespace Game15
 {
     public partial class FormGame : System.Windows.Forms.Form
     {
-        int difficulty = 4;
+        public int difficulty = 4;
         public FormGame()
         {
             InitializeComponent();
@@ -40,17 +40,14 @@ namespace Game15
             Reset();
         }
 
-        private void FormGame_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            DialogResult result = MessageBox.Show("Are you sure you want to leave?", e.CloseReason.ToString(), MessageBoxButtons.YesNo);
-
-            if (result == DialogResult.No)
-                e.Cancel = true; // отмена выхода
-        }
-
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            StreamWriter sw = new StreamWriter("db.dat");
+            Save("../../../Saves/db.dat");
+        }
+
+        void Save(string file_name)
+        {
+            StreamWriter sw = new StreamWriter(file_name);
             sw.WriteLine(Game.size);
             for (int i = 0; i < Game.size; i++)
             {
@@ -62,11 +59,50 @@ namespace Game15
             sw.Close();
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        public void Load()
         {
             Controls.Clear();
             InitializeComponent();
-            Game.Load(this);
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Game.Load(this, "../../../Saves/db.dat");
+        }
+
+        private void menuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormMenu formMenu = new FormMenu(this);
+            formMenu.BackgroundImage = new Bitmap("../../../background.jpg");
+            DialogResult result = formMenu.ShowDialog();
+
+            if(result == DialogResult.OK)
+            {
+                Reset();
+            }
+            if (result == DialogResult.Yes) // button Save
+            {
+                saveFileDialog1.Title = "Saving";
+                saveFileDialog1.Filter = "System File|*.dat";
+
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    Save(saveFileDialog1.FileName);
+                }
+            }
+
+            if(result == DialogResult.No) //button Load
+            {
+                openFileDialog1.Title = "Load";
+                openFileDialog1.Filter = "System File|*.dat";
+                // Проверка существования выбранного файла
+                openFileDialog1.CheckFileExists = true;
+                openFileDialog1.Multiselect = false;
+                if(openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    Game.Load(this, openFileDialog1.FileName);
+                }
+            }
         }
     }
 }

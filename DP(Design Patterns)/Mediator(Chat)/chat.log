@@ -7,3 +7,21 @@ Infantry received a message from HeavyArtillery(17:25:45)
 Infantry received a message from Aviation(17:25:45)
 {Поддержка с воздуха пошла }
 
+HeavyArtillery received a message from Infantry(11:37:26)
+{Заряжай! }
+
+Infantry received a message from HeavyArtillery(11:37:26)
+{Обороняюсь }
+
+Infantry received a message from Aviation(11:37:26)
+{Поддержка с воздуха пошла }
+
+HeavyArtillery received a message from Infantry(15:11:29)
+{Заряжай! }
+
+Infantry received a message from HeavyArtillery(15:11:29)
+{Обороняюсь }
+
+Infantry received a message from Aviation(15:11:29)
+{Поддержка с воздуха пошла }
+

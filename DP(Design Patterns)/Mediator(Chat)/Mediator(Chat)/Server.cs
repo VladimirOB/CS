@@ -6,17 +6,33 @@ using System.Threading.Tasks;
 
 namespace Mediator_Chat_
 {
-
+    delegate void Subs(string message, Member m);
     // "Mediator" 
     abstract class Mediator
-    {
+    { 
+        //public event Subs subscribers;
+        protected Dictionary<string, Member> dict = new Dictionary<string, Member>();
+
+        public void Add(Member m)
+        {
+            dict.Add(m.GetType().Name, m);
+        }
+
         public abstract void Send(string message, Member source, Member dest);
+
     }
 
 
     // "ConcreteMediator"
     class Server : Mediator
     {
+       
+        void Add(Member ev)
+        {
+            dict
+        }
+
+
         public override void Send(string message, Member source, Member dest)
         {
             Log(source, dest, message);

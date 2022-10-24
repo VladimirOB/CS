@@ -9,9 +9,10 @@ namespace Game15
 {
     static class Game
     {
+        static Font btnFont = new Font("Courier New", 26, System.Drawing.FontStyle.Bold); // < Bold = Жирный шрифт
         static FormGame form;
         public static int size = 4;
-        const int CELLSIZE = 100;
+        const int CELLSIZE = 150;
         static Button[,] buttons;
         public static int[,] map;
         static Stack<int> stack;
@@ -28,18 +29,21 @@ namespace Game15
             InitButtons(current);
         }
 
-        public static void Load(FormGame current)
+
+        public static void Load(FormGame current, string file_name)
         {
             form = current;
-            StreamReader sr = new StreamReader("db.dat");
+            StreamReader sr = new StreamReader(file_name);
             size = Convert.ToInt32(sr.ReadLine());
-            ConfigMapSize(form);
+            current.Load();
+            buttons = new Button[size, size];
+            map = new int[size, size];
+            ConfigMapSize(current);
             string temp = sr.ReadToEnd();
             sr.Close();
             string[] arr = temp.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             int cnt = 0;
-            buttons = new Button[size, size];
-            map = new int[size, size];
+            
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
@@ -47,37 +51,42 @@ namespace Game15
                     map[i,j] = Convert.ToInt32(arr[cnt++]);
                 }
             }
-            InitButtons(form);
+            InitButtons(current);
         }
 
         static void ConfigMapSize(FormGame current)
         {
             current.Width = size * CELLSIZE + 20;
-            current.Height = (size+1)  * CELLSIZE;
+            current.Height = (size  * CELLSIZE)+70;
+        }
+
+        static Button InitButton(int i, int j)
+        {
+            Button button = new Button();
+            button.Location = new Point(j * CELLSIZE, (i * CELLSIZE) + 30); // < i - j инверсия
+            button.Size = new Size(CELLSIZE, CELLSIZE);
+            button.Text = map[i, j].ToString();
+            button.ForeColor = Color.Orange;
+            button.Font = btnFont;
+            button.MouseUp += new MouseEventHandler(OnButtonPressedMouse);
+            if (button.Text == "0")
+            {
+                button.Text = "";
+                button.Enabled = false;
+            }
+            return button;
         }
 
         static void InitButtons(FormGame current)
         {
-            Font btnFont =  new Font("Courier New", 22, System.Drawing.FontStyle.Bold); // < Bold = Жирный шрифт
+            
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    Button button = new Button();
-                    button.Location = new Point(j * CELLSIZE, i * CELLSIZE); // < i - j инверсия
-                    button.Size = new Size(CELLSIZE, CELLSIZE);
-                    button.Text = map[i, j].ToString();
-                    button.ForeColor = Color.Orange;
-                    button.Font = btnFont;
-                    button.MouseUp += new MouseEventHandler(OnButtonPressedMouse);
+                    Button button = InitButton(i,j);
                     current.Controls.Add(button);
                     buttons[i, j] = button;
-
-                    if (map[i, j] == 0)
-                    {
-                        buttons[i, j].Text = "";
-                        buttons[i, j].Enabled = false;
-                    }
                 }
             }
         }

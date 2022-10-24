@@ -10,12 +10,14 @@
         static void Main()
         {
             Server serv = new Server();
+
             Infantry c1 = new Infantry(serv);
             HeavyArtillery c2 = new HeavyArtillery(serv);
             Aviation c3 = new Aviation(serv);
+
             c1.Send("Заряжай!", c2);
-            c2.Send("Обороняюсь", c1);
-            c3.Send("Поддержка с воздуха пошла", c1);
+            //c2.Send("Обороняюсь", c1);
+            //c3.Send("Поддержка с воздуха пошла", c1);
             Console.Read();
         }
     }

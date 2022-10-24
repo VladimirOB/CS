@@ -703,12 +703,5 @@ namespace Five_Game_
 
             return image;
         }
-
-        private static bool IsInBorder(int i, int j)
-        {
-            if (i < 0 || j < 0 || j > mapSize - 1 || i > mapSize - 1)
-                return false;
-            return true;
-        }
     }
 }

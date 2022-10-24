@@ -7,21 +7,17 @@ using System.Threading.Tasks;
 
 namespace Mediator_Chat_
 {
-    delegate void Subs(string message);
-
     // "Colleague"
     abstract class Member
     {
-        protected event Subs? subscribers;
         protected Mediator mediator;
 
         public Member(Mediator mediator)
         {
             this.mediator = mediator;
-            //mediator.Add(this);
+            mediator.Add(this);
         }
 
-        //public abstract void AddSubs(Subs ev);
         public abstract void Notify(string message, Member member);
     }
 
@@ -32,7 +28,7 @@ namespace Mediator_Chat_
         public Infantry(Mediator mediator) : base(mediator) { }
 
         //вызываем метод Send у Mediator(Server)
-        public void Send(string message, Member m) 
+        public void Send(string message, Member m)
         {
             mediator.Send(message, m, this);
         }
