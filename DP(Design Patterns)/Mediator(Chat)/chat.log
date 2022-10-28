@@ -12,16 +12,39 @@ HeavyArtillery received a message from Infantry(11:37:26)
 
 Infantry received a message from HeavyArtillery(11:37:26)
 {Обороняюсь }
-
-Infantry received a message from Aviation(11:37:26)
-{Поддержка с воздуха пошла }
-
-HeavyArtillery received a message from Infantry(15:11:29)
+Infantry received a message from HeavyArtillery(21:03:35)
 {Заряжай! }
 
-Infantry received a message from HeavyArtillery(15:11:29)
+HeavyArtillery received a message from Infantry(21:03:35)
 {Обороняюсь }
 
-Infantry received a message from Aviation(15:11:29)
+Aviation received a message from Infantry(21:03:35)
+{Поддержка с воздуха пошла }
+
+Infantry received a message from HeavyArtillery(14:44:40)
+{Заряжай! }
+
+HeavyArtillery received a message from Infantry(14:44:40)
+{Обороняюсь }
+
+Aviation received a message from Infantry(14:44:40)
+{Поддержка с воздуха пошла }
+
+Infantry received a message from HeavyArtillery(14:48:32)
+{Заряжай! }
+
+HeavyArtillery received a message from Infantry(14:48:32)
+{Обороняюсь }
+
+Aviation received a message from Infantry(14:48:32)
+{Поддержка с воздуха пошла }
+
+Infantry received a message from HeavyArtillery(15:10:37)
+{Заряжай! }
+
+HeavyArtillery received a message from Infantry(15:10:37)
+{Обороняюсь }
+
+Aviation received a message from Infantry(15:10:38)
 {Поддержка с воздуха пошла }
 

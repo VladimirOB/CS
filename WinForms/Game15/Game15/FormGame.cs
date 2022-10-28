@@ -2,18 +2,17 @@ namespace Game15
 {
     public partial class FormGame : System.Windows.Forms.Form
     {
-        public int difficulty = 4;
         public FormGame()
         {
             InitializeComponent();
-            Game.Init(this, difficulty);
+            Game.Init(this);
         }
 
         public void Reset()
         {
             Controls.Clear();
             InitializeComponent();
-            Game.Init(this, difficulty);
+            Game.Init(this);
         }
 
         private void resetGameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -24,25 +23,25 @@ namespace Game15
         private void easyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Controls.Clear();
-            difficulty = 4;
+            Game.size = 4;
             Reset();
         }
 
         private void mediumToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            difficulty = 5;
+            Game.size = 5;
             Reset();
         }
 
         private void hardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            difficulty = 6;
+            Game.size = 6;
             Reset();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Save("../../../Saves/db.dat");
+            Save("../../../Quick.dat");
         }
 
         void Save(string file_name)
@@ -67,7 +66,7 @@ namespace Game15
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Game.Load(this, "../../../Saves/db.dat");
+            Game.Load(this, "../../../Quick.dat");
         }
 
         private void menuToolStripMenuItem_Click(object sender, EventArgs e)

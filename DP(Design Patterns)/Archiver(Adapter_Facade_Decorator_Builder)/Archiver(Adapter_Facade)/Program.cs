@@ -32,13 +32,19 @@
             ar.algorithms.Add(".txt", recoveryGP);
             ar.algorithms.Add(".jpg", commentLZW);
 
-            UIFactory factory = new ConcreteUIFactory2();
+            UIFactory factory = new ConcreteUIFactory2(); // AbstractFactory
             GeneralUI general = new GeneralUI(factory);
             ProductsContainer pc = general.CreateUI();
             pc.Run();
 
             ar.ZipFolder("V:/temp", zip);
             //ar.UnZipFolder("V:/temp", rar);
+            Console.WriteLine();
+            Conveyor conveyor = new Conveyor();
+            conveyor.Attach(new ConcreteElementA());
+            ConcreteVisitor1 vis1 = new ConcreteVisitor1();
+            conveyor.Accept(vis1);
+            
 
         }
     }

@@ -24,13 +24,13 @@ namespace Mediator_Chat_
     //"ConcreteColleague1" - Пехота
     class Infantry : Member
     {
-        // Конструктор от бати
+        
         public Infantry(Mediator mediator) : base(mediator) { }
 
         //вызываем метод Send у Mediator(Server)
-        public void Send(string message, Member m)
+        public void Send(string message, string toWhom)
         {
-            mediator.Send(message, m, this);
+            mediator.Send(message, this, toWhom);
         }
         public override void Notify(string message, Member member)
         {
@@ -41,13 +41,13 @@ namespace Mediator_Chat_
     //"ConcreteColleague2"
     class HeavyArtillery : Member
     {
-        // Конструктор от бати
+
         public HeavyArtillery(Mediator mediator) : base(mediator) { }
 
         //вызываем метод Send у Mediator(Server)
-        public void Send(string message, Member m)
+        public void Send(string message, string toWhom)
         {
-            mediator.Send(message, m, this);
+            mediator.Send(message, this, toWhom);
         }
 
         public override void Notify(string message, Member member)
@@ -58,13 +58,13 @@ namespace Mediator_Chat_
     //"ConcreteColleague3"
     class Aviation : Member
     {
-        // Конструктор от бати
+
         public Aviation(Mediator mediator) : base(mediator) { }
 
         //вызываем метод Send у Mediator(Server)
-        public void Send(string message, Member m)
+        public void Send(string message, string toWhom)
         {
-            mediator.Send(message, m, this);
+            mediator.Send(message, this, toWhom);
         }
         public override void Notify(string message, Member member)
         {

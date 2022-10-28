@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Refactoring_Before
+namespace Refactoring_Fauler
 {
     /*Customer – класс, представляющий клиента магазина.
      * Как и предыдущие классы,
@@ -31,44 +33,37 @@ namespace Refactoring_Before
 
         public string statement()
         {
-            double totalAmount = 0;
-            int frequentRenterPoints = 0;
             string result = "Учет аренды для " + getName() + '\n';
             foreach (var each in _rentals)
             {
-                double thisAmount = 0;
-
-                // определить сумму для каждой строки
-                switch (each.getMovie().getPriceCode())
-                {
-                    case Movie.REGUAL:
-                        thisAmount += 2;
-                        if (each.getDaysRented() > 2)
-                            thisAmount += (each.getDaysRented() - 2 * 1.5);
-                        break;
-
-                    case Movie.NEW_RELEASE:
-                        thisAmount += each.getDaysRented() * 3;
-                        break;
-                    case Movie.CHILDRENS:
-                        thisAmount += 1.5;
-                        if (each.getDaysRented() > 3)
-                            thisAmount += (each.getDaysRented() - 3) * 1.5;
-                        break;
-                }
-                //добавить очки для активного арендатор
-                frequentRenterPoints++;
-                //бонус за аренду новинки на два и более дня
-                if ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) &&
-                   each.getDaysRented() > 1) frequentRenterPoints++;
-                totalAmount += thisAmount;
+                //показать результаты для этой аренды
+                result += "\t" + each.getMovie().getTitle() + " " + each.getChange() + "\n"; // each.getChange - "Замена временной переменной вызовом метода"(Replace Temp with Query, 133)
             }
-                
-                //показать результаты
-                result += "Сумма задолженности составляет " + totalAmount + "\n";
-                result += "Вы заработали " + frequentRenterPoints + " очков за активность.";
-                return result;
+            //показать результаты
+            result += "Сумма задолженности составляет " + getTotalChange() + "\n";
+            result += "Вы заработали " + getTotalFrequentRenterPoints() + " очков за активность.";
+            return result;
+        }
 
+        //добавить очки для активного арендатора
+        private int getTotalFrequentRenterPoints()
+        {
+            int result = 0;
+            foreach (var each in _rentals)
+            {
+                result += each.getFrequentRenterPoints(); //Выделение начисления бонусов в метод (Extract Method, 124)
+            }
+            return result;
+        }
+
+        private double getTotalChange() // замена локальной переменной вызовом метода (Replace Temp with Query, 133)
+        {
+            double result = 0;
+            foreach (var each in _rentals)
+            {
+                result += each.getChange();
+            }
+            return result;
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Refactoring_Before
+namespace Refactoring_Fauler
 {
     //Rental – класс, представляющий данные о прокате фильма.
     class Rental
@@ -25,5 +25,16 @@ namespace Refactoring_Before
         {
             return _movie;
         }
+
+        public int getFrequentRenterPoints()
+        {
+           return _movie.getFrequentRenterPoints(_daysRented);
+        }
+
+        public double getChange()
+        {
+            return _movie.getChange(_daysRented);
+        }
+
     }
 }

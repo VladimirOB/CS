@@ -11,6 +11,9 @@ using Microsoft.VisualBasic;
 using System.Linq;
 using System.Numerics;
 
+//кортеж для массива
+using Interval = System.ValueTuple<int, int>;
+
 namespace CodeWars
 {
     class MainApp
@@ -517,9 +520,200 @@ namespace CodeWars
               })
               .All(i => i == 45);*/
         }
+
+        public static bool MillipedeOfWords(string[] arr)
+        {
+            /*Дан набор слов. Слова соединяются, если последняя буква одного слова и первая буква другого слова совпадают.
+            Массив от 3 до 7 слов случайной длины. Заглавных букв нет. Слова в массиве могут повторяться. Пример правда
+            desirE EndurE ExcavatE ExcesS ScreeN NighT Theater.*/
+            if (arr.Length < 3 || arr.Length > 7)
+                return false;
+            int cnt = 0;
+            foreach (var word in arr)
+            {
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    if (word[word.Length - 1] == arr[i][0])
+                    {
+                        cnt++;
+                        break;
+                    }
+                }
+            }
+            if (cnt == arr.Length-1)
+                return true;
+            else return false;
+            //Console.WriteLine(MillipedeOfWords(new[] { "trade", "pole", "view", "grave", "ladder", "mushroom", "president" }));
+            //Console.WriteLine(MillipedeOfWords(new[] { "excavate", "endure", "eesire" }));
+        }
+
+        public static int[] Deadfish(string str, int i = 0)
+        {
+            //Deadfish.Parse("iiisdoso") => new int[] {8, 64};
+            //List<int> lst = new List<int>();
+            //int number = 0;
+            //for (int i = 0; i < str.Length; i++)
+            //{
+            //    if (str[i] == 'i')
+            //    {
+            //        number++;
+            //        continue;
+            //    }
+            //    if (str[i] == 's')
+            //    {
+            //        number*=number;
+            //        continue;
+            //    }
+            //    if (str[i] == 'd')
+            //    {
+            //        number --;
+            //        continue;
+            //    }
+            //    if (str[i] == 'o')
+            //    {
+            //        lst.Add(number);
+            //        continue;
+            //    }
+            //}
+            //return lst.ToArray();
+
+            return str.Aggregate(new List<int>(), (a, c) =>
+            {
+                if (c == 'i') i++;
+                else if (c == 'd') i--;
+                else if (c == 's') i *= i;
+                else if (c == 'o') a.Add(i);
+                return a;
+            }).ToArray();
+        }
+
+        public static long[] TakeaNumberAndSumItsDigits(long a, long b)
+        {
+            //Фактически: 89 = 8^1 + 9^2
+            //Следующее число, обладающее этим свойством, — 135.
+            //Посмотрите еще раз на это свойство: 135 = 1 ^ 1 + 3 ^ 2 + 5 ^ 3.
+
+            List<long> lst = new List<long>();
+            long sum = 0;
+            for (long i = a; i < b; i++)
+            {
+                int cnt = 1;
+                //получаем из i строку, чтоб пробежаться по всем членам
+                foreach (var n in i.ToString())
+                {
+                    // конвертируем в лонг n в степени cnt и потом добавляем в sum
+                    sum += Convert.ToInt64(Math.Pow(Convert.ToInt64(n.ToString()), cnt));
+                    cnt++;
+                }
+                cnt = 1;
+                if(sum == i)
+                {
+                    lst.Add(sum);
+                }
+                sum = 0;
+            }
+            return lst.ToArray();
+
+            /* return Enumerable.Range((int) a, (int) (b - a))
+            .Where(x => (long) x.ToString().Select((c, i) => Math.Pow(c - '0', i + 1)).Sum() == x)
+            .Select(Convert.ToInt64).ToArray();*/
+        }
+
+        public static int TrailingZeros(int n)
+        {
+            int res = 0;
+            while (n != 0)
+            {
+                //вычисляем найбольшее целое число n / 5
+                res += (int)Math.Floor((double) n / 5);
+                n /= 5;
+            }
+            return res;
+            //public static int TrailingZeros(int n) => Enumerable.Range(1, (int)Math.Log(n, 5)).Sum(i => (int)(n / Math.Pow(5, i)));
+        }
+
+        public static long NextSmaller(long n)
+        {
+            char[] chars = n.ToString().ToCharArray();
+            int[] numbers = new int[chars.Length];
+            for (int i = 0; i < chars.Length; i++)
+            {
+                numbers[i] = chars[i] - 48;
+            }
+
+            int stInd = numbers.Length - 1;
+            for (int i = numbers.Length - 2; i >= 0; i--)
+            {
+                int max = i == 0 ? 0 : int.MinValue;
+                int maxInd = -1;
+                for (int j = i + 1; j < numbers.Length; j++)
+                {
+                    if (numbers[j] > max && numbers[j] < numbers[i])
+                    {
+                        max = numbers[j];
+                        maxInd = j;
+                    }
+                }
+                if (maxInd >= 0)
+                {
+                    int t = numbers[maxInd];
+                    numbers[maxInd] = numbers[i];
+                    numbers[i] = t;
+
+                    stInd = i;
+                    break;
+                }
+            }
+            for (int i = stInd + 1; i < numbers.Length - 1; i++)
+            {
+                int max = numbers[i];
+                int sortIndex = i;
+                for (int j = i; j < numbers.Length; j++)
+                {
+                    if (numbers[j] > max)
+                    {
+                        max = numbers[j];
+                        sortIndex = j;
+                    }
+                }
+
+                int temp = numbers[i];
+                numbers[i] = max;
+                numbers[sortIndex] = temp;
+            }
+            string newNum = "";
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                newNum += numbers[i];
+            }
+            long newValue = Convert.ToInt64(newNum);
+            return newValue == n ? -1 : newValue;
+        }
+
+        public static string Extract(int[] args)
+        {
+            var allNumbers = Enumerable.Range(args.First(), args.Last() - args.First() + 1);
+            List<string> li = new List<string>();
+            foreach (var num in allNumbers)
+            {
+                if (args.Contains(num))
+                {
+                    li.Add(num + " ");
+                }
+                else
+                {
+                    li.Add("  ");
+                }
+            }
+
+            List<string> newLi = Regex.Split(string.Concat(li), @"\s{2,}").ToList();
+            newLi = newLi.Select(s => s.Trim()).ToList();
+
+            return string.Join(",", newLi.Select(w => w.All(a => !char.IsWhiteSpace(a)) ? Convert.ToInt32(w).ToString() : Convert.ToInt32(w.Split().Last()) - Convert.ToInt32(w.Split().First()) >= 2 ? w.Split().First() + "-" + w.Split().Last() : w.Split().First() + "," + w.Split().Last()));
+        }
+
         static void Main()
         {
-
             //double[] res = Tribonacci(new double[] { 8, 2, 18, }, 2);
             //Assert.AreEqual(new double[] { 1, 1, 1, 3, 5, 9, 17, 31, 57, 105 }, variabonacci.Tribonacci(new double[] { 1, 1, 1 }, 10));
             //Assert.AreEqual(new double[] { 0, 0, 1, 1, 2, 4, 7, 13, 24, 44 }, variabonacci.Tribonacci(new double[] { 0, 0, 1 }, 10));
@@ -542,6 +736,11 @@ namespace CodeWars
             //Console.WriteLine(StrCount("Hello", "o"));
             //Console.WriteLine(StripComments("яблоки, груши # и бананы\ngrapes\nbananas !apples", new[] { "#", "!" }));
             //Console.WriteLine(Add("1111111111111111111111", "1111111111111111111111"));
+            //int[] res = Deadfish("iiisdoso");
+            //long[] res = TakeaNumberAndSumItsDigits(88, 90);
+            //Console.WriteLine(TrailingZeros(1000));
+            //Console.WriteLine(NextSmaller(531));
+            //Console.WriteLine(Extract(new[] { -10, -9, -8, -6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20 }));
         }
     }
 }

@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace Mediator_Chat_
 {
-    delegate void Subs(string message, Member m);
+    delegate void Subs(string message, Member source);
+
     // "Mediator" 
     abstract class Mediator
-    { 
-        //public event Subs subscribers;
-        protected Dictionary<string, Member> dict = new Dictionary<string, Member>();
-
+    {
+        //protected Dictionary<string, Member> dict = new Dictionary<string, Member>();
+        protected Dictionary<string, Subs> dict = new Dictionary<string, Subs>();
         public void Add(Member m)
         {
-            dict.Add(m.GetType().Name, m);
+            dict.Add(m.GetType().Name, m.Notify);
         }
 
-        public abstract void Send(string message, Member source, Member dest);
+        public abstract void Send(string message, Member source, string toWhom);
 
     }
 
@@ -26,23 +26,22 @@ namespace Mediator_Chat_
     // "ConcreteMediator"
     class Server : Mediator
     {
-       
-        void Add(Member ev)
+        public override void Send(string message, Member source, string toWhom)
         {
-            dict
+            foreach (var item in dict)
+            {
+                if (item.Key.Equals(toWhom))
+                {
+                    Log(source, toWhom, message);
+                    item.Value.Invoke(message, source);
+                }
+            }
         }
 
-
-        public override void Send(string message, Member source, Member dest)
-        {
-            Log(source, dest, message);
-            source.Notify(message, dest);
-        }
-
-        void Log(Member source, Member dest, string message)
+        void Log(Member source, string dest, string message)
         {
             string time = "(" + DateTime.Now.ToLongTimeString() + ")";
-            File.AppendAllText("../../../../chat.log", source.GetType().Name + " received a message from " + dest.GetType().Name +time+ "\n{" + message + " }\n\n");
+            File.AppendAllText("../../../../chat.log", source.GetType().Name + " received a message from " + dest + time + "\n{" + message + " }\n\n");
         }
     }
 }

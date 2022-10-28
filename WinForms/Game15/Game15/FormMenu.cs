@@ -24,17 +24,17 @@ namespace Game15
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            formGame.difficulty = 4;
+            Game.size = 4;
         }
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            formGame.difficulty = 5;
+            Game.size = 5;
         }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
         {
-            formGame.difficulty = 6;
+            Game.size = 6;
         }
     }
 }

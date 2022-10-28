@@ -17,9 +17,9 @@ namespace Game15
         public static int[,] map;
         static Stack<int> stack;
         
-        public static void Init(FormGame current, int new_size)
+        public static void Init(FormGame current)
         {
-            size = new_size;
+            //size = new_size;
             buttons = new Button[size, size];
             map = new int[size, size];
             form = current;
@@ -35,7 +35,8 @@ namespace Game15
             form = current;
             StreamReader sr = new StreamReader(file_name);
             size = Convert.ToInt32(sr.ReadLine());
-            current.Load();
+            // сброс и инициализация компонентов. нужно для того чтоб InitButtons обработал правильно.
+            current.Load(); 
             buttons = new Button[size, size];
             map = new int[size, size];
             ConfigMapSize(current);
@@ -186,6 +187,7 @@ namespace Game15
                     stack.Push(t); // таким образом получается рандом генерация.
                 }
             }
+            
         }
 
         static void InitMap()
