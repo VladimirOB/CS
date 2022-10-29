@@ -13,6 +13,17 @@ namespace Exam_File_Manager_
         public abstract void Handle(FileManager context);
     }
 
+    enum Operation
+    {
+        logicalDisks = 1,
+        search = 2,
+        copy = 3,
+        movingAFile = 4,
+        creationFile = 5,
+        deleteFile = 6,
+        exit = 0
+    }
+
     // непотокобезопасная, простая реализация
     class OperationMenu : State
     {
@@ -36,7 +47,6 @@ namespace Exam_File_Manager_
         public override void Handle(FileManager context)
         {
             Console.WriteLine();
-            //Console.Clear();
             Console.WriteLine("Make a choise: ");
             Console.WriteLine("Press 1 to view Logical disks");
             Console.WriteLine("Press 2 to search");
@@ -45,42 +55,43 @@ namespace Exam_File_Manager_
             Console.WriteLine("Press 5 to creation file");
             Console.WriteLine("Press 6 to delete file");
             Console.WriteLine("Press 0 to exit");
-            int ch;
-            if (Int32.TryParse(Console.ReadLine(), out ch))
+            Operation op;
+            if (Enum.TryParse(Console.ReadLine(), out op))
             {
-                switch (ch)
+                
+                switch (op)
                 {
-                    case 1:
+                    case Operation.logicalDisks:
                         {
                             context.State = new LogicalDrives();
                             break;
                         }
-                    case 2:
+                    case Operation.search:
                         {
                             context.State = new SearchState();
                             break;
                         }
-                    case 3:
+                    case Operation.copy:
                         {
                             context.State = new CopyState();
                             break;
                         }
-                    case 4:
+                    case Operation.movingAFile:
                         {
                             context.State = new MovingState();
                             break;
                         }
-                    case 5:
+                    case Operation.creationFile:
                         {
                             context.State = new CreateState();
                             break;
                         }
-                    case 6:
+                    case Operation.deleteFile:
                         {
                             context.State = new DeleteStateProxy();
                             break;
                         }
-                    case 0:
+                    case Operation.exit:
                         {
                             Environment.Exit(0);
                             break;
@@ -98,6 +109,7 @@ namespace Exam_File_Manager_
             {
                 Console.WriteLine(current);
             }
+            Console.WriteLine("Press any key...");
             Console.ReadLine();
             context.State = OperationMenu.Instance();
         }
@@ -108,6 +120,7 @@ namespace Exam_File_Manager_
         public override void Handle(FileManager context)
         {
             Console.WriteLine("Search State");
+            Console.WriteLine("Press any key...");
             Console.ReadLine();
             context.State = OperationMenu.Instance();
         }
@@ -118,6 +131,7 @@ namespace Exam_File_Manager_
         public override void Handle(FileManager context)
         {
             Console.WriteLine("Copy State");
+            Console.WriteLine("Press any key...");
             Console.ReadLine();
             context.State = OperationMenu.Instance();
         }
@@ -128,6 +142,7 @@ namespace Exam_File_Manager_
         public override void Handle(FileManager context)
         {
             Console.WriteLine("Moving State");
+            Console.WriteLine("Press any key...");
             Console.ReadLine();
             context.State = OperationMenu.Instance();
         }
@@ -138,6 +153,7 @@ namespace Exam_File_Manager_
         public override void Handle(FileManager context)
         {
             Console.WriteLine("Create State");
+            Console.WriteLine("Press any key...");
             Console.ReadLine();
             context.State = OperationMenu.Instance();
         }
@@ -148,6 +164,7 @@ namespace Exam_File_Manager_
         public override void Handle(FileManager context)
         {
             Console.WriteLine("Delete State");
+            Console.WriteLine("Press any key...");
             Console.ReadLine();
             context.State = OperationMenu.Instance();
         }
@@ -166,6 +183,7 @@ namespace Exam_File_Manager_
             //условный файл
             string file = "file_name1.exe " + DateTime.Now.ToString() + " size: 0\n";
             File.AppendAllText("../../../../DeleteFiles.log", file);
+            Console.WriteLine("Press any key...");
             Console.ReadLine();
             context.State = new DeleteState(); // операция обычной панели
         }

@@ -4,8 +4,9 @@
     {
         //абстрактная фабрика или фабричный метод
         //декоратор
-        //прокси 
+        //прокси
         //Singleton
+        //State
 
         //Паттерны должны быть обоснованы
         //Наличие комментариев
@@ -15,17 +16,14 @@
             Label label = new Label();
             Border border = new Border(label);
             ScrollBar scrollBar = new ScrollBar(border);
-            scrollBar.Draw();
-
-            Console.WriteLine();
 
             //Factory Method
             UIFactory factory = new UIFactory2(); // AbstractFactory
             GeneralUI general = new GeneralUI(factory);
             ProductsContainer pc = general.CreateUI();
-            pc.Run();
 
-            FileManager fm = FileManager.Instance(OperationMenu.Instance());
+            FileManager fm = FileManager.Instance(OperationMenu.Instance(), scrollBar, pc);
+            fm.Draw();
             fm.Run();
             Console.Read();
         }

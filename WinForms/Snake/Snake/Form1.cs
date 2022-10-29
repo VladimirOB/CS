@@ -187,7 +187,7 @@ namespace Snake
             Graphics canvas = e.Graphics;
             Brush snakeColor;
             //Bitmap f = new Bitmap("../../../food2.bmp");
-            // canvas.DrawImage(f, food.X, food.Y);
+            //canvas.DrawImage(f, food.X, food.Y);
             for (int i = 0; i < Snake.Count; i++)
             {
                 if( i == 0)
@@ -343,7 +343,9 @@ namespace Snake
             };
             Snake.Add(body);
 
-            food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            do
+                food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            while (Snake.Any(i => i.X == food.X && i.Y == food.Y));
 
             if (score % 7 == 0)
             {

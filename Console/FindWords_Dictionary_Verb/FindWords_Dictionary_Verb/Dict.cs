@@ -198,16 +198,6 @@ namespace FindWords_Dictionary_Verb
             Console.ReadKey();
         }
 
-        void Save()
-        {
-            //StreamWriter sw = new StreamWriter("db.txt");
-            //foreach (var item in pair)
-            //{
-            //    sw.WriteLine(item.Key + " " + item.Value);
-            //}
-            //sw.Close();
-        }
-
         void PrintMenu()
         {
             Console.Clear();

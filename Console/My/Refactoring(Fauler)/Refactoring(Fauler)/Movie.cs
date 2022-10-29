@@ -10,6 +10,11 @@ namespace Refactoring_Fauler
     {
         public abstract int getPriceCode();
         public abstract double getCharge(int daysRented);
+
+        public virtual int getFrequentRenterPoints(int datsRented)
+        {
+            return 1;
+        }
     }
 
     class ChildrensPrice : Price
@@ -37,6 +42,10 @@ namespace Refactoring_Fauler
         {
              return daysRented * 3;
         }
+        public override int getFrequentRenterPoints(int datsRented)
+        {
+            return (datsRented > 1) ? 2 : 1;
+        }
     }
     class RegularPrice : Price
     {
@@ -58,12 +67,11 @@ namespace Refactoring_Fauler
     //Movie – класс, который представляет данные о фильме.
     class Movie
     {
-        public const int CHILDRENS = 2;
         public const int REGULAR = 0;
         public const int NEW_RELEASE = 1;
+        public const int CHILDRENS = 2;
 
         private string _title;
-        private int _priceCode;
         private Price _price; //Strategy или State
 
         public Movie(string title, int priceCode)
@@ -108,10 +116,7 @@ namespace Refactoring_Fauler
 
         public int getFrequentRenterPoints(int daysRented)
         {
-            if (getPriceCode() == NEW_RELEASE && daysRented > 1)
-                return 2;
-            else
-                return 1;
+            return _price.getFrequentRenterPoints(daysRented);
         }
     }
 }

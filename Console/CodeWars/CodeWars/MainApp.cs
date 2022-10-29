@@ -9,7 +9,7 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using Microsoft.VisualBasic;
 using System.Linq;
-using System.Numerics;
+using System.Numerics; // << BigInt
 
 //кортеж для массива
 using Interval = System.ValueTuple<int, int>;
@@ -690,6 +690,31 @@ namespace CodeWars
             return newValue == n ? -1 : newValue;
         }
 
+        public static long NextBigger(long n)
+        {
+            string numText = n.ToString();
+            string maxValueText = string.Join("", numText.OrderByDescending(ch => ch));
+            long num = n + 1;
+            long max = long.Parse(maxValueText);
+
+            while(num <= max)
+            {
+                if (NumsNextSmaller(n, num))
+                    return num;
+                ++num;
+            }
+
+            return -1;
+        }
+
+        private static bool NumsNextSmaller(long num1, long num2)
+        {
+            string num1Text = num1.ToString();
+            string num2Text = num2.ToString();
+
+            return num1Text.OrderBy(ch => ch).SequenceEqual(num2Text.OrderBy(ch => ch));
+        }
+
         public static string Extract(int[] args)
         {
             var allNumbers = Enumerable.Range(args.First(), args.Last() - args.First() + 1);
@@ -712,8 +737,74 @@ namespace CodeWars
             return string.Join(",", newLi.Select(w => w.All(a => !char.IsWhiteSpace(a)) ? Convert.ToInt32(w).ToString() : Convert.ToInt32(w.Split().Last()) - Convert.ToInt32(w.Split().First()) >= 2 ? w.Split().First() + "-" + w.Split().Last() : w.Split().First() + "," + w.Split().Last()));
         }
 
+        public static string sumStrings(string a, string b)
+        {
+            BigInteger aa;
+            BigInteger bb;
+            if (BigInteger.TryParse(a, out aa))
+            {
+                if (BigInteger.TryParse(b, out bb))
+                {
+                    return (aa + bb).ToString();
+                }
+                return aa.ToString();
+            }
+            else if (BigInteger.TryParse(b, out bb))
+                return bb.ToString();
+            else return null;
+        }
+
+        public static bool DetectPangram(string str)
+        {
+            /*Панграмма — это предложение, в котором каждая буква алфавита встречается хотя бы по одному разу.  
+             *Например, предложение «The quick brown fox jumps over the lazy dog» является панграммой, 
+             *потому что в нем хотя бы один раз используются буквы AZ (регистр значения не имеет).
+              Учитывая строку, определите, является ли она панграммой.  Возвращает True, если это так, False, если нет.  
+              Не обращайте внимания на цифры и знаки препинания.*/
+            //a - 97, z - 122.
+            //str = str.ToLower();
+            //List<char> lst = new List<char>();
+            //bool[] check = new bool[26];
+            //for (int i = 97; i < 123; i++)
+            //{
+            //    lst.Add(Convert.ToChar(i));
+            //}
+
+            //for (int i = 0; i < str.Length; i++)
+            //{
+            //    for (int j = 0; j < lst.Count; j++)
+            //    {
+            //        if (str[i] == lst[j])
+            //        {
+            //            check[j] = true;
+            //            lst.Remove(lst[j]);
+            //            break;
+            //        }
+            //    }
+            //}
+            //if (lst.Count > 0)
+            //    return false;
+            //else
+            //    return true;
+
+            return str.Where(ch => Char.IsLetter(ch)).Select(ch => Char.ToLower(ch)).Distinct().Count() == 26;
+        }
+
+
+        public static int FindDigitInInfiniteAdditionResult(int n)  // 3kyu
+        {
+            //string f = "123456789101112131415161718192021222324252627282930";
+            //string s = "149162536496481100121144169196225256289324361400441484529576625676729784841900";
+            string res = "27261325597593231536305887388246478613576988683371484529576625676729784841900";
+
+            return Convert.ToInt32(res[n]-48);
+        }
+
+
+
         static void Main()
         {
+
             //double[] res = Tribonacci(new double[] { 8, 2, 18, }, 2);
             //Assert.AreEqual(new double[] { 1, 1, 1, 3, 5, 9, 17, 31, 57, 105 }, variabonacci.Tribonacci(new double[] { 1, 1, 1 }, 10));
             //Assert.AreEqual(new double[] { 0, 0, 1, 1, 2, 4, 7, 13, 24, 44 }, variabonacci.Tribonacci(new double[] { 0, 0, 1 }, 10));
@@ -740,7 +831,12 @@ namespace CodeWars
             //long[] res = TakeaNumberAndSumItsDigits(88, 90);
             //Console.WriteLine(TrailingZeros(1000));
             //Console.WriteLine(NextSmaller(531));
+            //Console.WriteLine(NextBigger(513));
             //Console.WriteLine(Extract(new[] { -10, -9, -8, -6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20 }));
+            //Console.WriteLine(sumStrings("123", "123"));
+            //Console.WriteLine(DetectPangram("The quick brown fox jumps over the lazy dog"));
+            //Console.WriteLine(FindDigitInInfiniteAdditionResult(1));
+
         }
     }
 }
