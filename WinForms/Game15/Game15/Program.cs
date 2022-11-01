@@ -1,17 +1,28 @@
+using Microsoft.VisualBasic.ApplicationServices;
+
 namespace Game15
 {
-    internal static class Program
+    class Program : WindowsFormsApplicationBase
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] arg)
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new FormGame());
+            Program p = new Program();
+            p.Run(arg);
+            //Если запускать так, можно закрывать окно.
+            //FormMenu menu = new FormMenu();
+            //menu.Show();
+            //Application.Run();
+
+            //Запуск основного приложения, если его закрыть, закроется всё.
+            //Application.Run(new FormMenu(new FormGame(4)));
+        }
+        public Program()
+        {
+            this.EnableVisualStyles = true;
+            this.ShutdownStyle = ShutdownMode.AfterAllFormsClose;
+            this.MainForm = new FormMenu();
         }
     }
 }

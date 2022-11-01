@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,27 +10,18 @@ namespace Exam_File_Manager_
 
     //"Context" - класс системы, основанной на состояниях
     // потокобезопасный синглтон
-    sealed class FileManager : Component
+    sealed class FileManager
     {
         private static readonly FileManager instance = new FileManager();
-
-        //ссылка на декоратор
-        Component comp;
-
-        //ссылка на продуктовый контейнер
-        ProductsContainer pc;
 
         private FileManager() { }
 
         //Текущее состояние системы
         private State currentState;
 
-        public static FileManager Instance(State state, Component component, ProductsContainer pc)
+        public static FileManager Instance(State state)
         {
-            instance.comp = component;
-            instance.pc = pc;
             instance.State = state;
-            pc.Run();
             return instance;
         }
 
@@ -44,8 +36,28 @@ namespace Exam_File_Manager_
             }
         }
 
+        private void InitDecorator()
+        {
+            Label label = new Label();
+            Border border = new Border(label);
+            ScrollBar scrollBar = new ScrollBar(border);
+            scrollBar.Draw();
+        }
+
+        private void InitFactoryMethod()
+        {
+            //Factory Method
+            UIFactory factory = new UIFactory2(); // AbstractFactory
+            GeneralUI general = new GeneralUI(factory);
+            ProductsContainer pc = general.CreateUI();
+            pc.Run();
+        }
+
         public void Run()
         {
+            InitDecorator();
+            InitFactoryMethod();
+
             while (true)
             {
                 Request();
@@ -56,11 +68,6 @@ namespace Exam_File_Manager_
         private void Request()
         {
             currentState.Handle(this);
-        }
-
-        public override void Draw()
-        {
-            comp.Draw();
         }
     }
 }

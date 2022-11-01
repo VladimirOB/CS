@@ -1,9 +1,13 @@
+using System.Drawing;
+using System.Runtime.CompilerServices;
+
 namespace Game15
 {
     public partial class FormGame : System.Windows.Forms.Form
     {
-        public FormGame()
+        public FormGame(int size)
         {
+            Game.size = size;
             InitializeComponent();
             Game.Init(this);
         }
@@ -22,7 +26,6 @@ namespace Game15
 
         private void easyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Controls.Clear();
             Game.size = 4;
             Reset();
         }
@@ -41,7 +44,13 @@ namespace Game15
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Save("../../../Quick.dat");
+            saveFileDialog1.Title = "Saving";
+            saveFileDialog1.Filter = "System File|*.dat";
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Save(saveFileDialog1.FileName);
+            }
         }
 
         void Save(string file_name)
@@ -66,42 +75,49 @@ namespace Game15
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Game.Load(this, "../../../Quick.dat");
+            openFileDialog1.Title = "Load";
+            openFileDialog1.Filter = "System File|*.dat";
+            // Проверка существования выбранного файла
+            openFileDialog1.CheckFileExists = true;
+            openFileDialog1.Multiselect = false;
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Game.Load(this, openFileDialog1.FileName);
+            }
         }
 
-        private void menuToolStripMenuItem_Click(object sender, EventArgs e)
+        //Сворачивание в трей
+        private void FormGame_Resize(object sender, EventArgs e)
         {
-            FormMenu formMenu = new FormMenu(this);
-            formMenu.BackgroundImage = new Bitmap("../../../background.jpg");
-            DialogResult result = formMenu.ShowDialog();
-
-            if(result == DialogResult.OK)
+            if(Left == -32000 && Top == -32000)
             {
-                Reset();
+                notifyIcon1.Visible = true;
+                Visible = false;
+                notifyIcon1.ShowBalloonTip(1500);
             }
-            if (result == DialogResult.Yes) // button Save
+            else
             {
-                saveFileDialog1.Title = "Saving";
-                saveFileDialog1.Filter = "System File|*.dat";
-
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    Save(saveFileDialog1.FileName);
-                }
+                MaximumSize = new Size(Game.size * Game.CELLSIZE + 20, (Game.size * Game.CELLSIZE) + 70);
+                Width = Game.size * Game.CELLSIZE + 20;
+                Height = (Game.size * Game.CELLSIZE) + 70;
             }
+        }
 
-            if(result == DialogResult.No) //button Load
-            {
-                openFileDialog1.Title = "Load";
-                openFileDialog1.Filter = "System File|*.dat";
-                // Проверка существования выбранного файла
-                openFileDialog1.CheckFileExists = true;
-                openFileDialog1.Multiselect = false;
-                if(openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    Game.Load(this, openFileDialog1.FileName);
-                }
-            }
+        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+        {
+            Visible = true;
+            notifyIcon1.Visible = false;
+            WindowState = FormWindowState.Normal;
+        }
+
+        private void FormGame_Move(object sender, EventArgs e)
+        {
+            Cursor = System.Windows.Forms.Cursors.SizeAll;
+        }
+
+        private void FormGame_MouseMove(object sender, MouseEventArgs e)
+        {
+            Cursor = System.Windows.Forms.Cursors.Arrow;
         }
     }
 }

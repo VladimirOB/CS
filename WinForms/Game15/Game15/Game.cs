@@ -12,14 +12,13 @@ namespace Game15
         static Font btnFont = new Font("Courier New", 26, System.Drawing.FontStyle.Bold); // < Bold = Жирный шрифт
         static FormGame form;
         public static int size = 4;
-        const int CELLSIZE = 150;
+        public const int CELLSIZE = 150;
         static Button[,] buttons;
         public static int[,] map;
         static Stack<int> stack;
         
         public static void Init(FormGame current)
         {
-            //size = new_size;
             buttons = new Button[size, size];
             map = new int[size, size];
             form = current;
@@ -27,6 +26,7 @@ namespace Game15
             InitStack();
             InitMap();
             InitButtons(current);
+            form.MaximumSize = new Size(current.Width, current.Height);
         }
 
 

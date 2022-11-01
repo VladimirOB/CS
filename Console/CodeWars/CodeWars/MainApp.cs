@@ -18,6 +18,11 @@ namespace CodeWars
 {
     class MainApp
     {
+        public static int[] Maps(int[] x)
+        {
+            return x.Select(e => e * 2).ToArray();
+        }
+
         public static string Encrypt(string name)
         {
             //замазать строку, оставив последние 4 символа
@@ -790,7 +795,6 @@ namespace CodeWars
             return str.Where(ch => Char.IsLetter(ch)).Select(ch => Char.ToLower(ch)).Distinct().Count() == 26;
         }
 
-
         public static int FindDigitInInfiniteAdditionResult(int n)  // 3kyu
         {
             //string f = "123456789101112131415161718192021222324252627282930";
@@ -800,11 +804,23 @@ namespace CodeWars
             return Convert.ToInt32(res[n]-48);
         }
 
-
+        public static long findNb(long m)
+        {
+            //findNb(1071225) --> 45
+            long i = 1;
+            int cnt = 0;
+            while(m>0)
+            {
+                m -= (long)Math.Pow(i++, 3);
+                cnt++;
+            }
+            return (m== 0) ? cnt : -1;
+        }
 
         static void Main()
         {
 
+            //int[] res = Maps(new[] { 1, 2, 3 });
             //double[] res = Tribonacci(new double[] { 8, 2, 18, }, 2);
             //Assert.AreEqual(new double[] { 1, 1, 1, 3, 5, 9, 17, 31, 57, 105 }, variabonacci.Tribonacci(new double[] { 1, 1, 1 }, 10));
             //Assert.AreEqual(new double[] { 0, 0, 1, 1, 2, 4, 7, 13, 24, 44 }, variabonacci.Tribonacci(new double[] { 0, 0, 1 }, 10));
@@ -835,8 +851,8 @@ namespace CodeWars
             //Console.WriteLine(Extract(new[] { -10, -9, -8, -6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20 }));
             //Console.WriteLine(sumStrings("123", "123"));
             //Console.WriteLine(DetectPangram("The quick brown fox jumps over the lazy dog"));
-            //Console.WriteLine(FindDigitInInfiniteAdditionResult(1));
-
+            //Console.WriteLine(FindDigitInInfiniteAdditionResult(0));
+            //Console.WriteLine(findNb(1071225));
         }
     }
 }
