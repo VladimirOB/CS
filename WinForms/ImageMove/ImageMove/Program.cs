@@ -1,4 +1,4 @@
-namespace Image
+namespace Image_Move
 {
     internal static class Program
     {
