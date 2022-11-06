@@ -1,6 +1,7 @@
 using System.IO;
 using System.Runtime;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace FileManager
 {
@@ -14,7 +15,7 @@ namespace FileManager
     - строка состояние внизу
     - верхнее / контекстное меню
     - поиск файлов и папок*/
-    public partial class Form1 : Form, IMessageFilter
+    public partial class FormMain : Form, IMessageFilter
     {
         private ImageList imgList;
         int newFileCount = 1;
@@ -29,13 +30,13 @@ namespace FileManager
         DirectoryInfo currentDirInfo;
 
         //буфферы для хранения данных о копируемых папках и файлах.
-        string sourceDirCopyPath;
+        string sourceDirCopyFullName;
         string sourceDirCopyName;
-        string sourceDirCutPath;
+        string sourceDirCutFullName;
         string sourceDirCutName;
         List<string> copyBuffer = new List<string>();
         List<FileInfo> cutBuffer = new List<FileInfo>();
-        public Form1()
+        public FormMain()
         {
             InitializeComponent();
 
@@ -182,7 +183,12 @@ namespace FileManager
             currentDirInfo = new DirectoryInfo(path);
 
             files = currentDirInfo.GetFiles();
+            // Обработка информации
+            fileListView.LargeImageList.Images.Clear();
+            fileListView.SmallImageList.Images.Clear();
             int iconIndex = 0;
+            fileListView.LargeImageList.Images.Add(Bitmap.FromFile("../../../resources/note11.ico"));
+            fileListView.SmallImageList.Images.Add(Bitmap.FromFile("../../../resources/note11.ico"));
 
             foreach (FileInfo file in files)
             {
@@ -196,9 +202,6 @@ namespace FileManager
 
                 //Указать номер иконки для listView
                 item.ImageIndex = iconIndex;
-
-                fileListView.LargeImageList.Images.Add(Bitmap.FromFile("../../../resources/note11.ico"));
-                fileListView.SmallImageList.Images.Add(Bitmap.FromFile("../../../resources/note11.ico"));
 
                 //добавить пункт в listView
                 item.SubItems.Add(file.LastWriteTime.ToString());
@@ -239,6 +242,7 @@ namespace FileManager
             }
         }
 
+        //создание текстового файла
         private void buttonCreate_Click(object sender, EventArgs e)
         {
             if (fileListView.Focus())
@@ -248,6 +252,7 @@ namespace FileManager
             FillByFiles(currentDirInfo.FullName);
         }
 
+        //Переименование файла
         private void fileListView_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
             if (e.Label == null)
@@ -271,6 +276,7 @@ namespace FileManager
             }
         }
 
+        //Переименование папки
         private void dirTreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             if (e.Label == null)
@@ -295,6 +301,7 @@ namespace FileManager
             }
         }
 
+        //копирование файлов / папки
         private void buttonCopy_Click(object sender, EventArgs e)
         {
             copyBuffer.Clear();
@@ -304,13 +311,13 @@ namespace FileManager
                 {
                     copyBuffer.Add(files[file.Index].Name);
                 }
-                sourceDirCopyPath = currentDirInfo.FullName;
+                sourceDirCopyFullName = currentDirInfo.FullName;
                 sourceDirCopyName = currentDirInfo.Name;
                 return;
             }
             if (dirTreeView.Focus())
             {
-                sourceDirCopyPath = dirTreeView.SelectedNode.FullPath.Replace("\\\\", "\\");
+                sourceDirCopyFullName = dirTreeView.SelectedNode.FullPath.Replace("\\\\", "\\");
                 sourceDirCopyName = dirTreeView.SelectedNode.Text;
             }
         }
@@ -324,13 +331,13 @@ namespace FileManager
                 {
                     cutBuffer.Add(files[file.Index]);
                 }
-                sourceDirCutPath = currentDirInfo.FullName;
+                sourceDirCutFullName = currentDirInfo.FullName;
                 sourceDirCutName = currentDirInfo.Name;
                 return;
             }
-            else if (dirTreeView.Focus() && dirTreeView.SelectedNode.Nodes.Count > 0)
+            else if (dirTreeView.Focus())
             {
-                sourceDirCutPath = dirTreeView.SelectedNode.FullPath;
+                sourceDirCutFullName = dirTreeView.SelectedNode.FullPath;
                 sourceDirCutName = dirTreeView.SelectedNode.Text;
             }
         }
@@ -342,31 +349,37 @@ namespace FileManager
             {
                 foreach (var file in copyBuffer)
                 {
-                    if (!sourceDirCopyPath.Equals(currentDirInfo.FullName))
-                        File.Copy(Path.Combine(sourceDirCopyPath, file), Path.Combine(currentDirInfo.FullName, file), true);
+                    if (!sourceDirCopyFullName.Equals(currentDirInfo.FullName))
+                        File.Copy(Path.Combine(sourceDirCopyFullName, file), Path.Combine(currentDirInfo.FullName, file), true);
                 }
             }
             else if(cutBuffer.Count > 0)
             {
-                //string src = @"D:/src";
-                //string dest = @"D:/dest";
-                //DirectoryInfo destDir = new DirectoryInfo(currentDirInfo.FullName + sourceDirCutName);
-                //if (destDir.Exists)
-                //    destDir.Delete(true);
-                //new DirectoryInfo(src).MoveTo(dest);
                 foreach (var file in cutBuffer)
                 {
-                    if (!sourceDirCutPath.Equals(currentDirInfo.FullName))
+                    if (!sourceDirCutFullName.Equals(currentDirInfo.FullName))
                         File.Move(file.FullName, currentDirInfo.FullName + "\\" +  file.Name);
                 }
             }
-            else if(sourceDirCopyPath.Length > 0)
+            else if(sourceDirCopyFullName != null)
             {
                 //проверка чтоб сам в себя не копировал
-                if(!sourceDirCopyPath.Replace(sourceDirCopyName, "").Equals(currentDirInfo.FullName) &&
-                    !sourceDirCopyPath.Equals(currentDirInfo.FullName))
-                CopyDir(sourceDirCopyPath, currentDirInfo.FullName + "\\" + sourceDirCopyName);
+                if(!sourceDirCopyFullName.Replace(sourceDirCopyName, "").Equals(currentDirInfo.FullName) &&
+                    !sourceDirCopyFullName.Equals(currentDirInfo.FullName))
+                CopyDir(sourceDirCopyFullName, currentDirInfo.FullName + "\\" + sourceDirCopyName);
                 
+            }
+            else if (sourceDirCutFullName != null)
+            {
+                //проверка чтоб сам в себя не копировал
+                if (!sourceDirCutFullName.Replace(sourceDirCutName, "").Equals(currentDirInfo.FullName) &&
+                    !sourceDirCutFullName.Equals(currentDirInfo.FullName))
+                {
+                    DirectoryInfo destDir = new DirectoryInfo(currentDirInfo.FullName + "\\" + sourceDirCutName);
+                    if (destDir.Exists)
+                        destDir.Delete(true);
+                    new DirectoryInfo(sourceDirCutFullName).MoveTo(destDir.FullName);
+                }
             }
             FillByDirectories(dirTreeView.SelectedNode);
             FillByFiles(currentDirInfo.FullName);
@@ -470,7 +483,32 @@ namespace FileManager
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("В стадии разработки...");
+            FormDialog dialog = new FormDialog("Helper");
+            Button buttonOk = new Button();
+            Label label = new Label();
+            label.Parent = dialog;
+            label.Size = new Size(dialog.Width, dialog.Height - 75);
+            label.Location = new Point(1, 1);
+            label.Font = new Font("Times new roman", 14);
+            label.Text = "Here you will see tips for the file manager!\n" +
+                "\nPress F2 to rename file (Don't work xD)\n" +
+                "\nPress F3 to copy files or folders\n" +
+                "\nPress F4 to cut files or folders\n" +
+                "\nPress F5 to insert files or folders\n" +
+                "\nPress F6 to delete any files or folders\n" +
+                "\nPress F7 to create text file\n" +
+                "\nOr click on the button on the panel below\n" +
+                "\nOr click RBM and select from the menu";
+
+            buttonOk.BringToFront();
+            buttonOk.Parent = dialog;
+            buttonOk.Size = new Size(75, 25);
+            buttonOk.Location = new Point(dialog.Width / 2 -37, dialog.Height - 75);
+            buttonOk.Text = "OK";
+            buttonOk.DialogResult = DialogResult.OK;
+            // показать модальное окно
+            DialogResult result = dialog.ShowDialog();
+            //MessageBox.Show("В стадии разработки...");
         }
 
         private void createTextFileToolStripMenuItem_Click(object sender, EventArgs e)
