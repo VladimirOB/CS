@@ -76,13 +76,6 @@ namespace FlyingBalls
             }
             
         }
-
-
-        private bool CheckBorder()
-        {
-            return false;
-        }
-
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
             posX = e.X;
