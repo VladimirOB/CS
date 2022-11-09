@@ -257,5 +257,10 @@ namespace TextEditor
             }
             tabControl1.SelectedTab.Dispose();
         }
+
+        private void æîïêàToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

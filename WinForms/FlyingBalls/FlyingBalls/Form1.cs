@@ -5,12 +5,13 @@ namespace FlyingBalls
     public partial class Form1 : Form
     {
         Random rand = new Random();
-        int posX, posY;
+        Point mousePos;
         int tag = 0;
-
+        const int BALL_SIZE = 50;
         List<PictureBox> lstBalls = new List<PictureBox>();
         List<int> sX = new List<int>();
         List<int> sY = new List<int>();
+
         public Form1()
         {
             InitializeComponent();
@@ -23,9 +24,9 @@ namespace FlyingBalls
             picture.Tag = tag++;
             picture.Click += new System.EventHandler(pictureClick);
 
-            picture.Size = new Size(50, 50);
+            picture.Size = new Size(BALL_SIZE, BALL_SIZE);
             picture.Image = new Bitmap("../../../ball.jpg");
-            picture.Location = new Point(posX, posY);
+            picture.Location = mousePos;
             picture.Parent = this;
 
             int stepX = 0, stepY = 0;
@@ -54,11 +55,11 @@ namespace FlyingBalls
                 item.Left += sX[(int)item.Tag];
                 item.Top += sY[(int)item.Tag];
 
-                if (item.Location.X < 0 || item.Location.X + 50 > ClientSize.Width)
+                if (item.Location.X < 0 || item.Location.X + BALL_SIZE > ClientSize.Width)
                 {
                     sX[(int)item.Tag] = -sX[(int)item.Tag];
                 }
-                if (item.Location.Y < 0 || item.Location.Y + 50 > ClientSize.Height)
+                if (item.Location.Y < 0 || item.Location.Y + BALL_SIZE > ClientSize.Height)
                 {
                     sY[(int)item.Tag] = -sY[(int)item.Tag];
                 }
@@ -67,8 +68,8 @@ namespace FlyingBalls
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-            posX = e.X;
-            posY = e.Y;
+            mousePos.X = e.X;
+            mousePos.Y = e.Y;
             Text = $"{e.X} : {e.Y}";
         }
     }

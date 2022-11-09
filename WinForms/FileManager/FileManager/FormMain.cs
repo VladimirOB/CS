@@ -1,8 +1,4 @@
-using System.IO;
-using System.Runtime;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-
+using System.Collections.Specialized;
 namespace FileManager
 {
     /*1. Разработать программу "Файловый менеджер", которая имеет следующие функции:
@@ -14,35 +10,26 @@ namespace FileManager
     - переименование / перемещение файлов и папок
     - строка состояние внизу
     - верхнее / контекстное меню
-    - поиск файлов и папок*/
+    - поиск файлов и папок
+    - добавить для операций копирования и перемещения возможность использования Clipboard и Drag-N-Drop*/
     public partial class FormMain : Form, IMessageFilter
     {
         private ImageList imgList;
-        int newFileCount = 1;
-
         //Временная переменная для хранения изображения (нужна, чтоб можно было удалить изображение)
         Bitmap imagePreview;
+        PictureBox picturePreview;
 
-        //файлы в текущей папке
-        FileInfo[] files;
+        TreeNode tempNode;
 
-        //текущая папка
-        DirectoryInfo currentDirInfo;
+        FileOperations fileOp;
 
-        //буфферы для хранения данных о копируемых папках и файлах.
-        string sourceDirCopyFullName;
-        string sourceDirCopyName;
-        string sourceDirCutFullName;
-        string sourceDirCutName;
-        List<string> copyBuffer = new List<string>();
-        List<FileInfo> cutBuffer = new List<FileInfo>();
         public FormMain()
         {
             InitializeComponent();
 
             // перехват ввода в любое текстовое поле (добавить интерфейс IMessageFilter)
             Application.AddMessageFilter(this);
-
+            fileOp = new FileOperations();
             InitFileView();
             CreateImageList();
             InitTreeView();
@@ -57,6 +44,9 @@ namespace FileManager
                 Keys key = (Keys)(int)m.WParam;
                 switch (key)
                 {
+                    case Keys.F2:
+                        buttonRename_Click(null, null);
+                        break;
                     case Keys.F3:
                         buttonCopy_Click(null, null);
                         break;
@@ -151,9 +141,9 @@ namespace FileManager
         {
             // Запрет постоянной перерисовки дерева во время добавления элементов
             dirTreeView.BeginUpdate();
-            
             try
             {
+                tempNode = e.Node;
                 //Перебор всех дочерних узлов для узла(разворачивается по +)
                 foreach (TreeNode node in e.Node.Nodes)
                 {
@@ -180,9 +170,9 @@ namespace FileManager
             fileListView.Items.Clear();
 
             statusBarLabel.Text = path;
-            currentDirInfo = new DirectoryInfo(path);
+            fileOp.currentDirInfo = new DirectoryInfo(path);
 
-            files = currentDirInfo.GetFiles();
+            fileOp.files = fileOp.currentDirInfo.GetFiles();
             // Обработка информации
             fileListView.LargeImageList.Images.Clear();
             fileListView.SmallImageList.Images.Clear();
@@ -190,7 +180,7 @@ namespace FileManager
             fileListView.LargeImageList.Images.Add(Bitmap.FromFile("../../../resources/note11.ico"));
             fileListView.SmallImageList.Images.Add(Bitmap.FromFile("../../../resources/note11.ico"));
 
-            foreach (FileInfo file in files)
+            foreach (FileInfo file in fileOp.files)
             {
                 ListViewItem item = new ListViewItem(file.Name);
 
@@ -225,13 +215,16 @@ namespace FileManager
                     tbPreview.Location = previewPanel.Location;
                     tbPreview.Dock = DockStyle.Fill;
                     tbPreview.ScrollBars = ScrollBars.Both;
-                    tbPreview.Text = File.ReadAllText(files[file.Index].FullName);
+                    tbPreview.Text = File.ReadAllText(fileOp.files[file.Index].FullName);
                 }
                 if (file.Text.Contains(".jpg") || file.Text.Contains(".png") || file.Text.Contains(".bmp"))
                 {
-                    imagePreview = new Bitmap(files[file.Index].FullName);
-
-                    PictureBox picturePreview = new PictureBox();
+                    imagePreview = new Bitmap(fileOp.files[file.Index].FullName);
+                    /*FileStream stream = new FileStream(@"c:\temp\admin.gif", FileMode.Open, FileAccess.Read);
+			        Bitmap bmp = (Bitmap)Bitmap.FromStream(stream);
+                    stream.Close();*/
+                    picturePreview = new PictureBox();
+                    picturePreview.Name = fileOp.files[file.Index].Name;
                     picturePreview.Parent = previewPanel;
                     picturePreview.BackgroundImage = imagePreview;
                     picturePreview.BackgroundImageLayout = ImageLayout.Zoom;
@@ -247,32 +240,28 @@ namespace FileManager
         {
             if (fileListView.Focus())
             {
-                File.WriteAllText(currentDirInfo.FullName + $"\\New text file {newFileCount++}.txt", "");
+                File.WriteAllText(fileOp.currentDirInfo.FullName + $"\\New text file {fileOp.newFileCount++}.txt", "");
             }
-            FillByFiles(currentDirInfo.FullName);
+            FillByFiles(fileOp.currentDirInfo.FullName);
+        }
+
+        private void fileListView_BeforeLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            fileOp.currentLabelFileName = fileListView.SelectedItems[0].Text;
         }
 
         //Переименование файла
         private void fileListView_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
-            if (e.Label == null)
-                e.CancelEdit = true;
-            else
+            if (fileOp.currentLabelFileName != null)
             {
-                try
-                {
-                    string source = currentDirInfo.FullName + "\\" + fileListView.SelectedItems[0].Text;
-                    string destin = currentDirInfo.FullName + "\\" + e.Label.ToString();
-                    if (File.Exists(source))
-                    {
-                        File.Move(source, destin, true);
-                    }
-                }
-                catch
-                {
-                    e.CancelEdit = true;
-                }
-                FillByFiles(currentDirInfo.FullName);
+                //если изображение выведено в превью, удалить его.
+                if(picturePreview != null)
+                if (picturePreview.Name.Equals(fileListView.SelectedItems[0].Text))
+                    imagePreview.Dispose();
+
+                if (fileOp.RenameFile(fileListView.SelectedItems[0].Text, fileOp.currentLabelFileName))
+                FillByFiles(fileOp.currentDirInfo.FullName);
             }
         }
 
@@ -283,123 +272,135 @@ namespace FileManager
                 e.CancelEdit = true;
             else
             {
-                string source = currentDirInfo.FullName;
-                string destin = currentDirInfo.FullName.Replace(currentDirInfo.Name, "") + e.Label.ToString();
                 try
                 {
-                    if (Directory.Exists(source))
-                    {
-                        Directory.Move(source, destin);
-                        dirTreeView.SelectedNode.Text = e.Label.ToString();
-                    }
+                    string destin = fileOp.RenameFolder(e.Label);
+
+                    dirTreeView.SelectedNode.Text = e.Label.ToString();
+                    FillByFiles(destin);
+                    
                 }
                 catch
                 {
                     e.CancelEdit = true;
                 }
-                FillByFiles(destin);
             }
         }
 
         //копирование файлов / папки
         private void buttonCopy_Click(object sender, EventArgs e)
         {
-            copyBuffer.Clear();
+            StringCollection str = new StringCollection();
+
             if (fileListView.Focus() && fileListView.SelectedItems.Count > 0)
             {
                 foreach (ListViewItem file in fileListView.SelectedItems)
                 {
-                    copyBuffer.Add(files[file.Index].Name);
+                    //если изображение выведено в превью, удалить его.
+                    if (picturePreview != null)
+                        if (picturePreview.Name.Equals(file.Text))
+                            imagePreview.Dispose();
+
+                    str.Add(fileOp.currentDirInfo.FullName + "\\" +  file.Text);
                 }
-                sourceDirCopyFullName = currentDirInfo.FullName;
-                sourceDirCopyName = currentDirInfo.Name;
-                return;
             }
-            if (dirTreeView.Focus())
+            else if (dirTreeView.Focus())
             {
-                sourceDirCopyFullName = dirTreeView.SelectedNode.FullPath.Replace("\\\\", "\\");
-                sourceDirCopyName = dirTreeView.SelectedNode.Text;
+                str.Add(fileOp.currentDirInfo.FullName);
             }
+            fileOp.isCopy = true;
+            Clipboard.SetFileDropList(str);
         }
 
         private void buttonCut_Click(object sender, EventArgs e)
         {
-            cutBuffer.Clear();
+            StringCollection str = new StringCollection();
             if (fileListView.Focus() && fileListView.SelectedItems.Count > 0)
             {
                 foreach (ListViewItem file in fileListView.SelectedItems)
                 {
-                    cutBuffer.Add(files[file.Index]);
+                    //если изображение выведено в превью, удалить его.
+                    if (picturePreview != null)
+                        if (picturePreview.Name.Equals(file.Text))
+                            imagePreview.Dispose();
+
+                    str.Add(fileOp.currentDirInfo.FullName + "\\" + file.Text);
                 }
-                sourceDirCutFullName = currentDirInfo.FullName;
-                sourceDirCutName = currentDirInfo.Name;
+                Clipboard.SetFileDropList(str);
                 return;
             }
             else if (dirTreeView.Focus())
             {
-                sourceDirCutFullName = dirTreeView.SelectedNode.FullPath;
-                sourceDirCutName = dirTreeView.SelectedNode.Text;
+                str.Add(fileOp.currentDirInfo.FullName);
+                Clipboard.SetFileDropList(str);
             }
         }
 
         private void buttonPaste_Click(object sender, EventArgs e)
         {
+            IDataObject obj = Clipboard.GetDataObject();
+            if(obj.GetDataPresent(DataFormats.FileDrop))
+            {
+                StringCollection files = Clipboard.GetFileDropList();
 
-            if (copyBuffer.Count > 0)
-            {
-                foreach (var file in copyBuffer)
+                if(fileOp.isCopy)
                 {
-                    if (!sourceDirCopyFullName.Equals(currentDirInfo.FullName))
-                        File.Copy(Path.Combine(sourceDirCopyFullName, file), Path.Combine(currentDirInfo.FullName, file), true);
+                    foreach (var file in files)
+                    {
+                        fileOp.CopyPaste(file);
+                    }
+                    fileOp.isCopy = false;
                 }
-            }
-            else if(cutBuffer.Count > 0)
-            {
-                foreach (var file in cutBuffer)
+                else
                 {
-                    if (!sourceDirCutFullName.Equals(currentDirInfo.FullName))
-                        File.Move(file.FullName, currentDirInfo.FullName + "\\" +  file.Name);
-                }
-            }
-            else if(sourceDirCopyFullName != null)
-            {
-                //проверка чтоб сам в себя не копировал
-                if(!sourceDirCopyFullName.Replace(sourceDirCopyName, "").Equals(currentDirInfo.FullName) &&
-                    !sourceDirCopyFullName.Equals(currentDirInfo.FullName))
-                CopyDir(sourceDirCopyFullName, currentDirInfo.FullName + "\\" + sourceDirCopyName);
-                
-            }
-            else if (sourceDirCutFullName != null)
-            {
-                //проверка чтоб сам в себя не копировал
-                if (!sourceDirCutFullName.Replace(sourceDirCutName, "").Equals(currentDirInfo.FullName) &&
-                    !sourceDirCutFullName.Equals(currentDirInfo.FullName))
-                {
-                    DirectoryInfo destDir = new DirectoryInfo(currentDirInfo.FullName + "\\" + sourceDirCutName);
-                    if (destDir.Exists)
-                        destDir.Delete(true);
-                    new DirectoryInfo(sourceDirCutFullName).MoveTo(destDir.FullName);
+                    foreach (var file in files)
+                    {
+                        fileOp.CutPaste(file);
+                    }
                 }
             }
             FillByDirectories(dirTreeView.SelectedNode);
-            FillByFiles(currentDirInfo.FullName);
+            FillByFiles(fileOp.currentDirInfo.FullName);
         }
 
-        //рекурсивный метод для копирования папок
-        void CopyDir(string from, string to)
-        {  
-            DirectoryInfo newDir = new DirectoryInfo(to);
-            if (newDir.Exists == false)
-                newDir.Create();
-            foreach (string s1 in Directory.GetFiles(from))
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            if (imagePreview != null)
+                imagePreview.Dispose();
+
+            if (fileListView.Focus() && fileListView.SelectedItems.Count > 0)
             {
-                string s2 = to + "\\" + Path.GetFileName(s1);
-                File.Copy(s1, s2);
+                foreach (ListViewItem file in fileListView.SelectedItems)
+                {
+                    if(MessageBoxDialogYesNo("Delete " + file.Text + "?"))
+                    {
+                        fileOp.Delete(fileOp.currentDirInfo.FullName + "\\" + file.Text);
+                    }
+                    
+                }
             }
-            foreach (string s in Directory.GetDirectories(from))
+            else if (dirTreeView.Focus())
             {
-                CopyDir(s, to + "\\" + Path.GetFileName(s));
+                if (MessageBoxDialogYesNo("Delete " + dirTreeView.SelectedNode.FullPath + "?"))
+                {
+                    fileOp.Delete(dirTreeView.SelectedNode.FullPath);
+                }
             }
+            // предыдущий узел?
+            //FillByDirectories(tempNode);
+            //FillByFiles(tempNode.FullPath);
+        }
+
+        private bool MessageBoxDialogYesNo(string message)
+        {
+            MessageBoxButtons btn = MessageBoxButtons.OKCancel;
+
+            DialogResult result = MessageBox.Show(message, "Warning!", btn);
+
+            if(result == DialogResult.OK)
+                return true;
+            else
+                return false;
         }
 
         private void timerTime_Tick(object sender, EventArgs e)
@@ -438,27 +439,21 @@ namespace FileManager
             buttonCreate.Location = new Point(newWidthButton * 5, 3);
         }
 
-        private void buttonDelete_Click(object sender, EventArgs e)
-        {
-            imagePreview.Dispose();
-            if (fileListView.Focus() && fileListView.SelectedItems.Count > 0)
-            {
-                foreach (ListViewItem file in fileListView.SelectedItems)
-                {
-                    File.Delete(files[file.Index].FullName);
-                }
-            }
-            else if (dirTreeView.Focus() && dirTreeView.SelectedNode.Nodes.Count > 0)
-            {
-                Directory.Delete(dirTreeView.SelectedNode.FullPath, true);
-            }
-            FillByDirectories(dirTreeView.SelectedNode);
-            FillByFiles(currentDirInfo.FullName);
-        }
-
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void buttonRename_Click(object sender, EventArgs e)
+        {
+            fileListView_BeforeLabelEdit(null, null);
+            fileListView_AfterLabelEdit(null, null);
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FillByDirectories(dirTreeView.SelectedNode);
+            FillByFiles(fileOp.currentDirInfo.FullName);
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -481,6 +476,11 @@ namespace FileManager
             buttonDelete_Click(sender, e);
         }
 
+        private void createTextFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buttonCreate_Click(sender, e);
+        }
+
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormDialog dialog = new FormDialog("Helper");
@@ -492,10 +492,10 @@ namespace FileManager
             label.Font = new Font("Times new roman", 14);
             label.Text = "Here you will see tips for the file manager!\n" +
                 "\nPress F2 to rename file (Don't work xD)\n" +
-                "\nPress F3 to copy files or folders\n" +
-                "\nPress F4 to cut files or folders\n" +
-                "\nPress F5 to insert files or folders\n" +
-                "\nPress F6 to delete any files or folders\n" +
+                "\nPress F3 to copy fileOperationsfiles or folders\n" +
+                "\nPress F4 to cut fileOperationsfiles or folders\n" +
+                "\nPress F5 to insert fileOperationsfiles or folders\n" +
+                "\nPress F6 to delete any fileOperationsfiles or folders\n" +
                 "\nPress F7 to create text file\n" +
                 "\nOr click on the button on the panel below\n" +
                 "\nOr click RBM and select from the menu";
@@ -510,12 +510,58 @@ namespace FileManager
             DialogResult result = dialog.ShowDialog();
             //MessageBox.Show("В стадии разработки...");
         }
-
-        private void createTextFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void searchBetaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            buttonCreate_Click(sender, e);
+            FormDialog window = new FormDialog("Search");
+            window.Width = 300;
+            window.Height = 150;
+
+            TextBox textBox = new TextBox();
+            textBox.Parent = window;
+            textBox.Size = new Size(window.Width-30, 50);
+            textBox.Location = new Point(3, 31);
+            Label label = new Label();
+            label.Parent = window;
+            label.Size = new Size(window.Width, window.Height-50);
+            label.Location = new Point(1, 1);
+            label.Font = new Font("Times new roman", 14);
+            label.Text = "Enter шо искать:";
+            DialogResult result = window.ShowDialog();
         }
 
-       
+        private void fileListView_DragEnter(object sender, DragEventArgs e)
+        {
+            if ((e.AllowedEffect & DragDropEffects.Copy) != 0 && e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void fileListView_DragDrop(object sender, DragEventArgs e)
+        {
+            if(e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] tempFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                //вытягиваем из массива строк по 1 имени и закидываем в папку
+                for (int i = 0; i < tempFiles.Length; i++)
+                {
+                    fileOp.CopyPaste(tempFiles[i]);
+                }
+                FillByDirectories(dirTreeView.SelectedNode);
+                FillByFiles(fileOp.currentDirInfo.FullName);
+            }
+        }
+
+        private void fileListView_DoubleClick(object sender, EventArgs e)
+        {
+            if (fileListView.Focus() && fileListView.SelectedItems.Count > 0)
+            {
+                TextBox tb = new TextBox();
+                tb.Parent = fileListView;
+                tb.Location = fileListView.SelectedItems[0].Position;
+                tb.Size = new Size(120, 15);
+            }
+        }
     }
 }
