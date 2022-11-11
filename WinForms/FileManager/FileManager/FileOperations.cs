@@ -120,5 +120,21 @@ namespace FileManager
                 File.Delete(fileName);
             }
         }
+
+        public void DirTreeDragDrog(string fileName, string to)
+        {
+            FileAttributes attr = File.GetAttributes(fileName);
+            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                DirectoryInfo sourceDir = new DirectoryInfo(fileName);
+                if (!fileName.Equals(currentDirInfo.FullName))
+                    CopyDir(fileName, to);
+            }
+            else
+            {
+                FileInfo file = new FileInfo(fileName);
+                File.Copy(fileName, to);
+            }
+        }
     }
 }

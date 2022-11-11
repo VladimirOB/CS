@@ -96,35 +96,26 @@ namespace FlyingBalls
 
         private void TimerTick(object sender, EventArgs e)
         {
-            //Grid_MouseUp(sender, null);
+           
         }
 
-        private void Grid_MouseMove(object sender, MouseEventArgs e)
+        private void Window_MouseMove(object sender, MouseEventArgs e)
         {
             var position = Mouse.GetPosition(this);
             mousePos.X = position.X;
             mousePos.Y = position.Y;
         }
 
-        private void Grid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Ellipse ellipse = new Ellipse();
+            ellipse.Stroke = Brushes.Black;
             ellipse.HorizontalAlignment = HorizontalAlignment.Left;
             ellipse.Height = 100;
             ellipse.VerticalAlignment = VerticalAlignment.Top;
             ellipse.Width = 100;
             ellipse.Margin = new Thickness(mousePos.X, mousePos.Y, 0, 0);
             //<Ellipse HorizontalAlignment="Left" Height="100" Margin="256,179,0,0" Stroke="Black" VerticalAlignment="Top" Width="100"/>
-        }
-
-        private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        private void Grid_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-           
         }
     }
 }

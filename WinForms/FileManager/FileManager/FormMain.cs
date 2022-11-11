@@ -1,4 +1,6 @@
 using System.Collections.Specialized;
+using System.Windows.Forms;
+
 namespace FileManager
 {
     /*1. Разработать программу "Файловый менеджер", которая имеет следующие функции:
@@ -260,7 +262,7 @@ namespace FileManager
                 if (picturePreview.Name.Equals(fileListView.SelectedItems[0].Text))
                     imagePreview.Dispose();
 
-                if (fileOp.RenameFile(fileListView.SelectedItems[0].Text, fileOp.currentLabelFileName))
+                if (fileOp.RenameFile(fileListView.SelectedItems[0].Text, e.Label.ToString()))
                 FillByFiles(fileOp.currentDirInfo.FullName);
             }
         }
@@ -275,10 +277,8 @@ namespace FileManager
                 try
                 {
                     string destin = fileOp.RenameFolder(e.Label);
-
                     dirTreeView.SelectedNode.Text = e.Label.ToString();
                     FillByFiles(destin);
-                    
                 }
                 catch
                 {
@@ -386,6 +386,7 @@ namespace FileManager
                     fileOp.Delete(dirTreeView.SelectedNode.FullPath);
                 }
             }
+            fileListView.EndUpdate();
             // предыдущий узел?
             //FillByDirectories(tempNode);
             //FillByFiles(tempNode.FullPath);
@@ -531,7 +532,8 @@ namespace FileManager
 
         private void fileListView_DragEnter(object sender, DragEventArgs e)
         {
-            if ((e.AllowedEffect & DragDropEffects.Copy) != 0 && e.Data.GetDataPresent(DataFormats.FileDrop))
+            //&& !e.Data.GetDataPresent("Myappformat") чтоб сам в себя не копировал
+            if ((e.AllowedEffect & DragDropEffects.Copy) != 0 && e.Data.GetDataPresent(DataFormats.FileDrop) && !e.Data.GetDataPresent("Myappformat"))
             {
                 e.Effect = DragDropEffects.Copy;
             }
@@ -561,6 +563,69 @@ namespace FileManager
                 tb.Parent = fileListView;
                 tb.Location = fileListView.SelectedItems[0].Position;
                 tb.Size = new Size(120, 15);
+            }
+        }
+
+        //перетаскивание из ListBox
+        private void fileListView_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Если есть выделенные строки
+            if (fileListView.Focus() && fileListView.SelectedItems.Count > 0)
+            {
+                string[] str = new string[fileListView.SelectedItems.Count];
+                int i = 0;
+                foreach (ListViewItem item in fileListView.SelectedItems)
+                {
+                    // Получить выделенную строку
+                    str[i++] = item.Text;
+                }
+
+                // Создать контейнер для хранения данных
+                DataObject data1 = new DataObject();
+
+                // Положить содержимое выделенной в списке строки
+                StringCollection col = new StringCollection();
+                col.AddRange(str);
+                data1.SetFileDropList(col);
+
+                // Добавить признак пользовательского формата в контейнер
+                data1.SetData("Myappformat", 0);
+
+                // НАЧАТЬ перетаскивание программно
+                DragDropEffects dde = DoDragDrop(data1, DragDropEffects.Copy);
+            }
+        }
+
+        private void dirTreeView_DragEnter(object sender, DragEventArgs e)
+        {
+            if ((e.AllowedEffect & DragDropEffects.Copy) != 0 && e.Data.GetDataPresent(DataFormats.FileDrop) && e.Data.GetDataPresent("Myappformat"))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void dirTreeView_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] tempFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                Point p = dirTreeView.PointToClient(new Point(e.X, e.Y));
+                TreeNode node = dirTreeView.GetNodeAt(p.X, p.Y);
+
+                if (node != null)
+                {
+                    //вытягиваем из массива строк по 1 имени и закидываем в папку
+                    for (int i = 0; i < tempFiles.Length; i++)
+                    {
+                        //отправляем на копирование путь + имя файла
+                        fileOp.DirTreeDragDrog(fileOp.currentDirInfo.FullName + "\\" + tempFiles[i], 
+                                                                node.FullPath + "\\" + tempFiles[i]);
+                    }
+                }
+              
+                FillByDirectories(dirTreeView.SelectedNode);
+                FillByFiles(fileOp.currentDirInfo.FullName);
             }
         }
     }

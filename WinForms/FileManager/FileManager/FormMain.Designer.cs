@@ -114,6 +114,7 @@
             // 
             // dirTreeView
             // 
+            this.dirTreeView.AllowDrop = true;
             this.dirTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dirTreeView.LabelEdit = true;
             this.dirTreeView.Location = new System.Drawing.Point(0, 0);
@@ -123,6 +124,8 @@
             this.dirTreeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.dirTreeView_AfterLabelEdit);
             this.dirTreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.dirTreeView_BeforeExpand);
             this.dirTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.dirTreeView_AfterSelect);
+            this.dirTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.dirTreeView_DragDrop);
+            this.dirTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.dirTreeView_DragEnter);
             // 
             // previewPanel
             // 
@@ -152,8 +155,8 @@
             this.fileListView.BeforeLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.fileListView_BeforeLabelEdit);
             this.fileListView.DragDrop += new System.Windows.Forms.DragEventHandler(this.fileListView_DragDrop);
             this.fileListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.fileListView_DragEnter);
-            this.fileListView.DoubleClick += new System.EventHandler(this.fileListView_DoubleClick);
             this.fileListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.fileListView_MouseClick);
+            this.fileListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fileListView_MouseDown);
             // 
             // columnHeader1
             // 
