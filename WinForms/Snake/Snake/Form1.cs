@@ -17,7 +17,7 @@ namespace Snake
         int maxHeight;
 
         int score;
-        int highScore;
+        int highScore = 0;
 
         Random rand = new Random();
 
@@ -30,7 +30,7 @@ namespace Snake
             new Settings();
 
             txtHighScore.ForeColor = Color.Maroon;
-            highScore = Convert.ToInt32(File.ReadAllText("highScore.txt"));
+            //highScore = Convert.ToInt32(File.ReadAllText("highScore.txt"));
             txtHighScore.Text = "High Score: " + highScore;
             bigFoodBar.Value = 100;
 

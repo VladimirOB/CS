@@ -530,6 +530,17 @@ namespace FileManager
             DialogResult result = window.ShowDialog();
         }
 
+        private void fileListView_DoubleClick(object sender, EventArgs e)
+        {
+            if (fileListView.Focus() && fileListView.SelectedItems.Count > 0)
+            {
+                TextBox tb = new TextBox();
+                tb.Parent = fileListView;
+                tb.Location = fileListView.SelectedItems[0].Position;
+                tb.Size = new Size(120, 15);
+            }
+        }
+
         private void fileListView_DragEnter(object sender, DragEventArgs e)
         {
             //&& !e.Data.GetDataPresent("Myappformat") чтоб сам в себя не копировал
@@ -555,16 +566,7 @@ namespace FileManager
             }
         }
 
-        private void fileListView_DoubleClick(object sender, EventArgs e)
-        {
-            if (fileListView.Focus() && fileListView.SelectedItems.Count > 0)
-            {
-                TextBox tb = new TextBox();
-                tb.Parent = fileListView;
-                tb.Location = fileListView.SelectedItems[0].Position;
-                tb.Size = new Size(120, 15);
-            }
-        }
+       
 
         //перетаскивание из ListBox
         private void fileListView_MouseDown(object sender, MouseEventArgs e)

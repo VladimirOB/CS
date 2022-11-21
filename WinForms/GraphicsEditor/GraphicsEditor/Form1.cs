@@ -4,10 +4,14 @@ using System.Text;
 namespace GraphicsEditor
 {
     /*2. –азработать простой графический редактор, который имеет следующие функции:
-    - рисование примитивов: линии, карандаш, пр€моугольник, эллипс, треугольник
-    - возможность рисовать закрашенные фигуры
-    - сохранение / загрузка рисунков
-    - перерисовка картинки (Paint)*/
+        - рисование примитивов: линии, карандаш, пр€моугольник, эллипс, треугольник
+        - возможность рисовать закрашенные фигуры
+        - сохранение / загрузка рисунков в своЄм формате
+        - сохранение рисунков в форматах: PNG, JPG, BMP
+        - перерисовка картинки (Paint)
+        - осветление / затемнение картинки (быстрый способ)
+        - поворот картинки на 90, 180, 270 (быстрый способ)*/
+
     public partial class Form1 : Form
     {
         private Point mousePos;
@@ -16,6 +20,7 @@ namespace GraphicsEditor
         private Point linePos;
 
         Color baseColor = Color.Blue;
+        Image mainImage;
 
         //дл€ перерисовки
         List<(string, Color, int, int, int, int, int)> redrawingLine = new List<(string, Color, int, int, int, int, int)>();
@@ -27,6 +32,7 @@ namespace GraphicsEditor
         {
             InitializeComponent();
             panelCurrentColor.BackColor = baseColor;
+            mainImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)

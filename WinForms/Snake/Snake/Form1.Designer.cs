@@ -108,11 +108,13 @@
             // 
             this.picCanvas.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.picCanvas.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picCanvas.BackgroundImage")));
+            this.picCanvas.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.picCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picCanvas.ErrorImage = null;
             this.picCanvas.InitialImage = null;
-            this.picCanvas.Location = new System.Drawing.Point(0, 46);
+            this.picCanvas.Location = new System.Drawing.Point(0, 24);
             this.picCanvas.Name = "picCanvas";
-            this.picCanvas.Size = new System.Drawing.Size(748, 680);
+            this.picCanvas.Size = new System.Drawing.Size(748, 701);
             this.picCanvas.TabIndex = 1;
             this.picCanvas.TabStop = false;
             this.picCanvas.Paint += new System.Windows.Forms.PaintEventHandler(this.UpdatePictureBoxGraphics);
