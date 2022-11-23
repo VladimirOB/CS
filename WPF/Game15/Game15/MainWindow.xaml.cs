@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -14,38 +15,80 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using System.Xml.Linq;
 
 namespace Game15
 {
     //2. Реализовать игру пятнашки на WPF при помощи Grid.
+    //Для пятнашек добавить меню, таблицу рекордов в новом окне. Сделать игру по таймеру с подсчётом количеством шагов.
+    //Добавить DockPanel
 
     public partial class MainWindow : Window
     {
+        string name;
+        DispatcherTimer gameTimer = new DispatcherTimer();
         const int SIZE = 4;
         const int CELLSIZE = 100;
         Button[,] buttons;
         int[,] map;
         Stack<int> stack;
+        int steps = 0, time = 0;
 
         public MainWindow()
         {
             InitializeComponent();
+            gameTimer.Interval = TimeSpan.FromSeconds(1);
+            gameTimer.Tick += GameTimer_Tick;
             Init();
+            if(!File.Exists("records.txt"))
+            {
+                File.Create("records.txt");
+            }
         }
 
         void Init()
         {
+            time = 0;
+            steps = 0;
+            txtTimer.Content = "          Time: 0";
+            txtSteps.Content = "          Steps: 0";
             buttons = new Button[SIZE, SIZE];
             map = new int[SIZE, SIZE];
             InitStack();
             InitMap();
             InitButtons();
+            gameTimer.Start();
+        }
+
+        private void EnterName()
+        {
+            NameWindow nameWindow = new NameWindow();
+            nameWindow.ChangeName += ChangeName;
+
+            nameWindow.ShowDialog();
+            if(name == null)
+            {
+                name = "Guest";
+            }
+        }
+
+        void ChangeName(string n)
+        {
+            name = n;
+        }
+
+        private void GameTimer_Tick(object? sender, EventArgs e)
+        {
+            if (time == 0)
+                EnterName();
+            time++;
+            txtTimer.Content = "          Time: " + time;
+          
         }
 
         void InitStack()
         {
-
             //stack = new Stack<int>(SIZE * SIZE);
             //stack.Push(0);
             //for (int i = SIZE * SIZE - 1; i > 0; i--)
@@ -90,14 +133,12 @@ namespace Game15
             }
         }
 
-       
-
         Button InitButton(int i, int j)
         {
             Button button = new Button();
             button.Content = map[i, j].ToString();
             Thickness thickness = new Thickness(0, 0, 0, 0);
-            button.FontSize = 36;
+            button.FontSize = 24;
             button.Margin = thickness;
             button.Click += Button_Click;
             Grid.SetColumn(button, j);
@@ -121,6 +162,7 @@ namespace Game15
 
             if (CheckWin())
             {
+                File.AppendAllText("records.txt", name + " " + time + " " + steps + "\n");
                 MessageBox.Show("You won!", "Congratulations");
             }
 
@@ -165,6 +207,8 @@ namespace Game15
 
         void SwapButtons(Button source, Button dest)
         {
+            steps++;
+            txtSteps.Content = "          Steps: " + steps;
             dest.Content = source.Content;
             dest.IsEnabled = true;
             source.Content = "";
@@ -187,6 +231,21 @@ namespace Game15
                 }
             }
             return true;
+        }
+
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            gameTimer.Stop();
+            Init();
+        }
+
+        private void Records_Click(object sender, RoutedEventArgs e)
+        {
+
+            RecordsWindow records = new RecordsWindow();
+            records.Owner = this;
+
+            records.ShowDialog();
         }
 
         //Находятся ли координаты в пределах карты

@@ -5,20 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game15"
         mc:Ignorable="d"
-        Title="Пятнашки" Height="400" Width="400">
-    <Grid Name ="myGrid" Margin="0,0,0,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100*"/>
-            <RowDefinition Height="100*"/>
-            <RowDefinition Height="100*"/>
-            <RowDefinition Height="100*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100*"/>
-            <ColumnDefinition Width="100*"/>
-            <ColumnDefinition Width="100*"/>
-            <ColumnDefinition Width="100*"/>
-        </Grid.ColumnDefinitions>
+        Title="Пятнашки" Height="385" Width="330" MinWidth="330" MinHeight="385">
+    <DockPanel>
+        <Viewbox x:Name="viewBox1" MinWidth="30" MinHeight="30" MaxWidth="1500" MaxHeight="50" StretchDirection="Both" Stretch="Uniform" DockPanel.Dock="Top">
+            <Border Height="30" Background="SkyBlue" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Top">
+                <Menu x:Name="menu1" Height="30" VerticalAlignment="Top" Margin="0,0,0,0">
+                    <MenuItem Header="File">
+                        <MenuItem Header="Reset" Click="Reset_Click"/>
+                    </MenuItem>
+                    <MenuItem Header="Records" Click="Records_Click"/>
+                    <MenuItem Height="25" Width="100">
+                        <MenuItem.Header>
+                            <Label Name="txtTimer" Content="          Time: 0" HorizontalAlignment="Center" Margin="0,0,0,0" />
 
-    </Grid>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <Label Name="txtSteps" Content="          Steps: 0" Height="25" HorizontalAlignment="Center"/>
+                </Menu>
+            </Border>
+        </Viewbox>
+
+        <Viewbox x:Name="viewBox2" MinWidth="300" MinHeight="300" MaxWidth="1000" MaxHeight="1000" StretchDirection="Both" Stretch="Uniform">
+
+            <Grid Name ="myGrid" Margin="0,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </Viewbox>
+    </DockPanel>
 </Window>

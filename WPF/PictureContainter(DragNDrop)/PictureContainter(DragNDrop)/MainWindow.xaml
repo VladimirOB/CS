@@ -7,8 +7,18 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Name="myGrid" Background="White" ShowGridLines="True">
-        <Canvas x:Name="mainCanvas" Background="#FFE2E2D6" DragEnter="mainCanvas_DragEnter" Drop="mainCanvas_Drop" AllowDrop="True" MouseMove="mainCanvas_MouseMove" MouseUp="mainCanvas_MouseUp" PreviewKeyDown="mainCanvas_PreviewKeyDown">
+        <TabControl Name="tabControl" SelectedIndex="0" TabStripPlacement="Top">
+            <TabItem Header="Canvas" IsTabStop="True">
+                <Canvas x:Name="mainCanvas" Background="#FFE2E2D6" DragEnter="mainCanvas_DragEnter" Drop="mainCanvas_Drop" AllowDrop="True" MouseMove="mainCanvas_MouseMove" MouseUp="mainCanvas_MouseUp" PreviewKeyDown="mainCanvas_PreviewKeyDown">
             <Label x:Name="myLabel" Content="1" Canvas.Left="20" Canvas.Top="18" FontSize="24"/>
         </Canvas>
+            </TabItem>
+            <TabItem Header="Grid" IsTabStop="True">
+                <Grid Name="tabPageGrid" Background="White" ShowGridLines="True">
+                   
+                </Grid>
+            </TabItem>
+
+        </TabControl>
     </Grid>
 </Window>

@@ -43,10 +43,47 @@ namespace PictureContainter_DragNDrop_
         //для Rotate
         double angle = 0;
 
+        int currentRowGrid;
+        int currentColGrid;
+
         public MainWindow()
         {
             InitializeComponent();
+            InitGrid();
             Help();
+        }
+
+        private void InitGrid()
+        {
+            for (int i = 0; i < this.Width; i++)
+            {
+                ColumnDefinition colDef1 = new ColumnDefinition();
+                colDef1.Width = new GridLength(SIZEW);
+                if (SIZEW * i < Width)
+                {
+                    tabPageGrid.ColumnDefinitions.Add(colDef1);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int i = 0; i < this.Height; i++)
+            {
+                RowDefinition rowDef1 = new RowDefinition();
+                rowDef1.Height = new GridLength(SIZEH);
+                if (SIZEH * i < Height)
+                {
+                    tabPageGrid.RowDefinitions.Add(rowDef1);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            currentRowGrid = Grid.GetRow(tabPageGrid);
+            currentColGrid = Grid.GetColumn(tabPageGrid);
         }
 
         private void Help()
@@ -81,6 +118,7 @@ namespace PictureContainter_DragNDrop_
                 {
                     CheckFile(item);
                 }
+                AddImageInGrid();
                 AddImageInCanvas();
             }
         }
@@ -91,16 +129,15 @@ namespace PictureContainter_DragNDrop_
             {
                 System.Windows.Controls.Image image = new System.Windows.Controls.Image();
                 image.Source = (new ImageSourceConverter()).ConvertFromString(fileName) as ImageSource;
-
+                image.RenderTransformOrigin = new Point(0.5, 0.5);
                 image.Width = SIZEW;
                 image.Height = SIZEH;
 
-                //минут 40
                 if (cntImagesCols * SIZEW+5 < Width)
                 {
                     if(cntImagesRows == 1)
                     {
-                        if(cntImagesCols==1)
+                        if(cntImagesCols == 1)
                         {
                             Canvas.SetLeft(image, cntImagesCols++);
                             Canvas.SetTop(image, cntImagesRows);
@@ -136,6 +173,7 @@ namespace PictureContainter_DragNDrop_
                     Canvas.SetLeft(image, cntImagesCols++);
                     Canvas.SetTop(image, (cntImagesRows - 1) * SIZEH+5);
                 }
+
                 image.MouseDown += Image_MouseDown;
                 image.MouseRightButtonDown += Image_MouseRightButtonDown;
                 image.MouseRightButtonUp += Image_MouseRightButtonUp;
@@ -151,29 +189,77 @@ namespace PictureContainter_DragNDrop_
             images.Clear();
         }
 
+        private void AddImageInGrid()
+        {
+            
+            foreach (var fileName in images)
+            {
+                System.Windows.Controls.Image image = new System.Windows.Controls.Image();
+                image.Source = (new ImageSourceConverter()).ConvertFromString(fileName) as ImageSource;
+
+                image.Width = SIZEW;
+                image.Height = SIZEH;
+                if (SIZEW * currentColGrid < Width)
+                {
+                    Grid.SetRow(image, currentRowGrid);
+                    Grid.SetColumn(image, currentColGrid++);
+                }
+                else
+                {
+                    currentColGrid = 0;
+                    Grid.SetRow(image, currentRowGrid++);
+                    Grid.SetColumn(image, currentColGrid);
+                }
+                image.MouseDown += grid_MouseDown;
+                tabPageGrid.Children.Add(image);
+            }
+        }
+
+        private void grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Image img = (Image)sender;
+            GridShowImage show = new GridShowImage(1024,768);
+            show.imageShow.Source = img.Source;
+            show.ShowDialog();
+        }
 
         private void Image_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (movingElementLMB != null)
             {
-                MatrixTransform transform = movingElementLMB.RenderTransform as MatrixTransform;
-                if(transform != null)
+                double scale = e.Delta >= 0 ? 1.1 : 0.9;
+                TransformGroup gr;
+                if (movingElementLMB.Tag != null)
                 {
-                    Matrix matrix = transform.Matrix;
-                    double scale = e.Delta >= 0 ? 1.1 : 0.9;
-
-                    matrix.ScaleAtPrepend(scale, scale, elementCoords.X, elementCoords.Y);
-                    movingElementLMB.RenderTransform = new MatrixTransform(matrix);
+                    gr = movingElementLMB.Tag as TransformGroup;
                 }
-               
+                else
+                    gr = new TransformGroup();
+
+                ScaleTransform st = new ScaleTransform(scale, scale);
+                gr.Children.Add(st);
+                movingElementLMB.RenderTransform = gr;
+                movingElementLMB.Tag = gr;
+
+                
+
             }
             if(movingElementRMB != null)
             {
                 angle = e.Delta > 0 ? angle + 5 : angle - 5;
                 // 1 - угол в градусах 2, 3 - координаты точки, относительно которой происходит поворот
-                RotateTransform rt = new RotateTransform(angle, SIZEW / 2, SIZEW / 2);
+                TransformGroup gr;
+                if (movingElementRMB.Tag != null)
+                {
+                    gr = movingElementRMB.Tag as TransformGroup;
+                }
+                else
+                    gr = new TransformGroup();
 
-                movingElementRMB.RenderTransform = rt;
+                RotateTransform rt = new RotateTransform(angle, 0, 0);
+                gr.Children.Add(rt);
+                movingElementRMB.RenderTransform = gr;
+                movingElementRMB.Tag = gr;
             }
         }
 
