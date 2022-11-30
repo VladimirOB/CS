@@ -5,17 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PictureContainter_DragNDrop_"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid Name="myGrid" Background="White" ShowGridLines="True">
-        <TabControl Name="tabControl" SelectedIndex="0" TabStripPlacement="Top">
+        Title="MainWindow" Height="600" Width="1000" Background="Transparent" WindowStyle="None" AllowsTransparency="True">
+
+    <Grid Width="1000" Height="600" Name="myGrid" Background="Transparent" ShowGridLines="True" Margin="-135,-69,-76,-24">
+        <Ellipse Name="ellipse1" Stroke="Black" Fill="BlanchedAlmond" Margin="56,31,53,10" />
+        <Ellipse Margin="56,31,53,0" MouseLeftButtonDown="captionEllipse_MouseLeftButtonDown" Name="captionEllipse" Stroke="Black" Height="44" VerticalAlignment="Top" >
+            <Ellipse.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <GradientStop Color="MediumAquamarine" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+        <Ellipse MouseLeftButtonDown="ellipse3_MouseLeftButtonDown" Height="42" HorizontalAlignment="Right" Margin="0,32,53,0" Name="ellipse3" Stroke="Black" VerticalAlignment="Top" Width="61" Fill="Red" />
+        <TabControl Width="800" Height="450" Name="tabControl" SelectedIndex="0" TabStripPlacement="Top">
             <TabItem Header="Canvas" IsTabStop="True">
                 <Canvas x:Name="mainCanvas" Background="#FFE2E2D6" DragEnter="mainCanvas_DragEnter" Drop="mainCanvas_Drop" AllowDrop="True" MouseMove="mainCanvas_MouseMove" MouseUp="mainCanvas_MouseUp" PreviewKeyDown="mainCanvas_PreviewKeyDown">
-            <Label x:Name="myLabel" Content="1" Canvas.Left="20" Canvas.Top="18" FontSize="24"/>
-        </Canvas>
+                    <Label x:Name="myLabel" Content="1" Canvas.Left="20" Canvas.Top="18" FontSize="24"/>
+                </Canvas>
             </TabItem>
             <TabItem Header="Grid" IsTabStop="True">
                 <Grid Name="tabPageGrid" Background="White" ShowGridLines="True">
-                   
+
                 </Grid>
             </TabItem>
 

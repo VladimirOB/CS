@@ -45,7 +45,6 @@ namespace PictureContainter_DragNDrop_
 
         int currentRowGrid;
         int currentColGrid;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -371,6 +370,17 @@ namespace PictureContainter_DragNDrop_
                     mainCanvas.Children.Remove(movingElementRMB);
                 }
             }
+        }
+
+        private void ellipse3_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void captionEllipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // организация перемещения окна
+            DragMove();
         }
 
         private void CheckDir(string dirName)
