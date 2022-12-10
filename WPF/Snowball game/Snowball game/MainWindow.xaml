@@ -1,0 +1,93 @@
+﻿<Window x:Class="Snowball_game.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Snowball_game"
+        mc:Ignorable="d"
+        Title="Snowball Game" MinHeight="450" MinWidth="711" Height="450" Width="711" Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <Storyboard x:Key="sbYeti">
+            <DoubleAnimationUsingKeyFrames
+                Storyboard.TargetName="yetiImage"
+                Storyboard.TargetProperty="Opacity"
+                Duration="0:0:0.5"
+                AutoReverse="True"
+                CurrentTimeInvalidated="YetiAnimation_CurrentTimeInvalidated"
+                Completed="yetiAnim_Completed">
+                <LinearDoubleKeyFrame Value="0.5" KeyTime="0:0:0"/>
+                <LinearDoubleKeyFrame Value="1" KeyTime="0:0:0.35"/>
+                <LinearDoubleKeyFrame Value="1" KeyTime="0:0:0.5"/>
+            </DoubleAnimationUsingKeyFrames>
+
+            <DoubleAnimationUsingKeyFrames
+                Storyboard.TargetName="yetiTT"
+                Storyboard.TargetProperty="Y"
+                Duration="0:0:0.5"
+                AutoReverse="True">
+                <LinearDoubleKeyFrame Value="0" KeyTime="0:0:0"/>
+                <LinearDoubleKeyFrame Value="-160" KeyTime="0:0:0.35"/>
+                <LinearDoubleKeyFrame Value="-160" KeyTime="0:0:0.5"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="sbYeti2">
+            <DoubleAnimationUsingKeyFrames
+                Storyboard.TargetName="yetiImage2"
+                Storyboard.TargetProperty="Opacity"
+                Duration="0:0:0.5"
+                AutoReverse="True"
+                CurrentTimeInvalidated="YetiAnimation_CurrentTimeInvalidated2"
+                Completed="yetiAnim_Completed2">
+                <LinearDoubleKeyFrame Value="0.5" KeyTime="0:0:0"/>
+                <LinearDoubleKeyFrame Value="1" KeyTime="0:0:0.35"/>
+                <LinearDoubleKeyFrame Value="1" KeyTime="0:0:0.5"/>
+            </DoubleAnimationUsingKeyFrames>
+
+            <DoubleAnimationUsingKeyFrames
+                Storyboard.TargetName="yetiTT2"
+                Storyboard.TargetProperty="Y"
+                Duration="0:0:0.5"
+                AutoReverse="True">
+                <LinearDoubleKeyFrame Value="0" KeyTime="0:0:0"/>
+                <LinearDoubleKeyFrame Value="-160" KeyTime="0:0:0.35"/>
+                <LinearDoubleKeyFrame Value="-160" KeyTime="0:0:0.5"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+    </Window.Resources>
+
+
+    <DockPanel>
+
+        <Border DockPanel.Dock="Top" Height="20" Background="White" Grid.Row="0">
+            <Menu>
+                <MenuItem Header="Start / Stop" Click="Start_Click"/>
+            </Menu>
+        </Border>
+        <Viewbox>
+            <Canvas Name="mainCanvas" Height="450" Width="800" Background="Transparent" MouseDown="Canvas_MouseDown">
+                <Image x:Name="background" Source="/background.jpg" Stretch="Fill" Height="450" Width="800" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="0"/>
+                <TextBlock x:Name="txtScore" Text="Score: 0" FontSize="18" Foreground="Black" Height="20" Width="100" Canvas.Left="360"/>
+                <Image x:Name="heartFull" Visibility="Collapsed" Source="/heart1.jpg" Stretch="Fill" Height="50" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Image x:Name="heartNull" Visibility="Collapsed" Source="/heart2.jpg" Height="50" Width="50" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Top="-250"/>
+                <Image x:Name="yetiImage" Opacity="0" Source="/yeti.jpg" Stretch="Fill" Height="240" Width="163" Canvas.Top="268" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="805" MouseDown="yeti_MouseDown">
+                    <Image.RenderTransform>
+                        <TranslateTransform x:Name="yetiTT"  Y="0"/>
+                    </Image.RenderTransform>
+                </Image>
+                <Image x:Name="yetiImage2" Opacity="0" Source="/yeti.jpg" Stretch="Fill" Height="240" Width="163" Canvas.Top="268" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="935" MouseDown="yeti2_MouseDown">
+                    <Image.RenderTransform>
+                        <TranslateTransform x:Name="yetiTT2"  Y="0"/>
+                    </Image.RenderTransform>
+                </Image>
+                <Image x:Name="background2" Source="/background2.jpg" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Width="800" Canvas.Top="268" Height="182" />
+                <Border Name="borderStart" BorderThickness="3" BorderBrush="Cyan" Background="DarkCyan" Width="330" Canvas.Left="233" Canvas.Top="104" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Name="txtStart" Text="Игра в снежки Нажмите Start" TextWrapping="Wrap" Foreground="Yellow" FontSize="48"  HorizontalAlignment="Left" VerticalAlignment="Center" MouseDown="Start_Click" />
+                </Border>
+                <Image Name="snowballImage" Source="/snowball.jpg" RenderTransformOrigin="0.5, 0.5" Canvas.Left="370" Canvas.Top="350" Height="60" Width="60" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            </Canvas>
+        </Viewbox>
+    </DockPanel>
+</Window>

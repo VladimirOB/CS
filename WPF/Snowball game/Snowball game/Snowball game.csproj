@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>Snowball_game</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="background.jpg" />
+    <None Remove="background2.jpg" />
+    <None Remove="heart1.jpg" />
+    <None Remove="heart2.jpg" />
+    <None Remove="snowball.jpg" />
+    <None Remove="yeti.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="background.jpg" />
+    <Resource Include="background2.jpg" />
+    <Resource Include="heart1.jpg" />
+    <Resource Include="heart2.jpg" />
+    <Resource Include="snowball.jpg" />
+    <Resource Include="yeti.jpg" />
+  </ItemGroup>
+
+</Project>

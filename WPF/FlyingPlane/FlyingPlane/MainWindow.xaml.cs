@@ -24,7 +24,6 @@ namespace FlyingPlane
     public partial class MainWindow : Window
     {
         List<Point> lstSteps = new List<Point>();
-        List<Ellipse> lstEllipse = new List<Ellipse>();
         // текущее положение самолёта
         Point currentPlanePos;
 
@@ -92,11 +91,15 @@ namespace FlyingPlane
             currentPlanePos.X = Canvas.GetLeft(image);
             currentPlanePos.Y = Canvas.GetTop(image);
             lstSteps.Clear();
-            foreach (var item in lstEllipse)
+
+            // очистка точек траектории
+            int index = mainCanvas.Children.Count - 1;
+            while (index >= 0)
             {
-                mainCanvas.Children.Remove(item);
+                var item = mainCanvas.Children[index--];
+                if (item is Ellipse && ((Ellipse)item).Width == 5)
+                    mainCanvas.Children.Remove(item);
             }
-            lstEllipse.Clear();
         }
 
         private void mainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
@@ -106,12 +109,8 @@ namespace FlyingPlane
             Canvas.SetTop(ellipse, e.GetPosition(mainCanvas).Y);
             ellipse.Stroke = Brushes.Black;
             ellipse.Fill = Brushes.Black;
-            ellipse.StrokeThickness = 2;
-            ellipse.HorizontalAlignment = HorizontalAlignment.Center;
-            ellipse.VerticalAlignment = VerticalAlignment.Center;
             ellipse.Width = 5;
             ellipse.Height = 5;
-            lstEllipse.Add(ellipse);
             mainCanvas.Children.Add(ellipse);
             lstSteps.Add(e.GetPosition(mainCanvas));
         }

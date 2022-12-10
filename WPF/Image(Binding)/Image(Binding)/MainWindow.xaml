@@ -1,0 +1,44 @@
+﻿<Window x:Class="Image_Binding_.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Image_Binding_"
+        mc:Ignorable="d"
+        Title="ImageTransform" Height="650" Width="1100">
+    <Canvas Background="SlateGray">
+        <Image Name="img" Source="/Windows.jpg" Height="126" Width="204" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="{Binding ElementName=sliderOpacity, Path=Value, Mode=TwoWay}"  Canvas.Left="218" Canvas.Top="116">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="{Binding ElementName=sliderRotate, Path=Value, Mode=TwoWay}"/>
+                    <TranslateTransform X="{Binding ElementName=sliderLeft, Path=Value, Mode=TwoWay}"/>
+                    <TranslateTransform Y="{Binding ElementName=sliderTop, Path=Value, Mode=TwoWay}"/>
+                    <ScaleTransform ScaleX="{Binding ElementName=sliderZoomX, Path=Value, Mode=TwoWay}"/>
+                    <ScaleTransform ScaleY="{Binding ElementName=sliderZoomY, Path=Value, Mode=TwoWay}"/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        <TextBlock Text="Left" Canvas.Left="10" FontSize="24" Canvas.Top="549" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Slider x:Name="sliderLeft" Canvas.Left="10" Canvas.Top="581" Height="20" Width="1047" Maximum="500" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        
+        <TextBlock Text="Top" Canvas.Left="1013" FontSize="24" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Slider x:Name="sliderTop" Canvas.Left="1062" Canvas.Top="10" Height="593" Width="20" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Maximum="250" RenderTransformOrigin="0.5,0.5">
+            <Slider.RenderTransform>
+                <RotateTransform Angle="180"/>
+            </Slider.RenderTransform>
+        </Slider>
+        
+        <TextBlock Text="Rotate" Canvas.Left="867" FontSize="24" Canvas.Top="385" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Slider x:Name="sliderRotate" Maximum="360" Canvas.Left="867" Canvas.Top="419" Height="20" Width="184" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        
+        <TextBlock Text="ZoomX" Canvas.Left="867" FontSize="24" Canvas.Top="434" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Slider x:Name="sliderZoomX" Value="1" Maximum="5" Canvas.Left="867" Canvas.Top="466" Height="20" Width="184" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        
+        <TextBlock Text="ZoomY" Canvas.Left="867" FontSize="24" Canvas.Top="479" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Slider x:Name="sliderZoomY" Value="1" Maximum="5" Canvas.Left="867" Canvas.Top="509" Height="20" Width="184" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        
+        <TextBlock Text="Opacity" Canvas.Left="867" FontSize="24" Canvas.Top="524" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Slider x:Name="sliderOpacity" Value="1" Maximum="1" Canvas.Left="867" Canvas.Top="555" Height="20" Width="184"/>
+
+    </Canvas>
+</Window>
