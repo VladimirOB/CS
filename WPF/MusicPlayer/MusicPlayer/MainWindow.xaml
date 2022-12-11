@@ -5,10 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicPlayer"
         mc:Ignorable="d"
-        Title="Music Player" Height="180" Width="350" Background="Transparent" WindowStyle="None" AllowsTransparency="True" Closing="Window_Closing">
+        Title="Music Player" Height="170" Width="350" Background="Transparent" WindowStyle="None" AllowsTransparency="True" Closing="Window_Closing">
 
-    <Grid Height="180" Width="350" Background="Transparent">
-        <Rectangle x:Name="backgroundMain" Width="350">
+    <Window.Resources>
+        <Storyboard x:Key="MediaStoryboardResource" CurrentTimeInvalidated="storyboard_CurrentTimeInvalidated">
+            <MediaTimeline Name="tmline1"  Storyboard.TargetName="mediaElement" />
+        </Storyboard>
+    </Window.Resources>
+
+    <Canvas Height="170" Width="350" Background="Transparent" DragEnter="Canvas_DragEnter" Drop="Canvas_Drop" AllowDrop="True">
+        <Rectangle x:Name="backgroundMain" Canvas.Left="0" Canvas.Top="0" Width="350" Height="170">
             <Rectangle.Fill>
                 <LinearGradientBrush StartPoint="1,0" EndPoint="1,1">
                     <GradientStop x:Name="gr1" Color="Firebrick" Offset="0"/>
@@ -49,14 +55,14 @@
                 </EventTrigger>
             </Rectangle.Triggers>-->
         </Rectangle>
-        <Button x:Name="collapse" Margin="310,0,20,160" Click="collapse_Click" ToolTip="Сollapse">
+        <Button x:Name="collapse" Canvas.Left="310" Click="collapse_Click" ToolTip="Сollapse" Height="20" Width="20" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button.Background>
                 <ImageBrush Opacity="1" 
                             AlignmentX="Center" AlignmentY="Center"
                             Stretch="UniformToFill" ImageSource="/collapse.png"/>
             </Button.Background>
         </Button>
-        <Button x:Name="close"  Margin="330,0,0,160" Click="close_Click" ToolTip="Close">
+        <Button x:Name="close"  Canvas.Left="330" Height="20" Width="20" Click="close_Click" ToolTip="Close" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button.Background>
                 <ImageBrush Opacity="1" ImageSource="/close.png" 
                             AlignmentX="Center" AlignmentY="Center"
@@ -64,88 +70,80 @@
                 </ImageBrush>
             </Button.Background>
         </Button>
-        <Border BorderThickness="1" BorderBrush="LightSteelBlue" Height="20" Margin="5,0,40,160" MouseLeftButtonDown="borderTop_MouseLeftButtonDown">
+        <Border BorderThickness="1" BorderBrush="LightSteelBlue" Height="20" Margin="3,0,40,160" MouseLeftButtonDown="borderTop_MouseLeftButtonDown">
             <TextBlock  Text="                 > > > > > Music Player &lt; &lt; &lt; &lt; &lt;" Width="305"/>
         </Border>
-        <Border BorderThickness="1" BorderBrush="LightSteelBlue" Margin="5,25,5,5"/>
+        <Border BorderThickness="1" BorderBrush="LightSteelBlue" Height="141" Canvas.Left="5" Canvas.Top="25" Width="340" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
-        <Border BorderThickness="1" BorderBrush="LightSteelBlue" Background="Black" Margin="10,32,10,132">
-            <TextBlock x:Name="txtFileName" Text="fileName" Foreground="Lime"/>
-        </Border>
-        <Border BorderThickness="1" BorderBrush="LightSteelBlue" Background="Black" Margin="10,53,251,79">
+        <TextBlock x:Name="txtFileName" Text="Empty" Canvas.Left="10" Canvas.Top="30" Background="Black" Foreground="Lime" HorizontalAlignment="Left" VerticalAlignment="Center" Width="330"/>
+
+        <Border BorderThickness="1" BorderBrush="LightSteelBlue" Background="Black" Canvas.Left="10" Canvas.Top="50" HorizontalAlignment="Left" VerticalAlignment="Center" MaxWidth="90" Width="90">
             <Grid>
                 <TextBlock x:Name="txtTime" FontSize="24" HorizontalAlignment="Center" Text="00:00" Foreground="Lime" Margin="0,0,0,15"/>
                 <TextBlock x:Name="txtState" Text="stop" HorizontalAlignment="Center" Foreground="Lime" Margin="0,30,0,0"/>
             </Grid>
         </Border>
 
-        <Slider Name="sliderPosition" ValueChanged="sliderPosition_ValueChanged" Height="21" Margin="8,109,8,50"/>
-        <Slider Minimum="0" Maximum="1" Value="1" Height="22" Name="sliderVolume" Margin="108,68,114,90" ValueChanged="sliderVolume_ValueChanged"/>
-        
-        <Border BorderBrush = "Transparent" Margin="18,135,297,10">
-            <Button x:Name="prev" Click="prev_Click">
-                <Button.Background>
-                    <ImageBrush Opacity="1" ImageSource="/prev.png" 
-                            AlignmentX="Center" AlignmentY="Center"
-                            Stretch="UniformToFill">
-                    </ImageBrush>
-                </Button.Background>
-            </Button>
-        </Border>
+        <MediaElement Name="mediaElement" MediaOpened="mediaElement_MediaOpened" MediaEnded="mediaElement_MediaEnded" LoadedBehavior="Manual"/>
 
-        <Border BorderBrush = "Transparent" Margin="54,135,261,10">
-            <Button x:Name="play" Click="play_Click">
-                <Button.Background>
-                    <ImageBrush Opacity="1" ImageSource="/play.png" 
-                            AlignmentX="Center" AlignmentY="Center"
-                            Stretch="UniformToFill">
-                    </ImageBrush>
-                </Button.Background>
-            </Button>
-        </Border>
+        <Slider Name="sliderPosition" ValueChanged="sliderPosition_ValueChanged" Height="21" Canvas.Left="10" Canvas.Top="104" HorizontalAlignment="Center" VerticalAlignment="Center" Width="330"/>
+        <Slider Minimum="0" Maximum="1" Value="{Binding ElementName=mediaElement, Path=Volume, Mode=TwoWay}" Height="22" Name="sliderVolume" Canvas.Left="105" Canvas.Top="63" HorizontalAlignment="Left" VerticalAlignment="Center" Width="118" />
 
-        <Border BorderBrush = "Transparent" Margin="90,135,225,10">
-            <Button x:Name="pause" Click="pause_Click">
-                <Button.Background>
-                    <ImageBrush Opacity="1" ImageSource="/pause.png" 
+        <Button x:Name="btnPrev" Click="prev_Click" Canvas.Left="11" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Button.Background>
+                <ImageBrush Opacity="1" ImageSource="/prev.png" 
                             AlignmentX="Center" AlignmentY="Center"
                             Stretch="UniformToFill">
-                    </ImageBrush>
-                </Button.Background>
-            </Button>
-        </Border>
+                </ImageBrush>
+            </Button.Background>
+        </Button>
 
-        <Border BorderBrush = "Transparent" Margin="126,135,189,10">
-            <Button x:Name="stop" Click="stop_Click">
-                <Button.Background>
-                    <ImageBrush Opacity="1" ImageSource="/stop.png" 
+        <Button Name="btnPlay" Click="play_Click" Canvas.Left="46" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Button.Background>
+                <ImageBrush Opacity="1" 
                             AlignmentX="Center" AlignmentY="Center"
-                            Stretch="UniformToFill">
-                    </ImageBrush>
-                </Button.Background>
-            </Button>
-        </Border>
+                            Stretch="UniformToFill" ImageSource="/play.png"/>
+            </Button.Background>
+        </Button>
 
-        <Border BorderBrush = "Transparent" Margin="162,135,153,10">
-            <Button x:Name="next" Click="next_Click">
-                <Button.Background>
-                    <ImageBrush Opacity="1" ImageSource="/next.png" 
+        <Button x:Name="btnPause" Click="pause_Click" Canvas.Left="81" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Button.Background>
+                <ImageBrush Opacity="1" ImageSource="/pause.png" 
                             AlignmentX="Center" AlignmentY="Center"
                             Stretch="UniformToFill">
-                    </ImageBrush>
-                </Button.Background>
-            </Button>
-        </Border>
+                </ImageBrush>
+            </Button.Background>
+        </Button>
 
-        <Border BorderBrush = "Transparent" Margin="210,135,105,10">
-            <Button x:Name="search" Click="search_Click">
-                <Button.Background>
-                    <ImageBrush Opacity="1" ImageSource="/search.png" 
+        <Button x:Name="btnStop" Click="stop_Click" Canvas.Left="116" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Button.Background>
+                <ImageBrush Opacity="1" ImageSource="/stop.png" 
                             AlignmentX="Center" AlignmentY="Center"
                             Stretch="UniformToFill">
-                    </ImageBrush>
-                </Button.Background>
-            </Button>
-        </Border>
-    </Grid>
+                </ImageBrush>
+            </Button.Background>
+        </Button>
+
+        <Button x:Name="next" Click="next_Click" Canvas.Left="151" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Button.Background>
+                <ImageBrush Opacity="1" ImageSource="/next.png" 
+                            AlignmentX="Center" AlignmentY="Center"
+                            Stretch="UniformToFill">
+                </ImageBrush>
+            </Button.Background>
+        </Button>
+
+        <Button x:Name="btnSearch" Click="search_Click" Canvas.Left="196" Canvas.Top="130" Height="30" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Button.Background>
+                <ImageBrush Opacity="1" ImageSource="/search.png" 
+                            AlignmentX="Center" AlignmentY="Center"
+                            Stretch="UniformToFill">
+                </ImageBrush>
+            </Button.Background>
+        </Button>
+
+        <Button x:Name="btnTop" Foreground="DarkGreen" Content="TOP" FontSize="10" FontWeight="Black" Click="btnTop_Click" Canvas.Left="3" Height="20" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Toggle Always-On-Top"/>
+        <Button Name="btnPlaylist" Content="PL" Foreground="DarkRed" FontWeight="Black" Click="btnPlaylist_Click" Canvas.Left="299" Canvas.Top="84" Height="20" Width="36" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Open/Close playlist" />
+        <Button Name="btnRandom" Content="Random" Foreground="DarkRed" FontWeight="Bold" Click="btnRandom_Click" Canvas.Left="283" Canvas.Top="140" Height="20" Width="52" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Open/Close playlist" />
+    </Canvas>
 </Window>

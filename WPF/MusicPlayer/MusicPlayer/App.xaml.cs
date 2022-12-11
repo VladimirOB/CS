@@ -12,16 +12,17 @@ namespace MusicPlayer
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            //MainWindow wnd = new Window();
+            MainWindow wnd = new MainWindow();
+
             if (e.Args.Length == 1)
             {
-                MusicPlayer.MainWindow.Instance.NewSong(e.Args[0]);
+                wnd.PlaySong(e.Args[0]);
             }
             double screenHeight = SystemParameters.FullPrimaryScreenHeight; // общая высота
             double screenWidth = SystemParameters.FullPrimaryScreenWidth;  // общая ширина
-            MusicPlayer.MainWindow.Instance.Top = (screenHeight - MusicPlayer.MainWindow.Instance.Height); // расположение окна снизу справа
-            MusicPlayer.MainWindow.Instance.Left = (screenWidth - MusicPlayer.MainWindow.Instance.Width);
-            MusicPlayer.MainWindow.Instance.Show();
+            wnd.Top = (screenHeight - wnd.Height); // расположение окна снизу справа
+            wnd.Left = (screenWidth - wnd.Width);
+            wnd.Show();
         }
     }
 }
