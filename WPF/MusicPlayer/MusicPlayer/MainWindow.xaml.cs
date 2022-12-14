@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,14 +23,16 @@ namespace MusicPlayer
 {
     public partial class MainWindow : Window
     {
-        private bool suppressSeek;
+        private bool suppressSeek, isRandom;
         Storyboard storyboard;
         public List<string> playlist = new List<string>();
         public int currentSoundPos;
-        PlaylistWindow plWind;
+        PlaylistWindow plWindow;
+
+        // для загрузки плейлиста из закрытого плеера
+        public string playlistPath;
 
         Random rand = new Random();
-        private bool isRandom;
         public MainWindow()
         {
             InitializeComponent();
@@ -41,14 +44,15 @@ namespace MusicPlayer
 
         private void InitPlaylist()
         {
-            plWind = new PlaylistWindow(this);
+            plWindow = new PlaylistWindow(this);
             double screenHeight = SystemParameters.FullPrimaryScreenHeight; // общая высота
             double screenWidth = SystemParameters.FullPrimaryScreenWidth;  // общая ширина
-            plWind.Top = (screenHeight - Height - plWind.Height); // расположение окна снизу справа
-            plWind.Left = (screenWidth - Width);
-            plWind.Topmost = true;
-            plWind.Show();
-            plWind.Visibility = Visibility.Collapsed;
+            plWindow.Top = (screenHeight - Height - plWindow.Height); // расположение окна снизу справа
+            plWindow.Left = (screenWidth - Width);
+            plWindow.Topmost = true;
+            plWindow.Show();
+            plWindow.Visibility = Visibility.Collapsed;
+            
         }
 
         private void storyboard_CurrentTimeInvalidated(object? sender, EventArgs e)
@@ -63,7 +67,8 @@ namespace MusicPlayer
             else
             {
                 // настроить вывод текущего времени проигрывания и позиции слайдера
-                txtTime.Text = storyboardClock.CurrentTime.ToString();
+                
+                txtTime.Text = storyboardClock.CurrentTime.ToString().Substring(0,8);
                 suppressSeek = true;
                 sliderPosition.Value = storyboardClock.CurrentTime.Value.TotalSeconds;
                 suppressSeek = false;
@@ -73,6 +78,7 @@ namespace MusicPlayer
 
         private void mediaElement_MediaOpened(object sender, RoutedEventArgs e)
         {
+            if(mediaElement.NaturalDuration.HasTimeSpan)
             sliderPosition.Maximum = mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
         }
 
@@ -84,6 +90,8 @@ namespace MusicPlayer
         private void close_Click(object sender, RoutedEventArgs e)
         {
             Close();
+            mediaElement.Stop();
+            plWindow.Close();
         }
 
         private void collapse_Click(object sender, RoutedEventArgs e)
@@ -99,16 +107,19 @@ namespace MusicPlayer
 
         private void play_Click(object sender, RoutedEventArgs e)
         {
-            mediaElement.Play();
+           mediaElement.Play();
            if(mediaElement.Source != null)
-            {
+           {
                 if (storyboard.GetIsPaused())
                     storyboard.Resume();
                 else
                     storyboard.Begin();
-            }
-           
-            txtState.Text = "play";
+           }
+           else if(playlist.Count > 0)
+           {
+                PlaySong(playlist[0]);
+           }
+           txtState.Text = "play";
         }
 
         private void prev_Click(object sender, RoutedEventArgs e)
@@ -175,20 +186,31 @@ namespace MusicPlayer
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".mp3";
             dlg.Filter = "mp3 Files (mp3)|*.mp3|wav Files (wav)|*.wav";
+            dlg.Multiselect = true;
 
             bool? result = dlg.ShowDialog();
 
             if (result == true)
             {
-                plWind.plListBox.ItemsSource = null;
+                playlist.Clear();
+                plWindow.plListBox.ItemsSource = null;
+                plWindow.plListBox.Items.Clear();
+                plWindow.fullNames.Clear();
+                foreach (var item in dlg.FileNames)
+                { 
+                    plWindow.fullNames.Add(item);
+                    plWindow.plListBox.Items.Add(System.IO.Path.GetFileName(item));
+                    playlist.Add(item);
+                }
                 PlaySong(dlg.FileName);
-                plWind.plListBox.Items.Add(dlg.FileName);
-                playlist.Add(dlg.FileName);
             }
         }
 
         public void PlaySong(string FileName)
         {
+            //выделяем выбранную песню в пл
+            plWindow.plListBox.SelectedItem = plWindow.plListBox.Items[currentSoundPos];
+
             sliderPosition.Value = 0;
             suppressSeek = true;
             storyboard.Stop();
@@ -214,7 +236,7 @@ namespace MusicPlayer
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             mediaElement.Stop();
-            plWind.Close();
+            plWindow.Close();
         }
 
         private void btnTop_Click(object sender, RoutedEventArgs e)
@@ -222,12 +244,12 @@ namespace MusicPlayer
             if (!Topmost)
             {
                 Topmost = true;
-                plWind.Topmost = true;
+                plWindow.Topmost = true;
                 btnTop.Foreground = Brushes.DarkGreen;
             }
             else
             {
-                plWind.Topmost = false;
+                plWindow.Topmost = false;
                 Topmost = false;
                 btnTop.Foreground = Brushes.DarkRed;
             }
@@ -256,10 +278,14 @@ namespace MusicPlayer
 
                 if(playlist.Count > 0)
                 {
-                    plWind.plListBox.ItemsSource = null;
-                    plWind.plListBox.Items.Clear();
-                    plWind.plListBox.ItemsSource = playlist;
-                    PlaySong(playlist[0]);
+                    plWindow.plListBox.ItemsSource = null;
+                    plWindow.plListBox.Items.Clear();
+                    plWindow.fullNames = playlist;
+                    foreach (var item in playlist)
+                    {
+                        plWindow.plListBox.Items.Add(System.IO.Path.GetFileName(item));
+                    }
+                    PlaySong(plWindow.fullNames.FirstOrDefault());
                 }
             }
         }
@@ -281,10 +307,10 @@ namespace MusicPlayer
         }
         private void CheckDir(string dirName)
         {
-            foreach (string s1 in Directory.GetFiles(dirName))
+            foreach (string fileName in Directory.GetFiles(dirName))
             {
-                if (s1.EndsWith(".mp3") || s1.EndsWith(".wav"))
-                    playlist.Add(s1);
+                if (fileName.EndsWith(".mp3") || fileName.EndsWith(".wav"))
+                    playlist.Add(fileName);
             }
             foreach (string s2 in Directory.GetDirectories(dirName))
             {
@@ -294,14 +320,14 @@ namespace MusicPlayer
 
         private void btnPlaylist_Click(object sender, RoutedEventArgs e)
         {
-            if (plWind.Visibility == Visibility.Visible)
+            if (plWindow.Visibility == Visibility.Visible)
             {
-                plWind.Visibility = Visibility.Collapsed;
+                plWindow.Visibility = Visibility.Collapsed;
                 btnPlaylist.Foreground = Brushes.DarkRed;
             }
             else
             {
-                plWind.Visibility = Visibility.Visible;
+                plWindow.Visibility = Visibility.Visible;
                 btnPlaylist.Foreground = Brushes.DarkGreen;
             }
                 
@@ -320,6 +346,42 @@ namespace MusicPlayer
                 btnRandom.Foreground = Brushes.DarkGreen;
             }
                 
+        }
+
+        private void sliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (sliderVolume.Value.ToString().Length > 3)
+                txtVolume.Text = "Volume: " + sliderVolume.Value.ToString().Substring(0, 4);
+            else
+                txtVolume.Text = "Volume: " + sliderVolume.Value.ToString();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            //проверка нужна при запуске приложения напрямую открыв плейлист
+            if (playlistPath != null)
+            {
+                plWindow.LoadPlaylist(playlistPath);
+            }
+        }
+
+        private void sliderBalance_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if(sliderBalance.Value > 0)
+            {
+                if (sliderBalance.Value.ToString().Length > 3)
+                    txtBalance.Text = "Balance: " + sliderBalance.Value.ToString().Substring(0, 3);
+                else
+                    txtBalance.Text = "Balance: " + sliderBalance.Value.ToString();
+            }
+            else
+            {
+                if (sliderBalance.Value.ToString().Length > 4)
+                    txtBalance.Text = "Balance: " + sliderBalance.Value.ToString().Substring(0, 4);
+                else
+                    txtBalance.Text = "Balance: " + sliderBalance.Value.ToString();
+            }
+            
         }
     }
 }

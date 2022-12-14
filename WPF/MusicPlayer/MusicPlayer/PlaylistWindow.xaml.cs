@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +19,8 @@ namespace MusicPlayer
     public partial class PlaylistWindow : Window
     {
         MainWindow wnd;
+        // можно хранить List с FullName, а в LB показывать только Name
+        public List<string> fullNames = new List<string>();
         public PlaylistWindow(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -62,10 +65,10 @@ namespace MusicPlayer
             {
                 if (fileName.EndsWith(".mp3") || fileName.EndsWith(".wav"))
                 {
+                    fullNames.Add(fileName);
+                    plListBox.Items.Add(System.IO.Path.GetFileName(fileName));
                     wnd.playlist.Add(fileName);
-                    plListBox.Items.Add(fileName);
                 }
-
             }
         }
         private void CheckDir(string dirName)
@@ -74,8 +77,9 @@ namespace MusicPlayer
             {
                 if (fileName.EndsWith(".mp3") || fileName.EndsWith(".wav"))
                 {
+                    fullNames.Add(fileName);
+                    plListBox.Items.Add(System.IO.Path.GetFileName(fileName));
                     wnd.playlist.Add(fileName);
-                    plListBox.Items.Add(fileName);
                 }
                     
             }
@@ -93,7 +97,60 @@ namespace MusicPlayer
         private void ListBox_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             wnd.currentSoundPos = plListBox.SelectedIndex;
-            wnd.PlaySong(plListBox.SelectedItem.ToString());
+            wnd.PlaySong(fullNames[plListBox.SelectedIndex]);
+        }
+
+        private void savePL_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.DefaultExt = ".mpbv";
+            dlg.Filter = "mpbv Files (playlist)|*.mpbv";
+            bool? result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                StreamWriter sw = new StreamWriter(dlg.FileName);
+                foreach (var item in fullNames)
+                {
+                    sw.WriteLine(item);
+                }
+                sw.Close();
+            }
+        }
+
+        private void openPL_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = ".mpbv";
+            dlg.Filter = "mpbv Files (playlist)|*.mpbv";
+            dlg.Multiselect = false;
+
+            bool? result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                LoadPlaylist(dlg.FileName);
+            }
+        }
+
+        public void LoadPlaylist(string path)
+        {
+            StreamReader sr = new StreamReader(path);
+            string? line;
+
+            wnd.playlist.Clear();
+            plListBox.ItemsSource = null;
+            plListBox.Items.Clear();
+            fullNames.Clear();
+
+            while ((line = sr.ReadLine()) != null)
+            {
+                fullNames.Add(line);
+                plListBox.Items.Add(System.IO.Path.GetFileName(line));
+                wnd.playlist.Add(line);
+            }
+            plListBox.SelectedItem = plListBox.Items[0];
+            wnd.PlaySong(fullNames[0]);
         }
     }
 }

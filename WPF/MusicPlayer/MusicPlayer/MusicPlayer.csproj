@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="close.png" />
     <None Remove="collapse.png" />
+    <None Remove="icon.png" />
     <None Remove="next.png" />
     <None Remove="pause.png" />
     <None Remove="play.png" />
@@ -20,6 +21,7 @@
 
   <ItemGroup>
     <Resource Include="close.png" />
+    <Resource Include="icon.png" />
     <Resource Include="next.png" />
     <Resource Include="pause.png" />
     <Resource Include="play.png" />

@@ -5,64 +5,131 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicPlayer"
         mc:Ignorable="d"
-        Title="Music Player" Height="170" Width="350" Background="Transparent" WindowStyle="None" AllowsTransparency="True" Closing="Window_Closing">
+        Template="{StaticResource win1}"
+        Title="Music Player" Height="170" Width="350" Background="Transparent" WindowStyle="None" AllowsTransparency="True" Closing="Window_Closing" Icon="/icon.png" Loaded="Window_Loaded">
 
     <Window.Resources>
         <Storyboard x:Key="MediaStoryboardResource" CurrentTimeInvalidated="storyboard_CurrentTimeInvalidated">
             <MediaTimeline Name="tmline1"  Storyboard.TargetName="mediaElement" />
         </Storyboard>
+
+
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2"
+                               SnapsToDevicePixels="true"
+                               Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                               StrokeDashArray="1 2"
+                               StrokeThickness="1" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD" />
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070" />
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD" />
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1" />
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6" />
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B" />
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4" />
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5" />
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383" />
+        
+        <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="1" />
+            <Setter Property="Button.RenderTransformOrigin" Value="0.5 0.5" />
+            <!-- Свойство задаёт исходные трансформации для дальнейшей анимации в триггерах -->
+            <Setter Property="Button.RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Focusable="False"
+                                          RecognizesAccessKey="True"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <!--<Setter TargetName="border" Property="Background" Value="{StaticResource Button.MouseOver.Background}" />-->
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.MouseOver.Border}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource Button.Pressed.Background}" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.Pressed.Border}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                                <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{StaticResource Button.Disabled.Foreground}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <!-- Триггер срабатывает на нажатие на кнопку -->
+                <Trigger Property="Button.IsPressed" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation From="1" To="0.75" Duration="0:0:0.1" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"/>
+                                <DoubleAnimation From="1" To="0.75" Duration="0:0:0.1" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+
+                    <!-- Триггер срабатывает на отжатие кнопки -->
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation From="0.75" To="1" Duration="0:0:0.1" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"/>
+                                <DoubleAnimation From="0.75" To="1" Duration="0:0:0.1" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Canvas Height="170" Width="350" Background="Transparent" DragEnter="Canvas_DragEnter" Drop="Canvas_Drop" AllowDrop="True">
-        <Rectangle x:Name="backgroundMain" Canvas.Left="0" Canvas.Top="0" Width="350" Height="170">
-            <Rectangle.Fill>
-                <LinearGradientBrush StartPoint="1,0" EndPoint="1,1">
-                    <GradientStop x:Name="gr1" Color="Firebrick" Offset="0"/>
-                    <GradientStop x:Name="gr2" Color="DodgerBlue" Offset="1"/>
-                </LinearGradientBrush>
-            </Rectangle.Fill>
-            <!-- <Rectangle.Triggers>
-                <EventTrigger RoutedEvent="Window.Loaded">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimation
-                                Storyboard.TargetName="gr1"
-                                Storyboard.TargetProperty="Color"
-                                RepeatBehavior="Forever" 
-                                AutoReverse="True"
-                                To="SteelBlue" Duration="0:0:9" />
-                            <ColorAnimation
-                                Storyboard.TargetName="gr2"
-                                Storyboard.TargetProperty="Color"
-                                RepeatBehavior="Forever" 
-                                AutoReverse="True"
-                                To="Black" Duration="0:0:9" />
-                            <DoubleAnimation 
-                                Storyboard.TargetName="gr1"
-                                Storyboard.TargetProperty="Offset" 
-                                RepeatBehavior="Forever" 
-                                AutoReverse="True"
-                                From="0" To="1" Duration="0:0:9" />
-                            <DoubleAnimation 
-                                Storyboard.TargetName="gr2"
-                                Storyboard.TargetProperty="Offset" 
-                                RepeatBehavior="Forever" 
-                                AutoReverse="True"
-                                From="1" To="0" Duration="0:0:9" />
-
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Rectangle.Triggers>-->
-        </Rectangle>
-        <Button x:Name="collapse" Canvas.Left="310" Click="collapse_Click" ToolTip="Сollapse" Height="20" Width="20" HorizontalAlignment="Left" VerticalAlignment="Center">
+        
+        <Button x:Name="collapse" Style="{StaticResource ButtonStyle1}" Canvas.Left="310" Click="collapse_Click" ToolTip="Сollapse" Height="20" Width="20" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button.Background>
                 <ImageBrush Opacity="1" 
                             AlignmentX="Center" AlignmentY="Center"
                             Stretch="UniformToFill" ImageSource="/collapse.png"/>
             </Button.Background>
         </Button>
-        <Button x:Name="close"  Canvas.Left="330" Height="20" Width="20" Click="close_Click" ToolTip="Close" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Button x:Name="close" Style="{StaticResource ButtonStyle1}" Canvas.Left="330" Height="20" Width="20" Click="close_Click" ToolTip="Close" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button.Background>
                 <ImageBrush Opacity="1" ImageSource="/close.png" 
                             AlignmentX="Center" AlignmentY="Center"
@@ -71,7 +138,7 @@
             </Button.Background>
         </Button>
         <Border BorderThickness="1" BorderBrush="LightSteelBlue" Height="20" Margin="3,0,40,160" MouseLeftButtonDown="borderTop_MouseLeftButtonDown">
-            <TextBlock  Text="                 > > > > > Music Player &lt; &lt; &lt; &lt; &lt;" Width="305"/>
+            <TextBlock  Text="                > > > > > Music Player &lt; &lt; &lt; &lt; &lt;      ©BVO" FontWeight="Bold" Width="305"/>
         </Border>
         <Border BorderThickness="1" BorderBrush="LightSteelBlue" Height="141" Canvas.Left="5" Canvas.Top="25" Width="340" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
@@ -87,9 +154,12 @@
         <MediaElement Name="mediaElement" MediaOpened="mediaElement_MediaOpened" MediaEnded="mediaElement_MediaEnded" LoadedBehavior="Manual"/>
 
         <Slider Name="sliderPosition" ValueChanged="sliderPosition_ValueChanged" Height="21" Canvas.Left="10" Canvas.Top="104" HorizontalAlignment="Center" VerticalAlignment="Center" Width="330"/>
-        <Slider Minimum="0" Maximum="1" Value="{Binding ElementName=mediaElement, Path=Volume, Mode=TwoWay}" Height="22" Name="sliderVolume" Canvas.Left="105" Canvas.Top="63" HorizontalAlignment="Left" VerticalAlignment="Center" Width="118" />
+        <TextBlock Name="txtVolume" FontWeight="Bold" Text="Volume: 1" Canvas.Left="110" Canvas.Top="58" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Slider Minimum="0" Maximum="1" Value="{Binding ElementName=mediaElement, Path=Volume, Mode=TwoWay}" ValueChanged="sliderVolume_ValueChanged" Height="22" Name="sliderVolume" Canvas.Left="105" Canvas.Top="74" HorizontalAlignment="Center" VerticalAlignment="Top" Width="118" TickFrequency="0.05" TickPlacement="BottomRight" IsSnapToTickEnabled="True"/>
+        <TextBlock Name="txtBalance" FontWeight="Bold" Text="Balance: 0" Canvas.Left="248" Canvas.Top="58" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Slider Minimum="-1" Maximum="1" Value="{Binding ElementName=mediaElement, Path=Balance, Mode=TwoWay}" ValueChanged="sliderBalance_ValueChanged" Height="22" Name="sliderBalance" Canvas.Left="243" Canvas.Top="74" HorizontalAlignment="Center" VerticalAlignment="Top" Width="87" TickFrequency="0.1" TickPlacement="BottomRight" IsSnapToTickEnabled="True" />
 
-        <Button x:Name="btnPrev" Click="prev_Click" Canvas.Left="11" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Button x:Name="btnPrev" Style="{StaticResource ButtonStyle1}" Click="prev_Click" Canvas.Left="11" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5, 0.5">
             <Button.Background>
                 <ImageBrush Opacity="1" ImageSource="/prev.png" 
                             AlignmentX="Center" AlignmentY="Center"
@@ -98,7 +168,7 @@
             </Button.Background>
         </Button>
 
-        <Button Name="btnPlay" Click="play_Click" Canvas.Left="46" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Button Name="btnPlay" Style="{StaticResource ButtonStyle1}" Click="play_Click" Canvas.Left="46" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5, 0.5">
             <Button.Background>
                 <ImageBrush Opacity="1" 
                             AlignmentX="Center" AlignmentY="Center"
@@ -106,7 +176,7 @@
             </Button.Background>
         </Button>
 
-        <Button x:Name="btnPause" Click="pause_Click" Canvas.Left="81" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Button x:Name="btnPause" Style="{StaticResource ButtonStyle1}" Click="pause_Click" Canvas.Left="81" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5, 0.5">
             <Button.Background>
                 <ImageBrush Opacity="1" ImageSource="/pause.png" 
                             AlignmentX="Center" AlignmentY="Center"
@@ -115,7 +185,7 @@
             </Button.Background>
         </Button>
 
-        <Button x:Name="btnStop" Click="stop_Click" Canvas.Left="116" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Button x:Name="btnStop" Style="{StaticResource ButtonStyle1}" Click="stop_Click" Canvas.Left="116" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5, 0.5">
             <Button.Background>
                 <ImageBrush Opacity="1" ImageSource="/stop.png" 
                             AlignmentX="Center" AlignmentY="Center"
@@ -124,7 +194,7 @@
             </Button.Background>
         </Button>
 
-        <Button x:Name="next" Click="next_Click" Canvas.Left="151" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Button x:Name="next" Style="{StaticResource ButtonStyle1}" Click="next_Click" Canvas.Left="151" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5, 0.5">
             <Button.Background>
                 <ImageBrush Opacity="1" ImageSource="/next.png" 
                             AlignmentX="Center" AlignmentY="Center"
@@ -133,7 +203,7 @@
             </Button.Background>
         </Button>
 
-        <Button x:Name="btnSearch" Click="search_Click" Canvas.Left="196" Canvas.Top="130" Height="30" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Button x:Name="btnSearch" Style="{StaticResource ButtonStyle1}" Click="search_Click" Canvas.Left="196" Canvas.Top="130" Height="30" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5, 0.5">
             <Button.Background>
                 <ImageBrush Opacity="1" ImageSource="/search.png" 
                             AlignmentX="Center" AlignmentY="Center"
@@ -142,8 +212,8 @@
             </Button.Background>
         </Button>
 
-        <Button x:Name="btnTop" Foreground="DarkGreen" Content="TOP" FontSize="10" FontWeight="Black" Click="btnTop_Click" Canvas.Left="3" Height="20" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Toggle Always-On-Top"/>
-        <Button Name="btnPlaylist" Content="PL" Foreground="DarkRed" FontWeight="Black" Click="btnPlaylist_Click" Canvas.Left="299" Canvas.Top="84" Height="20" Width="36" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Open/Close playlist" />
-        <Button Name="btnRandom" Content="Random" Foreground="DarkRed" FontWeight="Bold" Click="btnRandom_Click" Canvas.Left="283" Canvas.Top="140" Height="20" Width="52" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Open/Close playlist" />
+        <Button x:Name="btnTop" Style="{StaticResource ButtonStyle1}" Foreground="DarkGreen" Content="TOP" FontSize="10" FontWeight="Black" Click="btnTop_Click" Canvas.Left="3" Height="20" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Toggle Always-On-Top" RenderTransformOrigin="0.5, 0.5"/>
+        <Button Name="btnPlaylist" Style="{StaticResource ButtonStyle1}" Content="PL" Foreground="DarkRed" FontWeight="Black" Click="btnPlaylist_Click" Canvas.Left="241" Canvas.Top="135" Height="20" Width="36" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Open/Close playlist" RenderTransformOrigin="0.5, 0.5" />
+        <Button Name="btnRandom" Style="{StaticResource ButtonStyle1}" Content="Random" Foreground="DarkRed" FontWeight="Bold" Click="btnRandom_Click" Canvas.Left="288" Canvas.Top="135" Height="20" Width="52" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Open/Close playlist" RenderTransformOrigin="0.5, 0.5" />
     </Canvas>
 </Window>

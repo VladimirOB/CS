@@ -1,0 +1,27 @@
+﻿<Window x:Class="Arkanoid.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Arkanoid"
+        mc:Ignorable="d"
+        Title="Arkanoid 2000" Height="500" Width="800" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File"/>
+            <MenuItem Header="Settings" Click="test"/>
+        </Menu>
+    
+    
+    <Canvas x:Name="mainCanvas" MouseMove="mainCanvas_MouseMove" MouseLeftButtonDown="mainCanvas_MouseLeftButtonDown">
+        <Canvas.Background>
+            <ImageBrush ImageSource="/backgroundSky.jpg"/>
+        </Canvas.Background>
+        <Rectangle x:Name="playerRect" Fill="DarkBlue" Canvas.Left="286" Canvas.Top="410" Width="200" Height="25"/>
+        <Image x:Name="ball" Source="/ball.png"  Canvas.Left="426" Canvas.Top="385" Width="25" Height="25"/>
+        <!--<Rectangle x:Name="block" Fill="OrangeRed" Canvas.Left="100" Canvas.Top="100" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"/>-->
+
+    </Canvas>
+    </DockPanel>
+</Window>

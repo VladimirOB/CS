@@ -14,9 +14,9 @@ namespace MusicPlayer
         {
             MainWindow wnd = new MainWindow();
 
-            if (e.Args.Length == 1)
+            if (e.Args.Length == 1) 
             {
-                wnd.PlaySong(e.Args[0]);
+                wnd.playlistPath = e.Args[0];
             }
             double screenHeight = SystemParameters.FullPrimaryScreenHeight; // общая высота
             double screenWidth = SystemParameters.FullPrimaryScreenWidth;  // общая ширина

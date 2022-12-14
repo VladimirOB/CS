@@ -4,7 +4,17 @@
              xmlns:local="clr-namespace:MusicPlayer"
              Startup="Application_Startup">
     <Application.Resources>
-         
+        <ControlTemplate x:Key="win1" TargetType="{x:Type Window}">
+            <Border Width="{TemplateBinding Window.Width}" Height="{TemplateBinding Window.Height}">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="1,0" EndPoint="1,1">
+                        <GradientStop  Color="Firebrick" Offset="0"/>
+                        <GradientStop  Color="DodgerBlue" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <ContentPresenter />
+            </Border>
+        </ControlTemplate>
     </Application.Resources>
 </Application>
 

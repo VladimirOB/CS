@@ -35,7 +35,7 @@ namespace Snowball_game
         private bool reloadPlayer = false;
         private bool reloadYeti = false, reloadYeti2 = false;
         //отслеживание попадания в цель, чтоб не дублировать анимацию
-        private bool hit = false, block = false, block2 = false;
+        private bool hit = false, block = false, block2 = false, sound = true;
         //очки, начисляются за попадание по Yeti
         private int score = 0;
         //анимация для Yeti
@@ -109,25 +109,29 @@ namespace Snowball_game
 
         private void InitMusic()
         {
-            int r = random.Next(0, 3);
-            switch(r)
+            if(sound)
             {
-                case 0:
-                    mp.Open(new Uri("1.mp3", UriKind.RelativeOrAbsolute));
-                    break;
-                case 1:
-                    mp.Open(new Uri("2.mp3", UriKind.RelativeOrAbsolute));
-                    break;
-                case 2:
-                    mp.Open(new Uri("3.mp3", UriKind.RelativeOrAbsolute));
-                    break;
+                int r = random.Next(0, 3);
+                switch (r)
+                {
+                    case 0:
+                        mp.Open(new Uri("1.mp3", UriKind.RelativeOrAbsolute));
+                        break;
+                    case 1:
+                        mp.Open(new Uri("2.mp3", UriKind.RelativeOrAbsolute));
+                        break;
+                    case 2:
+                        mp.Open(new Uri("3.mp3", UriKind.RelativeOrAbsolute));
+                        break;
+                }
+
+                mp.Volume = 0.5;
+                mp.Balance = 0;
+                mp.Position = new TimeSpan(0, 0, 0);
+                mp.SpeedRatio = 1;
+                mp.Play();
             }
             
-            mp.Volume = 0.5;
-            mp.Balance = 0;
-            mp.Position = new TimeSpan(0, 0, 0);
-            mp.SpeedRatio = 1;
-            mp.Play();
         }
 
         private void InitHearts()
@@ -191,7 +195,8 @@ namespace Snowball_game
 
         private void YetiSnowball_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            blockSound.Play();
+            if (sound)
+                blockSound.Play();
             block = true;
             reloadPlayer = false;
             yetiSnowball.Visibility = Visibility.Collapsed;
@@ -200,7 +205,8 @@ namespace Snowball_game
 
         private void YetiSnowball2_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            blockSound.Play();
+            if (sound)
+                blockSound.Play();
             block2 = true;
             reloadPlayer = false;
             yetiSnowball2.Visibility = Visibility.Collapsed;
@@ -212,7 +218,8 @@ namespace Snowball_game
             //если таймер был запущен, он выключается, происходит сброс очков и жизней и отображается окно меню
             if(gameTimer.IsEnabled)
             {
-                mp.Stop();
+                if (sound)
+                    mp.Stop();
                 gameTimer.Stop();
                 gameTimer2.Stop();
                 txtStart.Visibility = Visibility.Visible;
@@ -262,8 +269,8 @@ namespace Snowball_game
                 topAnimation.Completed += Canvas_MouseDownAnim_Completed;
                 snowballImage.BeginAnimation(Canvas.LeftProperty, leftAnimation);
                 snowballImage.BeginAnimation(Canvas.TopProperty, topAnimation);
-
-                hitSound.Play();
+                if (sound)
+                    hitSound.Play();
                 //т.к. есть туннелинг, метод отработает и при нажатии на Yeti
             }
         }
@@ -341,6 +348,22 @@ namespace Snowball_game
             }
         }
 
+        private void Sound_Click(object sender, RoutedEventArgs e)
+        {
+            if (sound)
+            {
+                btnSound.Foreground = Brushes.Red;
+                sound = false;
+            }
+                
+            else
+            {
+                btnSound.Foreground = Brushes.Green;
+                sound = true;
+            }
+                
+        }
+
         private void yetiSnowball_Completed(object? sender, EventArgs e)
         {
             if (!block)
@@ -348,7 +371,8 @@ namespace Snowball_game
                 
                 yetiSnowball.Visibility = Visibility.Collapsed;
                 health -= 1;
-                dmgSound.Play();
+                if (sound)
+                    dmgSound.Play();
                 switch (health)
                 {
                     case 2:
@@ -359,7 +383,8 @@ namespace Snowball_game
                         break;
                     case 0:
                         hearts[0].Source = heartNull.Source;
-                        dieSound.Play();
+                        if (sound)
+                            dieSound.Play();
                         Start_Click(null, null);
                         break;
                 }
@@ -375,7 +400,8 @@ namespace Snowball_game
                 
                 yetiSnowball2.Visibility = Visibility.Collapsed;
                 health -= 1;
-                dmgSound.Play();
+                if (sound)
+                    dmgSound.Play();
                 switch (health)
                 {
                     case 2:
@@ -386,7 +412,8 @@ namespace Snowball_game
                         break;
                     case 0:
                         hearts[0].Source = heartNull.Source;
-                        dieSound.Play();
+                        if (sound)
+                            dieSound.Play();
                         Start_Click(null, null);
                         break;
                 }
