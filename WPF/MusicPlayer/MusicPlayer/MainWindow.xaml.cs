@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,9 +19,14 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.Win32;
+using System.Windows.Interop;
+using Microsoft.VisualBasic;
+using System.Diagnostics;
 
 namespace MusicPlayer
 {
+
     public partial class MainWindow : Window
     {
         private bool suppressSeek, isRandom;
@@ -32,6 +38,15 @@ namespace MusicPlayer
         // для загрузки плейлиста из закрытого плеера
         public string playlistPath;
 
+        string memoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MusicPlayer";
+
+       
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern uint RegisterWindowMessage(string lpString);
+
+        private uint _messageId = RegisterWindowMessage("MyUniqueMessageIdentifier");
+
+
         Random rand = new Random();
         public MainWindow()
         {
@@ -39,15 +54,72 @@ namespace MusicPlayer
             storyboard = (Storyboard)this.Resources["MediaStoryboardResource"];
             sliderVolume.Value = 1;
             Topmost = true;
+            if (!System.IO.Directory.Exists(memoryPath) || !System.IO.File.Exists(memoryPath + "\\memory.db"))
+            {
+                System.IO.Directory.CreateDirectory(memoryPath);
+                File.WriteAllText(memoryPath + "\\memory.db", 1.ToString() + "\n"); // громкость
+
+            }
             InitPlaylist();
         }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            HwndSource source = PresentationSource.FromVisual(this) as HwndSource;
+            source.AddHook(WndProc);
+        }
+
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if(msg == _messageId)
+            {
+                // The unsafe section where byte pointers are used.
+                try
+                {
+                    //unsafe
+                    {
+                        //int len = lParam.ToInt32();
+                        //string? temp = Marshal.PtrToStringAnsi(wParam, len);
+                        //Marshal.FreeHGlobal(wParam);
+                        //MessageBox.Show(temp);
+                        //ReadProcessMemory(lParam, wParam, buffer, buffer.Length, 24);
+
+                        string fileName = System.IO.File.ReadAllText(memoryPath + "\\buffer.db");
+                        if(fileName.EndsWith(".mpbv"))
+                        {
+                            plWindow.LoadPlaylist(fileName);
+                        }
+                        else
+                        {
+                            currentSoundPos = 0;
+                            playlist.Clear();
+                            plWindow.plListBox.ItemsSource = null;
+                            plWindow.plListBox.Items.Clear();
+                            plWindow.fullNames.Clear();
+                            plWindow.fullNames.Add(fileName);
+                            plWindow.plListBox.Items.Add(System.IO.Path.GetFileName(fileName));
+                            playlist.Add(fileName);
+                            PlaySong(fileName);
+                        }
+                    }
+                   
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            return IntPtr.Zero;
+        }
+
 
         private void InitPlaylist()
         {
             plWindow = new PlaylistWindow(this);
             double screenHeight = SystemParameters.FullPrimaryScreenHeight; // общая высота
             double screenWidth = SystemParameters.FullPrimaryScreenWidth;  // общая ширина
-            plWindow.Top = (screenHeight - Height - plWindow.Height); // расположение окна снизу справа
+            plWindow.Top = (screenHeight - Height - plWindow.Height + 23); // расположение окна снизу справа
             plWindow.Left = (screenWidth - Width);
             plWindow.Topmost = true;
             plWindow.Show();
@@ -235,6 +307,16 @@ namespace MusicPlayer
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (playlist.Count > 0)
+            {
+                System.IO.File.WriteAllText(memoryPath + "\\sound.db", sliderVolume.Value.ToString());
+                StreamWriter sw = new StreamWriter(memoryPath + "\\memory.db");
+                foreach (var fileName in playlist)
+                {
+                    sw.WriteLine(fileName);
+                }
+                sw.Close();
+            }
             mediaElement.Stop();
             plWindow.Close();
         }
@@ -348,21 +430,34 @@ namespace MusicPlayer
                 
         }
 
-        private void sliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (sliderVolume.Value.ToString().Length > 3)
-                txtVolume.Text = "Volume: " + sliderVolume.Value.ToString().Substring(0, 4);
-            else
-                txtVolume.Text = "Volume: " + sliderVolume.Value.ToString();
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            sliderVolume.Value = Convert.ToDouble(File.ReadLines(memoryPath + "\\sound.db").First());
             //проверка нужна при запуске приложения напрямую открыв плейлист
             if (playlistPath != null)
             {
                 plWindow.LoadPlaylist(playlistPath);
             }
+            else if(playlist.Count > 0) 
+            {
+                plWindow.fullNames.Add(playlist[0]);
+                plWindow.plListBox.Items.Add(System.IO.Path.GetFileName(playlist[0]));
+                PlaySong(playlist[0]);
+            }
+            //открываются песни, которые были в плеере при закрытии
+            else 
+            {
+                plWindow.LoadPlaylist(memoryPath + "\\memory.db");
+            }
+        }
+
+        private void sliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (sliderVolume.Value == 1)
+                txtVolume.Text = "Volume: " + "100";
+
+            if (sliderVolume.Value.ToString().Length > 2)
+                txtVolume.Text = "Volume: " + (sliderVolume.Value * 100).ToString().Substring(0, 2);
         }
 
         private void sliderBalance_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

@@ -11,8 +11,10 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace MusicPlayer
 {
@@ -21,6 +23,7 @@ namespace MusicPlayer
         MainWindow wnd;
         // можно хранить List с FullName, а в LB показывать только Name
         public List<string> fullNames = new List<string>();
+
         public PlaylistWindow(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -137,7 +140,6 @@ namespace MusicPlayer
         {
             StreamReader sr = new StreamReader(path);
             string? line;
-
             wnd.playlist.Clear();
             plListBox.ItemsSource = null;
             plListBox.Items.Clear();
@@ -149,8 +151,46 @@ namespace MusicPlayer
                 plListBox.Items.Add(System.IO.Path.GetFileName(line));
                 wnd.playlist.Add(line);
             }
-            plListBox.SelectedItem = plListBox.Items[0];
-            wnd.PlaySong(fullNames[0]);
+            sr.Close();
+            if(fullNames.Count > 0)
+            {
+                plListBox.SelectedItem = plListBox.Items[0];
+                wnd.PlaySong(fullNames[0]);
+            }
+            
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Delete)
+            {
+                DeleteSound();
+            }
+        }
+
+        private void DeleteSound()
+        {
+            int index = plListBox.SelectedIndex;
+            if (index != wnd.currentSoundPos && index != -1)
+            {
+                if (index < wnd.currentSoundPos)
+                    wnd.currentSoundPos--;
+                plListBox.Items.RemoveAt(index);
+                wnd.playlist.RemoveAt(index);
+                fullNames.RemoveAt(index);
+                if (wnd.playlist.Count == 1)
+                    wnd.currentSoundPos = 0;
+            }
+            else
+            {
+                Storyboard sb = FindResource("StoryBoard1") as Storyboard;
+                sb.Begin();
+            }
+        }
+
+        private void contextItemDelete_click(object sender, RoutedEventArgs e)
+        {
+            DeleteSound();
         }
     }
 }

@@ -165,9 +165,30 @@ namespace RegExp_string_calc_
             }
         }
 
+        static private void test()
+        {
+            string? str = "+380714207124";
+            //str = Regex.Replace(str, "\\+38071", "+7949");
+
+            string? str2 = "anya givi:071-391-7321";
+            str2 = string.Join("", Regex.Replace(str2, "071-", "+7949").Split('-'));
+            Console.WriteLine(str2);
+        }
+
+        static private void test2()
+        {
+            string str = File.ReadAllText("V:/1.vcf");
+            str = string.Join("", Regex.Replace(str, "071-", "+7949").Split('-'));
+            str = Regex.Replace(str, "\\+38071", "+7949");
+            File.WriteAllText("V:/2.vcf", str);
+            Console.WriteLine("Ok");
+        }
+
         static void Main(string[] args)
         {
-            Task1();
+            test2();
+            //test();
+            //Task1();
             //Task2();
         }
     }

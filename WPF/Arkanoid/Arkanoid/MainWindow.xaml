@@ -5,23 +5,125 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Arkanoid"
         mc:Ignorable="d"
-        Title="Arkanoid 2000" Height="500" Width="800" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
+        Title="Arkanoid 2000" Height="1050" Width="1920" Loaded="Window_Loaded" KeyDown="Window_KeyDown" WindowStyle="None" WindowState="Maximized">
+
+    <Window.Resources>
+        <Image x:Key="background1" Source="/background1.jpg" Height="1050" Width="1610"/>
+        <Image x:Key="background2" Source="/background2.jpg" Height="1050" Width="1610"/>
+        <Image x:Key="background3" Source="/background3.jpg" Height="1050" Width="1610"/>
+        <Image x:Key="block1" Source="/block1.png"/>
+        <Image x:Key="block2" Source="/block2.png"/>
+        <Image x:Key="block3" Source="/block4.png"/>
+
+        <Storyboard x:Key="fireballDrop" CurrentTimeInvalidated="fireballDrop_CurrentTimeInt" Completed="fireballDrop_Completed">
+            <DoubleAnimation 
+                Storyboard.TargetName="fireballTT"
+                Storyboard.TargetProperty="Y"
+                Duration="0:0:2.2"
+                To="1100"
+                FillBehavior="Stop"
+                AutoReverse="False"/>
+        </Storyboard>
+    </Window.Resources>
 
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File"/>
-            <MenuItem Header="Settings" Click="test"/>
-        </Menu>
-    
-    
-    <Canvas x:Name="mainCanvas" MouseMove="mainCanvas_MouseMove" MouseLeftButtonDown="mainCanvas_MouseLeftButtonDown">
-        <Canvas.Background>
-            <ImageBrush ImageSource="/backgroundSky.jpg"/>
-        </Canvas.Background>
-        <Rectangle x:Name="playerRect" Fill="DarkBlue" Canvas.Left="286" Canvas.Top="410" Width="200" Height="25"/>
-        <Image x:Name="ball" Source="/ball.png"  Canvas.Left="426" Canvas.Top="385" Width="25" Height="25"/>
-        <!--<Rectangle x:Name="block" Fill="OrangeRed" Canvas.Left="100" Canvas.Top="100" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"/>-->
+        <Border x:Name="tableHighScore" DockPanel.Dock="Right" Width="300" Background="Black" BorderBrush="#FF3F3F3F" BorderThickness="5">
+            <Grid>
+                <Label Name="labelLVL" Content="Level: " FontWeight="Black" FontSize="36" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="High Score:" FontSize="36" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,870" Height="50"/>
+                <TextBlock x:Name="txtHighScore" Text="0" FontSize="36" Foreground="White" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,760" Height="50" />
+                <Label Content="Score:" FontSize="36" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,680" Height="50"/>
+                <TextBlock x:Name="txtScore" Text="0" FontSize="36" Foreground="White" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,560" Height="50" />
+                <Image Source="/platform.png" Margin="10,436,112,557"/>
+                <Label Name="txtLife" Content="x3" FontWeight="Black" Foreground="White" FontSize="36" Margin="209,439,19,546"/>
 
-    </Canvas>
+                <Button x:Name="btnPause" FontWeight="Black" FontSize="36" Click="btnPause_Click" Margin="19,537,19,269" Opacity="1" BorderThickness="0" Background="Transparent" Foreground="Transparent" IsHitTestVisible="True" OverridesDefaultStyle="False" >
+                    <Button.OpacityMask>
+                        <RadialGradientBrush>
+                            <GradientStop Offset="0" Color="AliceBlue"/>
+                            <GradientStop Offset="0.5" Color="AliceBlue"/>
+                            <GradientStop Offset="1" Color="Transparent"/>
+                        </RadialGradientBrush>
+                    </Button.OpacityMask>
+                    <Grid>
+                        <Ellipse  Width="200" Height="200">
+                            <Ellipse.Fill>
+                                <LinearGradientBrush StartPoint="1,1" EndPoint="1,0">
+                                    <GradientStop Color="DarkBlue" Offset="0"/>
+                                    <GradientStop x:Name="gradientBtnPause" Color="DarkRed" Offset="1.5"/>
+                                </LinearGradientBrush>
+
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock x:Name="btnTxtPause" Padding="70" Margin="0,0,0,0" Text="Pause" FontWeight="Bold" Focusable="False" Foreground="AliceBlue" FontSize="36"/>
+                    </Grid>
+                </Button>
+
+                <Button x:Name="btnExit" FontWeight="Black" FontSize="36" Click="btnExit_Click" Margin="19,796,19,10" Opacity="1" BorderThickness="0" Background="Transparent" Foreground="Transparent" IsHitTestVisible="True" OverridesDefaultStyle="False" >
+                    <Button.OpacityMask>
+                        <RadialGradientBrush>
+                            <GradientStop Offset="0" Color="AliceBlue"/>
+                            <GradientStop Offset="0.5" Color="AliceBlue"/>
+                            <GradientStop Offset="1" Color="Transparent"/>
+                        </RadialGradientBrush>
+                    </Button.OpacityMask>
+                    <Grid>
+                        <Ellipse  Width="200" Height="200">
+                            <Ellipse.Fill>
+                                <LinearGradientBrush StartPoint="1,1" EndPoint="1,0">
+                                    <GradientStop Color="Brown" Offset="0"/>
+                                    <GradientStop Color="MidnightBlue" Offset="0.65"/>
+                                </LinearGradientBrush>
+
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock x:Name="btnTxtExit" Padding="70" Text="Exit" FontWeight="Bold" Focusable="False" Foreground="AliceBlue" FontSize="36"/>
+                    </Grid>
+                </Button>
+            </Grid>
+        </Border>
+        <Canvas x:Name="mainCanvas" MouseMove="mainCanvas_MouseMove" MouseLeftButtonDown="mainCanvas_MouseLeftButtonDown">
+            <Canvas.Background>
+                <ImageBrush x:Name="mainCanvasImage" ImageSource="/background1.jpg"/>
+            </Canvas.Background>
+            <Border x:Name="borderMainCanvas" BorderBrush="#FF3F3F3F" BorderThickness="10" Width="1620"  Height="1080"/>
+            <Rectangle x:Name="playerRect" Canvas.Left="860" Canvas.Top="949" Width="200" Height="25" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="/platform.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Ellipse x:Name="fireballEllipse" RenderTransformOrigin=".5,.5" Canvas.Left="754" Canvas.Top="-145" Height="140" Width="112" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="/fireball.png"/>
+                </Ellipse.Fill>
+                <Ellipse.RenderTransform>
+                    <TranslateTransform x:Name="fireballTT" Y="0"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+            <Image x:Name="ball" Source="/ball.png"  Canvas.Left="945" Canvas.Top="920" Width="30" Height="30" RenderTransformOrigin=".5,.5" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Image.RenderTransform>
+                    <RotateTransform x:Name="rtBall" Angle="0" CenterX="0" CenterY="0"/>
+                </Image.RenderTransform>
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Window.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard x:Name="ballAnim">
+                                <DoubleAnimation
+                                    Storyboard.TargetName="rtBall"
+                                    Storyboard.TargetProperty="Angle"
+                                    To="360"
+                                    AutoReverse="False"
+                                    RepeatBehavior="Forever"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+            <Border x:Name="lvlBorder" Background="Black" BorderBrush="Wheat" Canvas.Left="200" BorderThickness="2" HorizontalAlignment="Center" Canvas.Top="700">
+                <TextBlock Name="txtLVL" Text="lvl" Foreground="DarkRed" FontSize="60" TextWrapping="Wrap"/>
+            </Border>
+            <!--<Rectangle x:Name="block" Fill="OrangeRed" Canvas.Left="100" Canvas.Top="100" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"/>-->
+
+        </Canvas>
     </DockPanel>
 </Window>

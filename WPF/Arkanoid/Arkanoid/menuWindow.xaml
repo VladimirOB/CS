@@ -1,0 +1,283 @@
+﻿<Window x:Class="Arkanoid.menuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Arkanoid"
+        mc:Ignorable="d"
+        Title="Menu" Height="1032" Width="1920" WindowStyle="None">
+    <Window.Resources>
+
+        <ControlTemplate x:Key="buttonTemplateContinue" TargetType="Button">
+            <Grid>
+                <Rectangle x:Name="rectStart" RenderTransformOrigin=".5,.5"  Width="{TemplateBinding Button.Width}" Height="{TemplateBinding Button.Height}">
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="/continue.png"/>
+                    </Rectangle.Fill>
+                    <Rectangle.RenderTransform>
+                        <ScaleTransform x:Name="scaleTStart" ScaleX="1" ScaleY="1"/>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Grid>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="Button.IsPressed" Value="True">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX=".9" ScaleY=".9"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
+                </Trigger>
+
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="scaleTStart"
+                                                 Storyboard.TargetProperty="ScaleX"
+                                                 To="1.3" Duration="0:0:0.35"/>
+                            <DoubleAnimation Storyboard.TargetName="scaleTStart"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1.3" Duration="0:0:0.35"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="scaleTStart"
+                                                 Storyboard.TargetProperty="ScaleX"
+                                                 To="1" Duration="0:0:0.35"/>
+                            <DoubleAnimation Storyboard.TargetName="scaleTStart"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1" Duration="0:0:0.35"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+            </ControlTemplate.Triggers>
+
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="buttonTemplateStart" TargetType="Button">
+            <Grid>
+                <Rectangle x:Name="rectStart" RenderTransformOrigin=".5,.5"  Width="{TemplateBinding Button.Width}" Height="{TemplateBinding Button.Height}">
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="/start.png"/>
+                    </Rectangle.Fill>
+                    <Rectangle.RenderTransform>
+                        <ScaleTransform x:Name="scaleTStart" ScaleX="1" ScaleY="1"/>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Grid>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="Button.IsPressed" Value="True">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX=".9" ScaleY=".9"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
+                </Trigger>
+
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="scaleTStart"
+                                                 Storyboard.TargetProperty="ScaleX"
+                                                 To="1.3" Duration="0:0:0.35"/>
+                            <DoubleAnimation Storyboard.TargetName="scaleTStart"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1.3" Duration="0:0:0.35"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="scaleTStart"
+                                                 Storyboard.TargetProperty="ScaleX"
+                                                 To="1" Duration="0:0:0.35"/>
+                            <DoubleAnimation Storyboard.TargetName="scaleTStart"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1" Duration="0:0:0.35"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+            </ControlTemplate.Triggers>
+
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="buttonTemplateExit" TargetType="Button">
+            <Grid>
+                <Rectangle x:Name="rectStart" RenderTransformOrigin=".5,.5"  Width="{TemplateBinding Button.Width}" Height="{TemplateBinding Button.Height}">
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="/exit.png"/>
+                    </Rectangle.Fill>
+                    <Rectangle.RenderTransform>
+                        <ScaleTransform x:Name="scaleT" ScaleX="1" ScaleY="1"/>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Grid>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="Button.IsPressed" Value="True">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX=".9" ScaleY=".9"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
+                </Trigger>
+
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="scaleT"
+                                                 Storyboard.TargetProperty="ScaleX"
+                                                 To="1.3" Duration="0:0:0.35"/>
+                            <DoubleAnimation Storyboard.TargetName="scaleT"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1.3" Duration="0:0:0.35"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="scaleT"
+                                                 Storyboard.TargetProperty="ScaleX"
+                                                 To="1" Duration="0:0:0.35"/>
+                            <DoubleAnimation Storyboard.TargetName="scaleT"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1" Duration="0:0:0.35"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+            </ControlTemplate.Triggers>
+
+        </ControlTemplate>
+
+
+        <ControlTemplate x:Key="buttonTemplateSound" TargetType="{x:Type Button}">
+            <Grid>
+                <Ellipse x:Name="outerCircle" RenderTransformOrigin=".5,.5" Width="{TemplateBinding Button.Width}" Height="{TemplateBinding Button.Height}">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="/soundON.png"/>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <ScaleTransform x:Name="scaleTSound" ScaleX="1" ScaleY="1"/>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="Button.IsPressed" Value="True">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX=".9" ScaleY=".9"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
+                </Trigger>
+
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="scaleTSound"
+                                                 Storyboard.TargetProperty="ScaleX"
+                                                 To="1.3" Duration="0:0:0.1"/>
+                            <DoubleAnimation Storyboard.TargetName="scaleTSound"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1.3" Duration="0:0:0.1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="scaleTSound"
+                                                 Storyboard.TargetProperty="ScaleX"
+                                                 To="1" Duration="0:0:0.1"/>
+                            <DoubleAnimation Storyboard.TargetName="scaleTSound"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1" Duration="0:0:0.1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Window.Resources>
+
+    <Canvas x:Name="menuCanvas">
+        <Rectangle Height="1080" Width="1920" RenderTransformOrigin=".5,.5">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="/backgroundSky.jpg"/>
+            </Rectangle.Fill>
+            <Rectangle.RenderTransform>
+                <ScaleTransform x:Name="stBack" ScaleX="1" ScaleY="1"/>
+            </Rectangle.RenderTransform>
+            <Rectangle.Triggers>
+                <EventTrigger  RoutedEvent="Window.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation RepeatBehavior="Forever"
+                                     Storyboard.TargetName="stBack"
+                                     Storyboard.TargetProperty="ScaleX"
+                                     To="1.3"
+                                     Duration="0:0:3"
+                                     AutoReverse="true"/>
+                            <DoubleAnimation RepeatBehavior="Forever"
+                                     Storyboard.TargetName="stBack"
+                                     Storyboard.TargetProperty="ScaleY"
+                                     To="1.3"
+                                     Duration="0:0:3"
+                                     AutoReverse="true"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Rectangle.Triggers>
+        </Rectangle>
+        <Image Source="/load.png" Canvas.Left="515" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Button x:Name="btnSound" FontWeight="Black" FontSize="36" Click="btnSound_Click" Canvas.Left="1680" Canvas.Top="10" Opacity="1" BorderThickness="0" Background="Transparent" Foreground="Transparent" IsHitTestVisible="True" OverridesDefaultStyle="False" >
+            <Button.OpacityMask>
+                <RadialGradientBrush>
+                    <GradientStop Offset="0" Color="AliceBlue"/>
+                    <GradientStop Offset="0.5" Color="AliceBlue"/>
+                    <GradientStop Offset="1" Color="Transparent"/>
+                </RadialGradientBrush>
+            </Button.OpacityMask>
+            <Grid>
+                <Ellipse  Width="200" Height="200">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="1,1" EndPoint="1,0">
+                            <GradientStop Color="DarkBlue" Offset="0"/>
+                            <GradientStop x:Name="gradientBtnPause" Color="Lime" Offset="1.5"/>
+                        </LinearGradientBrush>
+
+                    </Ellipse.Fill>
+                </Ellipse>
+                <TextBlock Padding="70" Margin="0,-30,0,0" Text="Sound" FontWeight="Bold" Focusable="False" Foreground="AliceBlue" FontSize="36"/>
+                <TextBlock x:Name="btnTxtPause" Padding="70" Margin="25,20,0,0" Text="ON" FontWeight="Black" Focusable="False" Foreground="AliceBlue" FontSize="36"/>
+            </Grid>
+        </Button>
+        <Button Template="{StaticResource buttonTemplateContinue}" Visibility="Collapsed" x:Name="btnContinue" Click="btnContinue_Click" Canvas.Left="769" Canvas.Top="347" Width="382" Height="131" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Button Template="{StaticResource buttonTemplateStart}" x:Name="btnStart" Click="start_Click" Canvas.Left="769" Canvas.Top="540" Width="382" Height="132" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Button Template="{StaticResource buttonTemplateExit}" x:Name="btnExit" IsCancel="true" Canvas.Left="822" Canvas.Top="839" Width="276" Height="95" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+    </Canvas>
+</Window>

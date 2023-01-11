@@ -8,13 +8,41 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="background1.jpg" />
+    <None Remove="background2.jpg" />
+    <None Remove="background3.jpg" />
     <None Remove="backgroundSky.jpg" />
     <None Remove="ball.png" />
+    <None Remove="block1.png" />
+    <None Remove="block2.png" />
+    <None Remove="block4.png" />
+    <None Remove="continue.png" />
+    <None Remove="exit.png" />
+    <None Remove="fireball.png" />
+    <None Remove="load.png" />
+    <None Remove="platform.png" />
+    <None Remove="soundOFF.png" />
+    <None Remove="soundON.png" />
+    <None Remove="start.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="background1.jpg" />
+    <Resource Include="background2.jpg" />
+    <Resource Include="background3.jpg" />
     <Resource Include="backgroundSky.jpg" />
     <Resource Include="ball.png" />
+    <Resource Include="block1.png" />
+    <Resource Include="block2.png" />
+    <Resource Include="block4.png" />
+    <Resource Include="continue.png" />
+    <Resource Include="exit.png" />
+    <Resource Include="fireball.png" />
+    <Resource Include="load.png" />
+    <Resource Include="platform.png" />
+    <Resource Include="soundOFF.png" />
+    <Resource Include="soundON.png" />
+    <Resource Include="start.png" />
   </ItemGroup>
 
 </Project>

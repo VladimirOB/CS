@@ -13,6 +13,138 @@
             <MediaTimeline Name="tmline1"  Storyboard.TargetName="mediaElement" />
         </Storyboard>
 
+        <Style x:Key="SliderRepeatButtonUp" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border BorderThickness="1" BorderBrush="Black" Background="Black" Height="3"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButtonDown" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" BorderThickness="1" Height="3">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="Green" Offset="0"/>
+                                    <GradientStop Color="Lime" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+
+                            <Border.BorderBrush>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" >
+                                    <GradientStop Color="Green" Offset="0"/>
+                                    <GradientStop Color="Lime" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButtonDown2" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" BorderThickness="1" Height="3" Background="Firebrick" BorderBrush="Firebrick"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderThumb" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Ellipse Height="15" Width="15" Fill="White"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="SliderPosition" TargetType="Slider">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Track Grid.Row="1" Name="PART_Track">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButtonDown2}" Command="Slider.DecreaseLarge"/>
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource SliderThumb}"/>
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButtonUp}" Command="Slider.IncreaseLarge"/>
+                    </Track.IncreaseRepeatButton>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="Slider_Pos" TargetType="Slider">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinHeight" Value="21"/>
+                    <Setter Property="MinWidth" Value="105"/>
+                    <Setter Property="Template" Value="{StaticResource SliderPosition}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <ControlTemplate x:Key="SliderVolume" TargetType="Slider">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Track Grid.Row="1" Name="PART_Track">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButtonDown}" Command="Slider.DecreaseLarge"/>
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource SliderThumb}"/>
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButtonUp}" Command="Slider.IncreaseLarge"/>
+                    </Track.IncreaseRepeatButton>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+        
+        <Style x:Key="Slider_Volume" TargetType="Slider">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinHeight" Value="21"/>
+                    <Setter Property="MinWidth" Value="105"/>
+                    <Setter Property="Template" Value="{StaticResource SliderVolume}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
 
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -28,24 +160,12 @@
             </Setter>
         </Style>
 
-        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD" />
         <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070" />
-        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD" />
-        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1" />
-        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6" />
-        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B" />
-        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4" />
         <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5" />
-        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383" />
-        
+
         <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-            <Setter Property="Background" Value="{StaticResource Button.Static.Background}" />
-            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}" />
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="BorderBrush" Value="#FF707070" />
             <Setter Property="Padding" Value="1" />
             <Setter Property="Button.RenderTransformOrigin" Value="0.5 0.5" />
             <!-- Свойство задаёт исходные трансформации для дальнейшей анимации в триггерах -->
@@ -78,17 +198,15 @@
                                 <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <!--<Setter TargetName="border" Property="Background" Value="{StaticResource Button.MouseOver.Background}" />-->
-                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.MouseOver.Border}" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="Black" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="true">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource Button.Pressed.Background}" />
-                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.Pressed.Border}" />
+                                <Setter TargetName="border" Property="Opacity" Value="0.5" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="Red" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                                <Setter TargetName="border" Property="Opacity" Value="1" />
                                 <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
-                                <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{StaticResource Button.Disabled.Foreground}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -120,7 +238,7 @@
         </Style>
     </Window.Resources>
 
-    <Canvas Height="170" Width="350" Background="Transparent" DragEnter="Canvas_DragEnter" Drop="Canvas_Drop" AllowDrop="True">
+    <Canvas x:Name="mainCanvas" Height="170" Width="350" Background="Transparent" DragEnter="Canvas_DragEnter" Drop="Canvas_Drop" AllowDrop="True">
         
         <Button x:Name="collapse" Style="{StaticResource ButtonStyle1}" Canvas.Left="310" Click="collapse_Click" ToolTip="Сollapse" Height="20" Width="20" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button.Background>
@@ -153,11 +271,11 @@
 
         <MediaElement Name="mediaElement" MediaOpened="mediaElement_MediaOpened" MediaEnded="mediaElement_MediaEnded" LoadedBehavior="Manual"/>
 
-        <Slider Name="sliderPosition" ValueChanged="sliderPosition_ValueChanged" Height="21" Canvas.Left="10" Canvas.Top="104" HorizontalAlignment="Center" VerticalAlignment="Center" Width="330"/>
-        <TextBlock Name="txtVolume" FontWeight="Bold" Text="Volume: 1" Canvas.Left="110" Canvas.Top="58" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Slider Minimum="0" Maximum="1" Value="{Binding ElementName=mediaElement, Path=Volume, Mode=TwoWay}" ValueChanged="sliderVolume_ValueChanged" Height="22" Name="sliderVolume" Canvas.Left="105" Canvas.Top="74" HorizontalAlignment="Center" VerticalAlignment="Top" Width="118" TickFrequency="0.05" TickPlacement="BottomRight" IsSnapToTickEnabled="True"/>
+        <Slider Style="{StaticResource Slider_Pos}" Name="sliderPosition" ValueChanged="sliderPosition_ValueChanged" Height="21" Canvas.Left="10" Canvas.Top="104" HorizontalAlignment="Center" VerticalAlignment="Center" Width="330" IsMoveToPointEnabled="True"/>
+        <TextBlock Name="txtVolume" FontWeight="Bold" Text="Volume: 100" Canvas.Left="110" Canvas.Top="58" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Slider Style="{StaticResource Slider_Volume}" Minimum="0" Maximum="1" Value="{Binding ElementName=mediaElement, Path=Volume, Mode=TwoWay}" ValueChanged="sliderVolume_ValueChanged" Height="22" Name="sliderVolume" Canvas.Left="105" Canvas.Top="74" HorizontalAlignment="Center" VerticalAlignment="Top" Width="118" TickFrequency="0.01" IsMoveToPointEnabled="True"/>
         <TextBlock Name="txtBalance" FontWeight="Bold" Text="Balance: 0" Canvas.Left="248" Canvas.Top="58" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Slider Minimum="-1" Maximum="1" Value="{Binding ElementName=mediaElement, Path=Balance, Mode=TwoWay}" ValueChanged="sliderBalance_ValueChanged" Height="22" Name="sliderBalance" Canvas.Left="243" Canvas.Top="74" HorizontalAlignment="Center" VerticalAlignment="Top" Width="87" TickFrequency="0.1" TickPlacement="BottomRight" IsSnapToTickEnabled="True" />
+        <Slider Minimum="-1" Maximum="1" Value="{Binding ElementName=mediaElement, Path=Balance, Mode=TwoWay}" ValueChanged="sliderBalance_ValueChanged" Height="22" Name="sliderBalance" Canvas.Left="243" Canvas.Top="74" HorizontalAlignment="Center" VerticalAlignment="Top" Width="87" TickFrequency="0.1" TickPlacement="BottomRight" IsSnapToTickEnabled="True" Foreground="Transparent"/>
 
         <Button x:Name="btnPrev" Style="{StaticResource ButtonStyle1}" Click="prev_Click" Canvas.Left="11" Canvas.Top="130" Height="30" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5, 0.5">
             <Button.Background>

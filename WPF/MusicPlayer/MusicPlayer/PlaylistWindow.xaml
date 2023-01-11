@@ -6,8 +6,24 @@
         xmlns:local="clr-namespace:MusicPlayer"
         mc:Ignorable="d"
         Template="{StaticResource win1}"
-        Title="Playlist" Height="250" Width="350" Background="Transparent" WindowStyle="None" AllowsTransparency="True">
+        Title="Playlist" Height="250" Width="350" Background="Transparent" WindowStyle="None" AllowsTransparency="True" KeyDown="Window_KeyDown">
+
+    <Window.Resources>
+    <Storyboard x:Key="StoryBoard1">
+            <DoubleAnimation 
+                Storyboard.TargetName="txtError" 
+                Storyboard.TargetProperty="Opacity"
+                From="0" To="1"
+                Duration="0:0:1" AutoReverse="True"/>
+        </Storyboard>
+    </Window.Resources>
+    
     <Canvas Height="250" Width="350" Background="Transparent" DragEnter="Canvas_DragEnter" Drop="Canvas_Drop" AllowDrop="True">
+        <Canvas.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Delete" Click="contextItemDelete_click"/>
+            </ContextMenu>
+        </Canvas.ContextMenu>
         <Button x:Name="close"  Canvas.Left="330" Height="20" Width="20" Click="close_Click" ToolTip="Close" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button.Background>
                 <ImageBrush Opacity="1" ImageSource="/close.png" 
@@ -27,5 +43,10 @@
         </Border>
         <Button x:Name="btnSave" Content="Save Playlist" Click="savePL_Click" FontWeight="Black" Height="20" Width="90" Canvas.Left="5" Canvas.Top="227" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <Button x:Name="btnOpen" Content="Open Playlist" Click="openPL_Click" FontWeight="Black" Height="20" Width="90" Canvas.Left="255" Canvas.Top="227" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+        <TextBlock Name="txtError" Text="Error" Foreground="Red" Opacity="0" FontSize="18" FontWeight="Black" Canvas.Left="156" Canvas.Top="225" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+
+
     </Canvas>
 </Window>
